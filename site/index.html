@@ -1,0 +1,2285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TouchlineAI | HITL Sports Vision Prototype</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #1e293b;
+      --surface-alt: #162032;
+      --surface-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --badge-ai: #8b5cf6;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container constrained for mobile-first testing while clean on desktop */
+    .app-shell {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background: var(--bg);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 12px 16px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: white;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-about {
+      background: #334155;
+      color: #e2e8f0;
+      border: 1px solid #475569;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-about:hover {
+      background: #475569;
+    }
+
+    /* Screen navigation pills */
+    .screen-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      background: #0f172a;
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--surface-border);
+    }
+
+    .nav-pill {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .nav-pill.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-pill.completed {
+      color: var(--success);
+    }
+
+    .pill-step {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 5px;
+      border-radius: 10px;
+    }
+
+    main {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Screen visibility */
+    .screen {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* Section & Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Requirement Tag */
+    .fr-tag {
+      font-size: 10px;
+      font-weight: 700;
+      background: #1e3a8a;
+      color: #93c5fd;
+      border: 1px solid #2563eb;
+      padding: 1px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-ai {
+      background: #4c1d95;
+      color: #d8b4fe;
+      border-color: #7c3aed;
+    }
+
+    .tag-sim {
+      background: #701a75;
+      color: #f5d0fe;
+      border-color: #a21caf;
+    }
+
+    /* Form Controls */
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--surface-alt);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      outline: none;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    select:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Roster Table */
+    .roster-container {
+      overflow-x: auto;
+      max-height: 240px;
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      background: var(--surface-alt);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #0f172a;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .jersey-pill {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 11px;
+      background: #0284c7;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 12px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .badge-status {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .badge-ok {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-warn {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-err {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      min-height: 40px;
+    }
+    .btn:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #e2e8f0;
+      border: 1px solid #475569;
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: #475569;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+    .btn-danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    .btn-warning {
+      background: #d97706;
+      color: white;
+    }
+    .btn-warning:hover:not(:disabled) {
+      background: #b45309;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 11px;
+      min-height: 32px;
+    }
+
+    /* Processing animation */
+    .processing-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+      text-align: center;
+      gap: 12px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--surface-border);
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Banner notices */
+    .banner {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.4;
+    }
+
+    .banner-info {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #bfdbfe;
+    }
+
+    .banner-warning {
+      background: var(--warning-bg);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+
+    .banner-danger {
+      background: var(--danger-bg);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    /* Review Card & Synthetic Frame */
+    .clip-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      position: relative;
+    }
+
+    .clip-card.highlight-wrong {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 1px #f59e0b;
+    }
+
+    .clip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .clip-time {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .synthetic-frame-box {
+      width: 100%;
+      height: 140px;
+      background: #020617;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .frame-watermark {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.7);
+      color: #94a3b8;
+      padding: 2px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    .frame-obs-tag {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.85);
+      color: #f8fafc;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .clip-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+      background: var(--surface-alt);
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .meta-item-label {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .meta-item-val {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .confidence-meter {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .conf-high { color: #10b981; }
+    .conf-med { color: #f59e0b; }
+    .conf-low { color: #ef4444; }
+
+    /* Clip Action Bar */
+    .clip-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .clip-actions .btn {
+      padding: 8px 6px;
+      font-size: 11px;
+    }
+
+    .decision-banner {
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dec-confirmed {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .dec-reassigned {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .dec-removed {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Previews & Delivery Screen */
+    .reel-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .reel-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .reel-thumb {
+      width: 68px;
+      height: 68px;
+      background: #020617;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reel-details {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .reel-player-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reel-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .zero-highlight-box {
+      background: rgba(148, 163, 184, 0.05);
+      border: 1px dashed #475569;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Audit drawer */
+    .audit-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+      max-height: 160px;
+      overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: #cbd5e1;
+    }
+
+    .audit-entry {
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Required Footer */
+    footer {
+      padding: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--surface-border);
+      background: #0b1120;
+    }
+
+    footer a {
+      color: #38bdf8;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-logo">T</div>
+        <div>
+          <div class="brand-title">TouchlineAI</div>
+          <div style="font-size: 10px; color: #94a3b8;"><span class="fr-tag tag-sim">FR-24</span> Simulated Tagging Prototype</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-about" id="btnOpenAbout" onclick="openModal('aboutModal')">About Prototype</button>
+      </div>
+    </div>
+
+    <!-- 3 Screen Navigation Tabs -->
+    <nav class="screen-nav" aria-label="Workflow screens">
+      <button class="nav-pill active" id="tabNav1" onclick="navigateToScreen(1)">
+        <span class="pill-step">1</span> Setup
+      </button>
+      <button class="nav-pill" id="tabNav2" onclick="navigateToScreen(2)">
+        <span class="pill-step">2</span> Review
+      </button>
+      <button class="nav-pill" id="tabNav3" onclick="navigateToScreen(3)">
+        <span class="pill-step">3</span> Publish
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- SCREEN 1: SETUP (Steps 1 & 2) -->
+    <section class="screen active" id="screen1">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="fr-tag">FR-1</span> Game & Footage Selection
+            </div>
+            <div class="card-sub">Associate match footage with club roster & schedule</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnStartOver" onclick="handleStartOverMatch()" style="display: none;">
+            &orarr; Start Over / Switch Match
+          </button>
+        </div>
+
+        <div>
+          <label for="gameSelect">Select Game Record</label>
+          <select id="gameSelect" onchange="handleGameSelectChange()">
+            <option value="game-1">Enterprise Club Partner U12 vs Summit FC &middot; Oct 5, 2026 (Full 72 min HD &middot; 11 Moments)</option>
+            <option value="game-2">Enterprise Club Partner U12 vs Valley Strikers &middot; Sep 28, 2026 (Raw Unindexed &middot; 0 Moments Empty State)</option>
+          </select>
+        </div>
+
+        <div class="clip-meta-grid">
+          <div>
+            <div class="meta-item-label">Account</div>
+            <div class="meta-item-val" id="matchAccountVal">Enterprise Club Partner (Tier-1 Academy) ($180k)</div>
+          </div>
+          <div>
+            <div class="meta-item-label">Footage Status</div>
+            <div class="meta-item-val" id="footageStatusVal" style="color: #38bdf8;">Uploaded &bull; 1080p60 &bull; Ready</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eligible Roster Card (FR-2, FR-3) -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="fr-tag">FR-2</span> Eligible Team Roster
+              <span class="fr-tag">FR-3</span>
+            </div>
+            <div class="card-sub">12 confirmed roster players &middot; IDs, names &amp; jersey numbers</div>
+          </div>
+          <span class="badge-status badge-ok" id="rosterCountBadge">12 Kids Active</span>
+        </div>
+
+        <div class="roster-container">
+          <table aria-label="Team roster">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Player Name</th>
+                <th>Guardian Recipient</th>
+                <th>Consent Status</th>
+              </tr>
+            </thead>
+            <tbody id="rosterTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="banner banner-warning" id="rosterWarningBanner">
+          <span>&bull;</span>
+          <div>
+            <strong>Validation Notice:</strong> Player Sofia H. (#12) is missing guardian consent and recipient mapping. This will block publication batch validation (<span class="fr-tag">FR-18</span>) until resolved.
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="checkbox" id="rosterConfirmCheck" checked onchange="toggleRosterConfirm(this.checked)" style="width: 16px; height: 16px;">
+          <label for="rosterConfirmCheck" style="margin: 0; cursor: pointer; color: #f8fafc; font-size: 12px;">
+            Coach Alex confirms roster numbers and identity mappings for this match (<span class="fr-tag">FR-3</span>)
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Button to Trigger Detection (FR-24) -->
+      <div id="detectionActionBox">
+        <button class="btn" id="btnRunDetection" style="width: 100%;" onclick="runSimulatedDetection()">
+          <span class="fr-tag tag-sim">FR-24</span> Run Simulated AI Moment Detection
+        </button>
+      </div>
+
+      <!-- Processing State Overlay (FR-19, FR-24) -->
+      <div class="processing-overlay" id="detectionProcessing">
+        <div class="spinner"></div>
+        <div style="font-size: 14px; font-weight: 700; color: #f8fafc;">
+          Simulated AI Pipeline Running (<span class="fr-tag tag-sim">FR-24</span>)
+        </div>
+        <div style="font-size: 12px; color: #94a3b8;" id="processingStepText">
+          Scanning footage frames &bull; Identifying athlete jerseys &bull; Bounding timestamps...
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: REVIEW ASSIGNMENTS (Steps 3 & 4) -->
+    <section class="screen" id="screen2">
+      <!-- Human-in-the-loop simulated AI notice (FR-6) -->
+      <div class="banner banner-info" style="border-left: 4px solid #8b5cf6;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 3px;">
+            <span class="fr-tag tag-ai">Simulated AI</span>
+            <strong style="color: #f8fafc;">Coach Verification Mandatory</strong>
+          </div>
+          <div style="font-size: 11px; color: #cbd5e1;">
+            No publication based on confidence alone. Every assignment starts unresolved (<span class="fr-tag">FR-6</span>). The coach must make an individual decision on every clip: confirm (<span class="fr-tag">FR-7</span>), reassign (<span class="fr-tag">FR-8</span>), or remove (<span class="fr-tag">FR-9</span>).
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Progress Bar & Summary -->
+      <div class="card" style="padding: 10px 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+          <div>
+            <strong>Review Status:</strong>
+            <span id="reviewedCounter">0 of 11 reviewed</span>
+          </div>
+          <div id="unresolvedBadge" class="badge-status badge-warn">11 Unresolved</div>
+        </div>
+        <div style="width: 100%; background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 6px;">
+          <div id="reviewProgressBar" style="width: 0%; height: 100%; background: #3b82f6; transition: width 0.2s ease;"></div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="filterReviewList('all')">All (<span id="btnFilterAllCount">11</span>)</button>
+          <button class="btn btn-secondary btn-sm" onclick="filterReviewList('unresolved')">Unresolved (<span id="btnFilterUnresCount">11</span>)</button>
+          <button class="btn btn-secondary btn-sm" onclick="filterReviewList('decided')">Decided (<span id="btnFilterDecidedCount">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- Must-Show Edge Case Callout Banner (14 vs 4) -->
+      <div class="banner banner-warning" id="edgeCaseCalloutBanner">
+        <span>&bull;</span>
+        <div style="font-size: 11px;">
+          <strong>Must-Show Demonstration (Jersey 14 vs 4):</strong> Clip #2 (14:22) visibly shows jersey 4 in the synthetic frame. Simulated AI initially assigned it to #14 Maya at 94% confidence. Coach must reassign to #4 Liam (<span class="fr-tag">FR-8</span>).
+        </div>
+      </div>
+
+      <!-- Zero-highlight child notification (FR-13) -->
+      <div class="banner banner-info" id="zeroHighlightNoticeBanner" style="border-left: 4px solid #0ea5e9;">
+        <div style="font-size: 11px;">
+          <strong><span class="fr-tag">FR-13</span> Zero-Highlight Child:</strong> Noah B. (#9) has 0 detected highlights in this match. In step 5/6 he receives an honest no-highlight status without substituting other children's clips.
+        </div>
+      </div>
+
+      <!-- Clips Review Queue -->
+      <div id="clipsReviewContainer" style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+      <!-- Navigation to Screen 3 -->
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <button class="btn btn-secondary" style="flex: 1;" onclick="navigateToScreen(1)">
+          &larr; Back to Setup
+        </button>
+        <button class="btn" style="flex: 2;" id="btnGoToPreview" onclick="handleGoToPreview()">
+          Preview &amp; Publish Batch &rarr;
+        </button>
+      </div>
+
+      <!-- Audit Log Drawer (FR-10) -->
+      <div class="card" style="margin-top: 10px;">
+        <div class="card-header" onclick="toggleAuditDrawer()" style="cursor: pointer;">
+          <div class="card-title">
+            <span class="fr-tag">FR-10</span> Decision Audit Ledger (<span id="auditCount">0</span> actions)
+          </div>
+          <span style="font-size: 12px; color: var(--text-muted); cursor: pointer;" id="auditToggleIcon">&blacktriangledown; Show</span>
+        </div>
+        <div id="auditContentBox" style="display: none;">
+          <div class="audit-box" id="auditList">
+            <div style="color: #64748b; font-style: italic;">No coach actions recorded yet. Every confirm, reassign, and removal will log here with actor and timestamp.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: PREVIEW & PUBLISH (Steps 5 & 6) -->
+    <section class="screen" id="screen3">
+      <!-- Validation Gate Banner (FR-17, FR-18, FR-21) -->
+      <div id="publicationGateBanner" class="banner banner-danger">
+        <!-- Rendered based on validation state -->
+      </div>
+
+      <!-- Eligibility & Batch Configuration Header -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="fr-tag">FR-14</span> Corrected Reels Batch Preview
+              <span class="fr-tag">FR-16</span>
+            </div>
+            <div class="card-sub">Pre-publication review &middot; 1 batch = entire eligible team</div>
+          </div>
+          <span class="badge-status badge-warn" id="batchApprovalBadge">Approval Required</span>
+        </div>
+
+        <div class="clip-meta-grid">
+          <div>
+            <div class="meta-item-label">Total Roster</div>
+            <div class="meta-item-val" id="metaTotalRoster">12 Players</div>
+          </div>
+          <div>
+            <div class="meta-item-label">Included in Batch</div>
+            <div class="meta-item-val" id="metaIncludedCount">12 Players</div>
+          </div>
+          <div>
+            <div class="meta-item-label">Excluded from Batch</div>
+            <div class="meta-item-val" id="metaExcludedCount">0 Players</div>
+          </div>
+          <div>
+            <div class="meta-item-label">Zero-Highlight Children</div>
+            <div class="meta-item-val" id="metaZeroCount">1 (Noah B.)</div>
+          </div>
+        </div>
+
+        <div style="font-size: 11px; color: var(--text-muted);">
+          <span class="fr-tag tag-sim">Batch Gate</span> Publication is one validated batch. Any unreviewed assignment or included child with missing consent/recipient blocks publication entirely (<span class="fr-tag">FR-17</span>, <span class="fr-tag">FR-18</span>).
+        </div>
+      </div>
+
+      <!-- Sofia Resolution Card (FR-18 Blocker & Synthetic Test Controls) -->
+      <div class="card" id="sofiaResolutionCard" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.05);">
+        <div class="card-header">
+          <div>
+            <div class="card-title" style="color: #f87171;">
+              <span class="fr-tag" style="background: #991b1b; border-color: #ef4444;">FR-18 Blocker</span> Sofia H. (#12) Missing Consent &amp; Recipient
+            </div>
+            <div class="card-sub">Included child with missing consent/recipient blocks entire batch delivery</div>
+          </div>
+        </div>
+
+        <div style="font-size: 12px; color: #e2e8f0;">
+          Select a synthetic test action to resolve this blocking case for evaluation:
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+          <!-- Path A -->
+          <div style="background: var(--surface); padding: 8px 10px; border-radius: 6px; border: 1px solid var(--surface-border); display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <div style="font-size: 11px;">
+              <strong>Path A: Simulate Verified Consent Record</strong>
+              <div style="color: var(--text-muted);">Set recipient to `sofia.h@parent.org` &amp; mark consent verified (Synthetic Test Control)</div>
+            </div>
+            <button class="btn btn-sm" onclick="resolveSofiaConsent()">Simulate Consent</button>
+          </div>
+          <!-- Path B -->
+          <div style="background: var(--surface); padding: 8px 10px; border-radius: 6px; border: 1px solid var(--surface-border); display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <div style="font-size: 11px;">
+              <strong>Path B: Simulate Recorded Eligibility Exclusion</strong>
+              <div style="color: var(--text-muted);">Record explicit exclusion in audit ledger: "Opt-out / Missing consent" (FR-10, FR-20)</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="excludeSofiaFromBatch()">Simulate Exclusion</button>
+          </div>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; font-style: italic;">
+          *Synthetic test controls for prototype evaluation. Formal consent requires verified legal review prior to production release.
+        </div>
+      </div>
+
+      <!-- Player Reels Preview List (FR-12, FR-13, FR-14, FR-15) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="fr-tag">FR-12</span> Generated Player Reels &amp; Deliveries
+          </div>
+          <span style="font-size: 11px; color: var(--text-muted);">Only confirmed clips included</span>
+        </div>
+
+        <div class="reel-grid" id="reelsPreviewList">
+          <!-- Rendered dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Approval & Publishing Controls (FR-16, FR-20, FR-21, FR-22, FR-24) -->
+      <div class="card" style="gap: 12px;">
+        <div class="card-title">
+          <span class="fr-tag">FR-16</span> Batch Pre-Publication Gate
+          <span class="fr-tag">FR-21</span>
+        </div>
+
+        <div style="font-size: 12px; color: var(--text-muted);">
+          Coach approval locks the current batch. Any subsequent assignment changes or roster exclusions will invalidate approval (<span class="fr-tag">FR-20</span>) requiring re-validation before publication (<span class="fr-tag">FR-21</span>).
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" style="flex: 1;" id="btnApproveBatch" onclick="handleApproveBatch()">
+            &check; Approve Current Previews (<span class="fr-tag">FR-16</span>)
+          </button>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--surface-border);">
+
+        <div>
+          <button class="btn" id="btnPublishBatch" style="width: 100%; font-size: 14px; padding: 12px;" onclick="handlePublishBatch()">
+            Approve &amp; Publish Weekly Delivery (<span class="fr-tag">FR-21</span>, <span class="fr-tag">FR-22</span>, <span class="fr-tag tag-sim">FR-24</span>)
+          </button>
+        </div>
+
+        <!-- Failure Simulator & Duplicate Delivery Check (FR-23) -->
+        <div style="background: var(--surface-alt); padding: 8px 10px; border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong><span class="fr-tag tag-sim">FR-23</span> Test Network Failure:</strong>
+            <span style="color: var(--text-muted);">Simulate transient SMS timeout</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnToggleSimFailure" onclick="toggleSimulatedFailure()">
+            Fail Mode: OFF
+          </button>
+        </div>
+      </div>
+
+      <!-- Delivery Results View (Rendered after publishing) -->
+      <div class="card" id="deliveryResultsCard" style="display: none; border-color: #10b981; background: rgba(16, 185, 129, 0.05);">
+        <div class="card-header">
+          <div class="card-title" style="color: #34d399;">
+            &check; Weekly Delivery Batch Published (<span class="fr-tag tag-sim">FR-24</span>)
+          </div>
+          <span class="badge-status badge-ok" id="deliveryIdempotencyBadge">Idempotent Key: ACTIVE (<span class="fr-tag">FR-22</span>)</span>
+        </div>
+
+        <div style="font-size: 12px; color: #e2e8f0;" id="deliverySummaryText">
+          <!-- Rendered delivery summary -->
+        </div>
+
+        <div class="audit-box" id="deliveryDispatchLog" style="max-height: 140px; margin-top: 6px;">
+          <!-- Rendered delivery log -->
+        </div>
+
+        <div id="retryBox" style="display: none; margin-top: 6px;">
+          <button class="btn btn-warning btn-sm" onclick="retryFailedDeliveries()">
+            &orarr; Retry Failed Deliveries (<span class="fr-tag">FR-23</span>)
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary" style="flex: 1;" onclick="navigateToScreen(2)">
+          &larr; Back to Review Assignments
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Case Study Footer -->
+  <footer>
+    TouchlineAI Case Study Prototype &middot; Built by <a href="https://github.com/astrokshitij" target="_blank" rel="noopener">Kshitij Pandey (github.com/astrokshitij)</a>
+  </footer>
+</div>
+
+<!-- MODAL: Reassign Clip (FR-8) -->
+<div class="modal-backdrop" id="reassignModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <div><span class="fr-tag">FR-8</span> Reassign Clip Assignment</div>
+      <button class="btn-close" onclick="closeModal('reassignModal')">&times;</button>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted);" id="reassignModalSub">
+      Select the correct roster player for this clip.
+    </div>
+
+    <div>
+      <label for="reassignPlayerSelect">Correct Player</label>
+      <select id="reassignPlayerSelect">
+        <!-- Rendered dynamically -->
+      </select>
+    </div>
+
+    <div>
+      <label for="reassignNotes">Coach Reassignment Note (<span class="fr-tag">FR-10</span>)</label>
+      <input type="text" id="reassignNotes" placeholder="e.g., Synthetic frame shows jersey #4 Liam T.">
+    </div>
+
+    <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('reassignModal')">Cancel</button>
+      <button class="btn btn-sm" onclick="executeReassignment()">Confirm Reassignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Remove Clip (FR-9, FR-11) -->
+<div class="modal-backdrop" id="removeModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <div><span class="fr-tag">FR-9</span> Remove Clip from Reels</div>
+      <button class="btn-close" onclick="closeModal('removeModal')">&times;</button>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted);">
+      This clip will be excluded from all child reels and team recaps.
+    </div>
+
+    <div>
+      <label for="removeReasonSelect"><span class="fr-tag">FR-11</span> Removal Reason (Mandatory)</label>
+      <select id="removeReasonSelect">
+        <option value="Non-roster opponent or referee action">Non-roster opponent or referee action</option>
+        <option value="Dead-ball / Out-of-bounds stoppage">Dead-ball / Out-of-bounds stoppage</option>
+        <option value="Unidentifiable / Heavily obscured jersey">Unidentifiable / Heavily obscured jersey</option>
+        <option value="Duplicate moment detection">Duplicate moment detection</option>
+        <option value="Substandard footage quality">Substandard footage quality</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('removeModal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="executeRemoval()">Confirm Removal</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: About This Prototype -->
+<div class="modal-backdrop" id="aboutModal">
+  <div class="modal-box" style="max-width: 520px;">
+    <div class="modal-title">
+      <div>About TouchlineAI Prototype</div>
+      <button class="btn-close" onclick="closeModal('aboutModal')">&times;</button>
+    </div>
+
+    <div style="font-size: 12px; display: flex; flex-direction: column; gap: 10px; color: #cbd5e1;">
+      <div style="background: var(--surface-alt); padding: 8px; border-radius: 6px;">
+        <strong style="color: #38bdf8;">What is Real:</strong>
+        <p style="margin-top: 2px;">
+          Fully interactive client-side state machine; individual coach review requirement; dynamic clip counts and reel generation; publication preflight revalidation (FR-21); batch validation gates (FR-17, FR-18); decision audit ledger (FR-10); approval invalidation on modification (FR-20); delivery manifest and idempotency checks (FR-22); failed delivery retry (FR-23); responsive mobile layout (375px+).
+        </p>
+      </div>
+
+      <div style="background: var(--surface-alt); padding: 8px; border-radius: 6px;">
+        <strong style="color: #a855f7;">What is Simulated:</strong>
+        <p style="margin-top: 2px;">
+          AI moment detection engine (deterministic mock data); synthetic jersey frame rendering; SMS/Email delivery dispatcher. No backend, no API keys, and system fonts only.
+        </p>
+      </div>
+
+      <div>
+        <strong style="color: #f8fafc;">Key Test Click-Paths:</strong>
+        <ol style="margin-left: 18px; margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+          <li><strong>Must-Show 14 vs 4 Correction:</strong> Run detection &rarr; go to Clip #2 (14:22) &rarr; notice synthetic frame shows jersey 4 while AI proposed Maya #14 at 94% &rarr; click Reassign &rarr; select Liam T. (#4) &rarr; verify Liam's reel count updates.</li>
+          <li><strong>Publication Blocker Gates:</strong> Advance to Publish with unresolved clips or with Sofia's unconsented record &rarr; verify hard block &rarr; resolve via Path A (synthetic consent) or Path B (synthetic exclusion).</li>
+          <li><strong>Zero-Highlight &amp; Delivery:</strong> Check Noah B. (#9) has an honest zero-highlight card &rarr; approve batch &rarr; publish weekly delivery &rarr; test transient failure &amp; retry.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+      <button class="btn btn-sm" onclick="closeModal('aboutModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * TouchlineAI Core Roster-Tagging Prototype
+ * Covers FR-1 through FR-24
+ */
+
+// Initial Games Dataset
+const MATCHES_DATA = {
+  'game-1': {
+    name: 'Enterprise Club Partner U12 vs Summit FC · Oct 5, 2026 (Full 72 min HD · 11 Moments)',
+    account: 'Enterprise Club Partner (Tier-1 Academy) ($180k)',
+    status: 'Uploaded • 1080p60 • Ready',
+    statusColor: '#38bdf8',
+    clips: [
+      {
+        id: 'c1',
+        time: '04:12',
+        duration: '8s',
+        description: 'Breakaway sprint & finish into top corner',
+        observedJersey: 2,
+        proposedPlayerId: 'p1', // Lucas M. #2
+        confidence: 91,
+        status: 'unresolved',
+        assignedPlayerId: 'p1',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c2', // MUST SHOW WRONG-CHILD CASE (14 vs 4)
+        time: '14:22',
+        duration: '11s',
+        description: 'Right-foot strike on target from edge of penalty box',
+        observedJersey: 4, // SYNTHETIC FRAME VISIBLY SHOWS JERSEY 4
+        proposedPlayerId: 'p10', // AI PROPOSED MAYA S. #14
+        confidence: 94, // HIGH CONFIDENCE WRONG ASSIGNMENT
+        status: 'unresolved',
+        assignedPlayerId: 'p10',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c3',
+        time: '22:45',
+        duration: '7s',
+        description: 'Slide tackle interception breaking up counter',
+        observedJersey: 5,
+        proposedPlayerId: 'p3', // Ava K. #5
+        confidence: 86,
+        status: 'unresolved',
+        assignedPlayerId: 'p3',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c4', // LOW CONFIDENCE / UNKNOWN HONESTLY SHOWN (FR-5)
+        time: '29:10',
+        duration: '9s',
+        description: 'Sideline challenge near technical area (blurry footage)',
+        observedJersey: '7 (Obscured)',
+        proposedPlayerId: 'p4', // Ethan R. #7
+        confidence: 42,
+        status: 'unresolved',
+        assignedPlayerId: 'p4',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c5',
+        time: '35:50',
+        duration: '10s',
+        description: 'Cross assist delivered into six-yard box',
+        observedJersey: 8,
+        proposedPlayerId: 'p5', // Oliver P. #8
+        confidence: 89,
+        status: 'unresolved',
+        assignedPlayerId: 'p5',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c6',
+        time: '41:15',
+        duration: '6s',
+        description: 'Long-range shot bouncing off crossbar',
+        observedJersey: 10,
+        proposedPlayerId: 'p7', // Emma W. #10
+        confidence: 88,
+        status: 'unresolved',
+        assignedPlayerId: 'p7',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c7',
+        time: '48:02',
+        duration: '8s',
+        description: 'Defensive slide and clearance to sideline',
+        observedJersey: 11,
+        proposedPlayerId: 'p8', // Jackson D. #11
+        confidence: 84,
+        status: 'unresolved',
+        assignedPlayerId: 'p8',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c8', // Sofia's clip (Sofia missing consent FR-18)
+        time: '52:30',
+        duration: '12s',
+        description: 'Dribble run down left wing beating two defenders',
+        observedJersey: 12,
+        proposedPlayerId: 'p9', // Sofia H. #12
+        confidence: 90,
+        status: 'unresolved',
+        assignedPlayerId: 'p9',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c9',
+        time: '61:10',
+        duration: '7s',
+        description: 'Midfield through ball threading opposing defense',
+        observedJersey: 15,
+        proposedPlayerId: 'p11', // Chloe C. #15
+        confidence: 85,
+        status: 'unresolved',
+        assignedPlayerId: 'p11',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c10',
+        time: '67:40',
+        duration: '9s',
+        description: 'Defensive header on corner kick delivery',
+        observedJersey: 18,
+        proposedPlayerId: 'p12', // Ben L. #18
+        confidence: 87,
+        status: 'unresolved',
+        assignedPlayerId: 'p12',
+        removalReason: null,
+        notes: ''
+      },
+      {
+        id: 'c11',
+        time: '74:15',
+        duration: '10s',
+        description: 'Block on goal-bound shot inside penalty area',
+        observedJersey: 8,
+        proposedPlayerId: 'p5', // Oliver P. #8
+        confidence: 92,
+        status: 'unresolved',
+        assignedPlayerId: 'p5',
+        removalReason: null,
+        notes: ''
+      }
+    ]
+  },
+  'game-2': {
+    name: 'Enterprise Club Partner U12 vs Valley Strikers · Sep 28, 2026 (Raw Unindexed · 0 Moments Empty State)',
+    account: 'Enterprise Club Partner (Tier-1 Academy) ($180k)',
+    status: 'Raw Unindexed • 0 Detections',
+    statusColor: '#f59e0b',
+    clips: [] // Genuine Empty State
+  }
+};
+
+function getInitialRoster() {
+  return [
+    { id: 'p1', jersey: 2, name: 'Lucas M.', consent: true, recipient: 'lucas.m@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p2', jersey: 4, name: 'Liam T.', consent: true, recipient: 'liam.t@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p3', jersey: 5, name: 'Ava K.', consent: true, recipient: 'ava.k@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p4', jersey: 7, name: 'Ethan R.', consent: true, recipient: 'ethan.r@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p5', jersey: 8, name: 'Oliver P.', consent: true, recipient: 'oliver.p@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p6', jersey: 9, name: 'Noah B.', consent: true, recipient: 'noah.b@parent.org', excluded: false, exclusionReason: null }, // 0 clips! (FR-13)
+    { id: 'p7', jersey: 10, name: 'Emma W.', consent: true, recipient: 'emma.w@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p8', jersey: 11, name: 'Jackson D.', consent: true, recipient: 'jackson.d@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p9', jersey: 12, name: 'Sofia H.', consent: false, recipient: '', excluded: false, exclusionReason: null }, // Missing consent! (FR-18)
+    { id: 'p10', jersey: 14, name: 'Maya S.', consent: true, recipient: 'maya.s@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p11', jersey: 15, name: 'Chloe C.', consent: true, recipient: 'chloe.c@parent.org', excluded: false, exclusionReason: null },
+    { id: 'p12', jersey: 18, name: 'Ben L.', consent: true, recipient: 'ben.l@parent.org', excluded: false, exclusionReason: null }
+  ];
+}
+
+// Global State
+const STATE = {
+  activeScreen: 1,
+  gameId: 'game-1',
+  rosterConfirmed: true,
+  isProcessing: false,
+  detectionRan: false,
+  batchApproved: false,
+  isPublished: false,
+  simulatedDeliveryFailed: false,
+  activeClipForModal: null,
+  reviewFilter: 'all',
+  roster: getInitialRoster(),
+  clips: JSON.parse(JSON.stringify(MATCHES_DATA['game-1'].clips)),
+  auditLog: [],
+  deliveryManifest: []
+};
+
+// Helper: Get player by ID
+function getPlayer(id) {
+  return STATE.roster.find(p => p.id === id);
+}
+
+// 2. Navigation
+function navigateToScreen(screenNumber) {
+  if (screenNumber === 2 && !STATE.detectionRan) {
+    alert('Please run simulated moment detection first.');
+    return;
+  }
+
+  STATE.activeScreen = screenNumber;
+  document.querySelectorAll('.screen').forEach((el, idx) => {
+    el.classList.toggle('active', idx + 1 === screenNumber);
+  });
+  document.querySelectorAll('.nav-pill').forEach((el, idx) => {
+    el.classList.toggle('active', idx + 1 === screenNumber);
+  });
+
+  if (screenNumber === 2) {
+    renderReviewQueue();
+  } else if (screenNumber === 3) {
+    renderPreviewsAndPublishScreen();
+  }
+}
+
+// 3. Setup Screen Rendering
+function renderRosterTable() {
+  const tbody = document.getElementById('rosterTableBody');
+  tbody.innerHTML = '';
+
+  STATE.roster.forEach(player => {
+    let consentBadge = player.consent
+      ? `<span class="badge-status badge-ok">Verified</span>`
+      : `<span class="badge-status badge-err">Missing (FR-18)</span>`;
+
+    if (player.excluded) {
+      consentBadge = `<span class="badge-status badge-warn">Excluded (${player.exclusionReason})</span>`;
+    }
+
+    const recipientText = player.recipient
+      ? player.recipient
+      : `<span style="color:#ef4444; font-style:italic;">None (Missing mapping)</span>`;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="jersey-pill">#${player.jersey}</span></td>
+      <td><strong>${player.name}</strong></td>
+      <td>${recipientText}</td>
+      <td>${consentBadge}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const activeCount = STATE.roster.filter(p => !p.excluded).length;
+  document.getElementById('rosterCountBadge').innerText = `${activeCount} Active / ${STATE.roster.length} Total`;
+}
+
+function toggleRosterConfirm(isChecked) {
+  STATE.rosterConfirmed = isChecked;
+  document.getElementById('btnRunDetection').disabled = !isChecked;
+}
+
+function handleGameSelectChange() {
+  const sel = document.getElementById('gameSelect').value;
+  STATE.gameId = sel;
+  const matchInfo = MATCHES_DATA[sel];
+  const statusEl = document.getElementById('footageStatusVal');
+  statusEl.innerText = matchInfo.status;
+  statusEl.style.color = matchInfo.statusColor;
+  document.getElementById('matchAccountVal').innerText = matchInfo.account;
+
+  // Load appropriate clips
+  STATE.clips = JSON.parse(JSON.stringify(matchInfo.clips));
+}
+
+function handleStartOverMatch() {
+  if (confirm('Start over and reset match? This will clear all detection results, coach decisions, and previews.')) {
+    // Reset state completely
+    STATE.detectionRan = false;
+    STATE.isProcessing = false;
+    STATE.batchApproved = false;
+    STATE.isPublished = false;
+    STATE.simulatedDeliveryFailed = false;
+    STATE.roster = getInitialRoster();
+    STATE.clips = JSON.parse(JSON.stringify(MATCHES_DATA[STATE.gameId].clips));
+    STATE.auditLog = [];
+    STATE.deliveryManifest = [];
+
+    // Re-enable game dropdown
+    document.getElementById('gameSelect').disabled = false;
+    document.getElementById('btnStartOver').style.display = 'none';
+    document.getElementById('deliveryResultsCard').style.display = 'none';
+
+    logAudit(`MATCH_RESET: State reset for match ${STATE.gameId}`);
+    renderRosterTable();
+    navigateToScreen(1);
+  }
+}
+
+// 4. Simulated AI Detection (FR-24)
+function runSimulatedDetection() {
+  if (!STATE.rosterConfirmed) {
+    alert('Please confirm the roster first.');
+    return;
+  }
+
+  STATE.isProcessing = true;
+  document.getElementById('detectionActionBox').style.display = 'none';
+  document.getElementById('detectionProcessing').style.display = 'flex';
+  document.getElementById('gameSelect').disabled = true; // Lock game selection during review
+  document.getElementById('btnStartOver').style.display = 'inline-flex';
+
+  const isGame2 = STATE.gameId === 'game-2';
+  const steps = isGame2 ? [
+    'Scanning footage frames (68 min, raw unindexed)...',
+    'Analyzing audio-visual stream for athlete jersey bounding...',
+    'Zero moment detections matched against confirmed roster.',
+    'Simulated AI detection complete. 0 candidate clips extracted (Empty State).'
+  ] : [
+    'Scanning footage frames (72 min, 1080p60)...',
+    'Detecting athlete jerseys and pitch coordinates...',
+    'Matching candidate numbers against confirmed roster...',
+    'Simulated AI detection complete. 11 candidate clips extracted.'
+  ];
+
+  let stepIdx = 0;
+  const interval = setInterval(() => {
+    stepIdx++;
+    if (stepIdx < steps.length) {
+      document.getElementById('processingStepText').innerText = steps[stepIdx];
+    } else {
+      clearInterval(interval);
+      STATE.isProcessing = false;
+      STATE.detectionRan = true;
+      document.getElementById('detectionProcessing').style.display = 'none';
+      document.getElementById('detectionActionBox').style.display = 'block';
+      document.getElementById('tabNav2').classList.add('completed');
+      navigateToScreen(2);
+    }
+  }, 350);
+}
+
+// 5. Synthetic Jersey Frame SVG Generator (FR-4, FR-15)
+function generateSyntheticFrameSVG(observedJersey, frameWidth, frameHeight) {
+  const numStr = String(observedJersey);
+  const isObscured = numStr.includes('Obscured');
+  const displayNumber = isObscured ? '?' : numStr;
+
+  return `
+    <svg width="100%" height="100%" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pitchGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#064e3b"/>
+          <stop offset="100%" stop-color="#022c22"/>
+        </linearGradient>
+        <linearGradient id="jerseyGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1e3a8a"/>
+          <stop offset="100%" stop-color="#172554"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background: Simulated Pitch -->
+      <rect width="320" height="140" fill="url(#pitchGrad)"/>
+      <line x1="0" y1="90" x2="320" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+      <ellipse cx="160" cy="90" rx="40" ry="25" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+
+      <!-- Synthetic Player Silhouette with Jersey -->
+      <circle cx="160" cy="30" r="10" fill="#fbcfe8"/>
+
+      <!-- Jersey Body -->
+      <path d="M 136 44 L 148 42 L 160 46 L 172 42 L 184 44 L 188 64 L 178 66 L 178 94 L 142 94 L 142 66 L 132 64 Z"
+            fill="url(#jerseyGrad)" stroke="#3b82f6" stroke-width="1.5"/>
+
+      <!-- Gold Trim on Collar -->
+      <path d="M 152 44 Q 160 50 168 44" fill="none" stroke="#fbbf24" stroke-width="2"/>
+
+      <!-- Jersey Number Visibly Rendered -->
+      <text x="160" y="78"
+            font-family="system-ui, -apple-system, sans-serif"
+            font-size="28"
+            font-weight="900"
+            fill="#ffffff"
+            text-anchor="middle"
+            dominant-baseline="middle"
+            letter-spacing="-1">
+        ${displayNumber}
+      </text>
+
+      ${isObscured ? `
+        <rect x="146" y="58" width="28" height="28" fill="rgba(0,0,0,0.5)" filter="blur(2px)"/>
+      ` : ''}
+
+      <rect x="0" y="132" width="320" height="8" fill="#065f46"/>
+    </svg>
+  `;
+}
+
+// 6. Review Assignments Screen (Steps 3 & 4)
+function renderReviewQueue() {
+  const container = document.getElementById('clipsReviewContainer');
+  container.innerHTML = '';
+
+  // Empty state handling for Game 2 or games with 0 clips
+  if (STATE.clips.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="text-align: center; padding: 24px; gap: 8px;">
+        <div style="font-size: 15px; font-weight: 700; color: #f8fafc;">No Moments Detected (Empty State)</div>
+        <div style="font-size: 12px; color: var(--text-muted);">
+          Raw footage analysis yielded zero verified athlete highlights. All roster children will receive weekly recaps with an honest no-highlight state.
+        </div>
+      </div>
+    `;
+    updateReviewCounts();
+    return;
+  }
+
+  const filteredClips = STATE.clips.filter(c => {
+    if (STATE.reviewFilter === 'unresolved') return c.status === 'unresolved';
+    if (STATE.reviewFilter === 'decided') return c.status !== 'unresolved';
+    return true;
+  });
+
+  filteredClips.forEach(clip => {
+    const card = document.createElement('div');
+    const isWrong14vs4 = clip.id === 'c2';
+    card.className = `clip-card ${isWrong14vs4 && clip.status === 'unresolved' ? 'highlight-wrong' : ''}`;
+
+    const assignedPlayer = getPlayer(clip.assignedPlayerId);
+    const proposedPlayer = getPlayer(clip.proposedPlayerId);
+
+    // Confidence class
+    let confClass = 'conf-high';
+    if (clip.confidence < 60) confClass = 'conf-low';
+    else if (clip.confidence < 85) confClass = 'conf-med';
+
+    // Status banner
+    let statusBannerHtml = '';
+    if (clip.status === 'confirmed') {
+      statusBannerHtml = `
+        <div class="decision-banner dec-confirmed">
+          <span>&check; Confirmed for <strong>${assignedPlayer.name} (#${assignedPlayer.jersey})</strong> (<span class="fr-tag">FR-7</span>)</span>
+          <button class="btn btn-secondary btn-sm" onclick="reopenClip('${clip.id}')" style="padding: 2px 6px; font-size: 10px;">Change</button>
+        </div>
+      `;
+    } else if (clip.status === 'reassigned') {
+      statusBannerHtml = `
+        <div class="decision-banner dec-reassigned">
+          <span>&orarr; Reassigned to <strong>${assignedPlayer.name} (#${assignedPlayer.jersey})</strong> (<span class="fr-tag">FR-8</span>)</span>
+          <button class="btn btn-secondary btn-sm" onclick="reopenClip('${clip.id}')" style="padding: 2px 6px; font-size: 10px;">Change</button>
+        </div>
+      `;
+    } else if (clip.status === 'removed') {
+      statusBannerHtml = `
+        <div class="decision-banner dec-removed">
+          <span>&times; Removed from all reels (${clip.removalReason || 'Excluded'}) (<span class="fr-tag">FR-9</span>, <span class="fr-tag">FR-11</span>)</span>
+          <button class="btn btn-secondary btn-sm" onclick="reopenClip('${clip.id}')" style="padding: 2px 6px; font-size: 10px;">Undo</button>
+        </div>
+      `;
+    }
+
+    // Individual action controls only (every clip requires explicit decision)
+    let actionsHtml = '';
+    if (clip.status === 'unresolved') {
+      actionsHtml = `
+        <div class="clip-actions">
+          <button class="btn btn-sm" style="background:#059669;" onclick="confirmClip('${clip.id}')">
+            &check; Confirm (<span class="fr-tag">FR-7</span>)
+          </button>
+          <button class="btn btn-sm" style="background:#2563eb;" onclick="openReassignModal('${clip.id}')">
+            &orarr; Reassign (<span class="fr-tag">FR-8</span>)
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="openRemoveModal('${clip.id}')">
+            &times; Remove (<span class="fr-tag">FR-9</span>)
+          </button>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="clip-header">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="clip-time">${clip.time}</span>
+          <span style="font-size:11px; color:var(--text-muted);">&bull; ${clip.duration}</span>
+          ${isWrong14vs4 ? `<span class="fr-tag" style="background:#b45309; border-color:#f59e0b;">Must-Show Mixup</span>` : ''}
+        </div>
+        <div>
+          <span class="fr-tag tag-ai">Simulated AI</span>
+          <span class="confidence-meter ${confClass}">
+            ${clip.confidence}% Conf
+          </span>
+        </div>
+      </div>
+
+      <!-- VISIBLE SYNTHETIC JERSEY FRAME -->
+      <div class="synthetic-frame-box" aria-label="Simulated frame showing jersey ${clip.observedJersey}">
+        <span class="frame-watermark">[MOCKED FRAME &bull; FR-4]</span>
+        ${generateSyntheticFrameSVG(clip.observedJersey, 320, 140)}
+        <span class="frame-obs-tag">Observed Jersey: #${clip.observedJersey}</span>
+      </div>
+
+      <div style="font-size: 12px; color: #f8fafc;">
+        ${clip.description}
+      </div>
+
+      <div class="clip-meta-grid">
+        <div>
+          <div class="meta-item-label">AI Initial Proposal (<span class="fr-tag tag-sim">FR-4</span>)</div>
+          <div class="meta-item-val">${proposedPlayer.name} (#${proposedPlayer.jersey})</div>
+        </div>
+        <div>
+          <div class="meta-item-label">Current Assignment</div>
+          <div class="meta-item-val" style="color: ${clip.status === 'unresolved' ? '#f59e0b' : '#38bdf8'};">
+            ${clip.status === 'removed' ? 'None (Removed)' : `${assignedPlayer.name} (#${assignedPlayer.jersey})`}
+          </div>
+        </div>
+      </div>
+
+      ${statusBannerHtml}
+      ${actionsHtml}
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateReviewCounts();
+}
+
+function updateReviewCounts() {
+  const total = STATE.clips.length;
+  const unresolved = STATE.clips.filter(c => c.status === 'unresolved').length;
+  const decided = total - unresolved;
+
+  document.getElementById('reviewedCounter').innerText = `${decided} of ${total} reviewed`;
+  document.getElementById('reviewProgressBar').style.width = total > 0 ? `${(decided / total) * 100}%` : '100%';
+  document.getElementById('btnFilterAllCount').innerText = total;
+  document.getElementById('btnFilterUnresCount').innerText = unresolved;
+  document.getElementById('btnFilterDecidedCount').innerText = decided;
+
+  const unresBadge = document.getElementById('unresolvedBadge');
+  if (unresolved === 0) {
+    unresBadge.className = 'badge-status badge-ok';
+    unresBadge.innerText = 'All Decided';
+  } else {
+    unresBadge.className = 'badge-status badge-warn';
+    unresBadge.innerText = `${unresolved} Unresolved`;
+  }
+
+  document.getElementById('auditCount').innerText = STATE.auditLog.length;
+}
+
+function filterReviewList(filter) {
+  STATE.reviewFilter = filter;
+  renderReviewQueue();
+}
+
+// 7. Coach Actions (FR-7, FR-8, FR-9, FR-10, FR-11, FR-20)
+function invalidateApproval(reason) {
+  if (STATE.batchApproved) {
+    STATE.batchApproved = false;
+    logAudit(`APPROVAL_INVALIDATED: Batch re-approval required due to ${reason} (FR-20)`);
+  }
+}
+
+function confirmClip(clipId) {
+  const clip = STATE.clips.find(c => c.id === clipId);
+  if (!clip) return;
+
+  clip.status = 'confirmed';
+  clip.removalReason = null;
+  invalidateApproval(`confirmation of clip ${clip.time}`);
+
+  const p = getPlayer(clip.assignedPlayerId);
+  logAudit(`CONFIRM: Clip ${clip.time} confirmed for ${p.name} (#${p.jersey}) [FR-7]`);
+  renderReviewQueue();
+}
+
+function openReassignModal(clipId) {
+  STATE.activeClipForModal = clipId;
+  const clip = STATE.clips.find(c => c.id === clipId);
+
+  const select = document.getElementById('reassignPlayerSelect');
+  select.innerHTML = '';
+
+  STATE.roster.forEach(player => {
+    const opt = document.createElement('option');
+    opt.value = player.id;
+    opt.innerText = `#${player.jersey} ${player.name}`;
+    if (clip.id === 'c2' && player.jersey === 4) {
+      opt.selected = true; // Pre-select Liam #4 for the 14 vs 4 edge case
+    } else if (player.id === clip.assignedPlayerId) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  });
+
+  const notesInput = document.getElementById('reassignNotes');
+  if (clip.id === 'c2') {
+    notesInput.value = 'Synthetic frame visibly shows jersey #4 Liam T.';
+  } else {
+    notesInput.value = '';
+  }
+
+  openModal('reassignModal');
+}
+
+function executeReassignment() {
+  const clipId = STATE.activeClipForModal;
+  const clip = STATE.clips.find(c => c.id === clipId);
+  if (!clip) return;
+
+  const newPlayerId = document.getElementById('reassignPlayerSelect').value;
+  const note = document.getElementById('reassignNotes').value;
+  const oldPlayer = getPlayer(clip.assignedPlayerId);
+  const newPlayer = getPlayer(newPlayerId);
+
+  clip.assignedPlayerId = newPlayerId;
+  clip.status = 'reassigned';
+  clip.removalReason = null;
+  clip.notes = note;
+
+  invalidateApproval(`reassignment of clip ${clip.time} to ${newPlayer.name}`);
+  logAudit(`REASSIGN: Clip ${clip.time} changed from ${oldPlayer.name} (#${oldPlayer.jersey}) -> ${newPlayer.name} (#${newPlayer.jersey}). Note: "${note}" [FR-8, FR-10]`);
+
+  closeModal('reassignModal');
+  renderReviewQueue();
+}
+
+function openRemoveModal(clipId) {
+  STATE.activeClipForModal = clipId;
+  openModal('removeModal');
+}
+
+function executeRemoval() {
+  const clipId = STATE.activeClipForModal;
+  const clip = STATE.clips.find(c => c.id === clipId);
+  if (!clip) return;
+
+  const reason = document.getElementById('removeReasonSelect').value;
+  clip.status = 'removed';
+  clip.removalReason = reason;
+
+  invalidateApproval(`removal of clip ${clip.time}`);
+  logAudit(`REMOVE: Clip ${clip.time} removed. Reason: "${reason}" [FR-9, FR-11]`);
+
+  closeModal('removeModal');
+  renderReviewQueue();
+}
+
+function reopenClip(clipId) {
+  const clip = STATE.clips.find(c => c.id === clipId);
+  if (!clip) return;
+
+  clip.status = 'unresolved';
+  invalidateApproval(`reopening clip ${clip.time}`);
+  logAudit(`REOPEN: Clip ${clip.time} marked back to unresolved [FR-6]`);
+  renderReviewQueue();
+}
+
+// Audit logger (FR-10)
+function logAudit(actionText) {
+  const time = new Date().toLocaleTimeString();
+  STATE.auditLog.unshift(`[${time}] Coach Alex: ${actionText}`);
+
+  const container = document.getElementById('auditList');
+  container.innerHTML = '';
+  STATE.auditLog.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'audit-entry';
+    div.innerText = entry;
+    container.appendChild(div);
+  });
+  document.getElementById('auditCount').innerText = STATE.auditLog.length;
+}
+
+function toggleAuditDrawer() {
+  const box = document.getElementById('auditContentBox');
+  const icon = document.getElementById('auditToggleIcon');
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+    icon.innerHTML = '&blacktriangle; Hide';
+  } else {
+    box.style.display = 'none';
+    icon.innerHTML = '&blacktriangledown; Show';
+  }
+}
+
+function handleGoToPreview() {
+  navigateToScreen(3);
+}
+
+// 8. Screen 3: Previews, Batch Validation & Publishing (Steps 5 & 6)
+function renderPreviewsAndPublishScreen() {
+  const container = document.getElementById('reelsPreviewList');
+  container.innerHTML = '';
+
+  const activePlayers = STATE.roster.filter(p => !p.excluded);
+  const excludedPlayers = STATE.roster.filter(p => p.excluded);
+
+  document.getElementById('metaTotalRoster').innerText = `${STATE.roster.length} Players`;
+  document.getElementById('metaIncludedCount').innerText = `${activePlayers.length} Players`;
+  document.getElementById('metaExcludedCount').innerText = `${excludedPlayers.length} Players`;
+
+  let zeroHighlightCount = 0;
+
+  activePlayers.forEach(player => {
+    // Only confirmed or reassigned clips count (FR-12)
+    const playerClips = STATE.clips.filter(c =>
+      (c.status === 'confirmed' || c.status === 'reassigned') &&
+      c.assignedPlayerId === player.id
+    );
+
+    const hasClips = playerClips.length > 0;
+    if (!hasClips) zeroHighlightCount++;
+
+    const card = document.createElement('div');
+    card.className = 'reel-card';
+
+    // Thumbnail generation follows corrected assignment (FR-15)
+    let thumbHtml = '';
+    if (hasClips) {
+      const firstClip = playerClips[0];
+      thumbHtml = `
+        <div class="reel-thumb" title="Clip ${firstClip.time}">
+          ${generateSyntheticFrameSVG(player.jersey, 68, 68)}
+        </div>
+      `;
+    } else {
+      thumbHtml = `
+        <div class="reel-thumb" style="background:#1e293b; color:#64748b; font-size:10px; text-align:center; padding:4px;">
+          No Clips (FR-13)
+        </div>
+      `;
+    }
+
+    let bodyHtml = '';
+    if (hasClips) {
+      const timestamps = playerClips.map(c => c.time).join(', ');
+      bodyHtml = `
+        <div class="reel-player-name">
+          <span class="jersey-pill">#${player.jersey}</span> ${player.name}
+          <span class="badge-status badge-ok">${playerClips.length} Clip${playerClips.length > 1 ? 's' : ''}</span>
+        </div>
+        <div class="reel-meta">
+          Authorized Recipient: <strong>${player.recipient || 'None'}</strong>
+        </div>
+        <div class="reel-meta" style="color: #38bdf8;">
+          Timestamps: [${timestamps}] &bull; FR-14 Reel Ready
+        </div>
+      `;
+    } else {
+      // HONEST NO-HIGHLIGHT STATE (FR-13)
+      bodyHtml = `
+        <div class="reel-player-name">
+          <span class="jersey-pill">#${player.jersey}</span> ${player.name}
+          <span class="badge-status" style="background:#334155; color:#94a3b8;">0 Highlights</span>
+        </div>
+        <div class="zero-highlight-box">
+          <strong><span class="fr-tag">FR-13</span> Honest No-Highlight State:</strong>
+          <span>Zero clips confirmed. No clips from other children have been substituted. Authorized guardian (${player.recipient || 'Unspecified'}) will receive weekly team recap only.</span>
+        </div>
+      `;
+    }
+
+    card.innerHTML = thumbHtml + `<div class="reel-details">${bodyHtml}</div>`;
+    container.appendChild(card);
+  });
+
+  // Dynamic zero-highlight identification
+  const zeroKids = activePlayers.filter(p => {
+    const count = STATE.clips.filter(c => (c.status === 'confirmed' || c.status === 'reassigned') && c.assignedPlayerId === p.id).length;
+    return count === 0;
+  });
+
+  const unresolvedCount = STATE.clips.filter(c => c.status === 'unresolved').length;
+  if (unresolvedCount > 0) {
+    document.getElementById('metaZeroCount').innerText = `${zeroKids.length} (Review in progress)`;
+  } else if (zeroKids.length === 0) {
+    document.getElementById('metaZeroCount').innerText = '0';
+  } else if (zeroKids.length === 1) {
+    document.getElementById('metaZeroCount').innerText = `1 (${zeroKids[0].name})`;
+  } else {
+    document.getElementById('metaZeroCount').innerText = `${zeroKids.length} (${zeroKids.map(k => k.name).join(', ')})`;
+  }
+
+  evaluatePublicationGates();
+}
+
+// Batch Validation Preflight Engine (FR-17, FR-18, FR-19, FR-21)
+function getBatchPreflightErrors() {
+  const errors = [];
+
+  if (!STATE.detectionRan || STATE.isProcessing) {
+    errors.push('Detection pipeline has not finished processing (FR-19).');
+  }
+
+  if (!STATE.rosterConfirmed) {
+    errors.push('Team roster identity mappings have not been confirmed by coach (FR-3).');
+  }
+
+  const unresolvedClips = STATE.clips.filter(c => c.status === 'unresolved');
+  if (unresolvedClips.length > 0) {
+    errors.push(`${unresolvedClips.length} assignment(s) remain unresolved (FR-17). Every clip requires an explicit coach decision.`);
+  }
+
+  const invalidChildren = STATE.roster.filter(p => !p.excluded && (!p.consent || !p.recipient));
+  if (invalidChildren.length > 0) {
+    const names = invalidChildren.map(p => `${p.name} (#${p.jersey})`).join(', ');
+    errors.push(`Included child ${names} has missing guardian consent or missing recipient mapping (FR-18).`);
+  }
+
+  if (!STATE.batchApproved) {
+    errors.push('Current batch previews have not been approved by coach (FR-16, FR-20, FR-21).');
+  }
+
+  return errors;
+}
+
+function evaluatePublicationGates() {
+  const gateBanner = document.getElementById('publicationGateBanner');
+  const btnPublish = document.getElementById('btnPublishBatch');
+  const btnApprove = document.getElementById('btnApproveBatch');
+  const sofiaCard = document.getElementById('sofiaResolutionCard');
+
+  const invalidConsentPlayers = STATE.roster.filter(p => !p.excluded && (!p.consent || !p.recipient));
+  const sofiaNeedsResolution = invalidConsentPlayers.some(p => p.id === 'p9');
+  sofiaCard.style.display = sofiaNeedsResolution ? 'flex' : 'none';
+
+  const preflightErrors = getBatchPreflightErrors();
+  const hardBlockers = preflightErrors.filter(e => !e.includes('previews have not been approved'));
+
+  if (hardBlockers.length > 0) {
+    gateBanner.style.display = 'flex';
+    gateBanner.className = 'banner banner-danger';
+    gateBanner.innerHTML = `<div><strong>Publication Blocked:</strong><br>${hardBlockers.join('<br>')}</div>`;
+    btnPublish.disabled = true;
+    btnApprove.disabled = true;
+    document.getElementById('batchApprovalBadge').className = 'badge-status badge-err';
+    document.getElementById('batchApprovalBadge').innerText = 'Blocked by Gates';
+  } else {
+    if (!STATE.batchApproved) {
+      gateBanner.style.display = 'flex';
+      gateBanner.className = 'banner banner-warning';
+      gateBanner.innerHTML = `<div><strong><span class="fr-tag">FR-16 Pending:</span> Pre-publication batch approval required. Verify reels and click "Approve Current Previews" below.</strong></div>`;
+      btnPublish.disabled = true;
+      btnApprove.disabled = false;
+      document.getElementById('batchApprovalBadge').className = 'badge-status badge-warn';
+      document.getElementById('batchApprovalBadge').innerText = 'Pending Coach Approval';
+    } else {
+      gateBanner.style.display = 'flex';
+      gateBanner.className = 'banner banner-info';
+      gateBanner.innerHTML = `<div><strong>&check; <span class="fr-tag">FR-21 Validated:</span> All gates passed. Batch approved and ready for simulated publication.</strong></div>`;
+      btnPublish.disabled = STATE.isPublished;
+      btnApprove.disabled = true;
+      document.getElementById('batchApprovalBadge').className = 'badge-status badge-ok';
+      document.getElementById('batchApprovalBadge').innerText = 'Approved for Release';
+    }
+  }
+}
+
+// Sofia Synthetic Test Controls (FR-18)
+function resolveSofiaConsent() {
+  const sofia = STATE.roster.find(p => p.id === 'p9');
+  if (!sofia) return;
+
+  sofia.consent = true;
+  sofia.recipient = 'sofia.h@parent.org';
+  sofia.excluded = false;
+
+  invalidateApproval('guardian consent addition for Sofia H.');
+  logAudit(`CONSENT_SIMULATED: Recorded synthetic verified consent and recipient for Sofia H. (#12) [FR-3, FR-18]`);
+
+  renderRosterTable();
+  renderPreviewsAndPublishScreen();
+}
+
+function excludeSofiaFromBatch() {
+  const sofia = STATE.roster.find(p => p.id === 'p9');
+  if (!sofia) return;
+
+  sofia.excluded = true;
+  sofia.exclusionReason = 'Missing consent / opt-out';
+
+  invalidateApproval('explicit eligibility exclusion of Sofia H.');
+  logAudit(`ELIGIBILITY_EXCLUSION_SIMULATED: Sofia H. (#12) explicitly excluded from batch delivery. Reason: "Opt-out / Missing consent on file" [FR-10, FR-18, FR-20]`);
+
+  renderRosterTable();
+  renderPreviewsAndPublishScreen();
+}
+
+function handleApproveBatch() {
+  // Re-verify that hard blockers are clear before allowing approval
+  const unresolvedClips = STATE.clips.filter(c => c.status === 'unresolved');
+  const invalidConsentPlayers = STATE.roster.filter(p => !p.excluded && (!p.consent || !p.recipient));
+
+  if (unresolvedClips.length > 0 || invalidConsentPlayers.length > 0) {
+    alert('Cannot approve batch: Resolve all clip assignments and consent blockers first.');
+    return;
+  }
+
+  STATE.batchApproved = true;
+  logAudit(`BATCH_APPROVED: Coach Alex approved child reel previews and recipient lists [FR-16, FR-21]`);
+  evaluatePublicationGates();
+}
+
+// 9. Batch Publication & Simulated Delivery (FR-21, FR-22, FR-23, FR-24)
+function handlePublishBatch() {
+  // 1. Idempotency protection against duplicate delivery (FR-22)
+  if (STATE.isPublished) {
+    alert('Duplicate Delivery Blocked (FR-22): Batch has already been published. Idempotency key prevents resending.');
+    return;
+  }
+
+  // 2. Preflight revalidation inside publish action before changing state or dispatching (FR-21)
+  const preflightErrors = getBatchPreflightErrors();
+  if (preflightErrors.length > 0) {
+    alert('Publication Blocked (FR-21):\n\n' + preflightErrors.join('\n'));
+    evaluatePublicationGates();
+    return;
+  }
+
+  STATE.isPublished = true;
+  logAudit(`PUBLICATION_EXECUTED: Batch published to authorized guardians [FR-21, FR-24]`);
+
+  // Build delivery manifest
+  STATE.deliveryManifest = [];
+  const activePlayers = STATE.roster.filter(p => !p.excluded);
+
+  activePlayers.forEach(player => {
+    const isSimulatedFail = STATE.simulatedDeliveryFailed && player.id === 'p1'; // Lucas M. fails in test mode
+    STATE.deliveryManifest.push({
+      playerId: player.id,
+      playerName: player.name,
+      jersey: player.jersey,
+      recipient: player.recipient,
+      status: isSimulatedFail ? 'failed' : 'delivered',
+      error: isSimulatedFail ? 'SMS Gateway Timeout (Simulated)' : null,
+      timestamp: new Date().toLocaleTimeString()
+    });
+  });
+
+  renderDeliveryResultsUI();
+  evaluatePublicationGates();
+}
+
+function renderDeliveryResultsUI() {
+  const deliveryCard = document.getElementById('deliveryResultsCard');
+  const dispatchLog = document.getElementById('deliveryDispatchLog');
+  const summaryText = document.getElementById('deliverySummaryText');
+  const retryBox = document.getElementById('retryBox');
+
+  deliveryCard.style.display = 'flex';
+  dispatchLog.innerHTML = '';
+
+  const failedItems = STATE.deliveryManifest.filter(d => d.status === 'failed');
+  const deliveredItems = STATE.deliveryManifest.filter(d => d.status === 'delivered');
+
+  STATE.deliveryManifest.forEach(item => {
+    const logRow = document.createElement('div');
+    logRow.className = 'audit-entry';
+    if (item.status === 'failed') {
+      logRow.innerHTML = `[${item.timestamp}] Recipient: ${item.recipient} (#${item.jersey} ${item.playerName}) &rarr; <span style="color:#ef4444; font-weight:700;">FAILED (${item.error}) [FR-23]</span>`;
+    } else {
+      logRow.innerHTML = `[${item.timestamp}] Recipient: ${item.recipient} (#${item.jersey} ${item.playerName}) &rarr; <span style="color:#10b981; font-weight:700;">DELIVERED (SIMULATED)</span>`;
+    }
+    dispatchLog.appendChild(logRow);
+  });
+
+  if (failedItems.length > 0) {
+    summaryText.innerHTML = `Batch completed with <strong>${failedItems.length} failed delivery</strong>. Click retry below (<span class="fr-tag">FR-23</span>).`;
+    retryBox.style.display = 'block';
+  } else {
+    // Honest simulated-delivery wording explaining QA audit
+    summaryText.innerHTML = `Batch simulated dispatch complete for <strong>${deliveredItems.length} authorized recipient(s)</strong>. Notice: Coach confirmation does not establish ground-truth accuracy; independent pilot QA audit determines correctness.`;
+    retryBox.style.display = 'none';
+  }
+}
+
+function toggleSimulatedFailure() {
+  STATE.simulatedDeliveryFailed = !STATE.simulatedDeliveryFailed;
+  updateSimulatedFailureButtonUI();
+}
+
+function updateSimulatedFailureButtonUI() {
+  const btn = document.getElementById('btnToggleSimFailure');
+  if (STATE.simulatedDeliveryFailed) {
+    btn.innerText = 'Fail Mode: ON (Lucas M)';
+    btn.className = 'btn btn-danger btn-sm';
+  } else {
+    btn.innerText = 'Fail Mode: OFF';
+    btn.className = 'btn btn-secondary btn-sm';
+  }
+}
+
+// Retry only failed recipients, preserving successful deliveries (FR-23)
+function retryFailedDeliveries() {
+  const failedItems = STATE.deliveryManifest.filter(d => d.status === 'failed');
+  if (failedItems.length === 0) return;
+
+  // Recheck authorization and current manifest before retry
+  for (const item of failedItems) {
+    const player = getPlayer(item.playerId);
+    if (!player || player.excluded || !player.consent || !player.recipient) {
+      alert(`Retry Blocked: Child ${item.playerName} is no longer authorized or missing valid consent/recipient mapping.`);
+      return;
+    }
+  }
+
+  // Retry ONLY failed recipients; preserve existing successful deliveries
+  const retryTime = new Date().toLocaleTimeString();
+  failedItems.forEach(item => {
+    item.status = 'delivered';
+    item.error = null;
+    item.timestamp = retryTime + ' (Retry)';
+  });
+
+  // Clear simulated failure flag and update toggle UI cleanly
+  STATE.simulatedDeliveryFailed = false;
+  updateSimulatedFailureButtonUI();
+
+  logAudit(`RETRY_EXECUTED: Retried ${failedItems.length} failed delivery record(s) [FR-23]`);
+  renderDeliveryResultsUI();
+}
+
+// Modal management
+function openModal(modalId) {
+  const m = document.getElementById(modalId);
+  if (m) m.style.display = 'flex';
+}
+
+function closeModal(modalId) {
+  const m = document.getElementById(modalId);
+  if (m) m.style.display = 'none';
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  renderRosterTable();
+});
+</script>
+</body>
+</html>
