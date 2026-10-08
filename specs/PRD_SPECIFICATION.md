@@ -14,7 +14,7 @@
 **TouchlineAI** is an AI-powered sports highlights platform designed to detect, tag, and deliver personalized game clips of youth athletes directly to verified guardians. 
 
 ### Core Architectural Principle
-**Zero Unvetted Autonomous Publication.** Computer vision models operating on wide-angle, low-elevation, single-camera youth sports footage encounter severe visual degradation: motion blur, occlusion, fabric folds, and low OCR resolution. High-confidence model predictions frequently misidentify similar jersey numbers (e.g., classifying a jersey #4 as jersey #14 at 94% confidence). 
+**Zero Unvetted Autonomous Publication.** Field footage in youth sports frequently presents severe visual ambiguity where similar jersey numbers are confused. While factors like motion blur, occlusion, fabric folds, and perspective warp remain hypothesized computer vision edge cases, the empirical incident tickets demonstrate that high-confidence model predictions misidentify similar jersey numbers (e.g., classifying a jersey #4 as jersey #14 at 94% confidence) regardless of underlying technical causes. 
 
 To ensure absolute safeguarding and prevent humiliating or distressing wrong-child deliveries:
 1. **Mandatory Human-in-the-Loop (HITL):** Every proposed highlight assignment—regardless of reported model confidence—must be explicitly confirmed, reassigned, or removed by the team's verified coach before publication.
@@ -31,7 +31,7 @@ Youth sports video platforms face an existential tension between viral engagemen
 |---|---|---|
 | **Tier-1 Academy Ticket #1** | Jersey #4 highlight delivered into Jersey #14's personal reel. | Digits with common stroke morphology (4 vs 14) suffer severe false positives; human review must verify focal identity. |
 | **Brightwater SC Tickets #2 & #3** | Two separate wrong-child reel deliveries involving similar jersey numbers (#1 vs #11, #7 vs #17). | Misattribution is a structural CV limitation, not an isolated edge case. |
-| **Cobblestone FC Ticket #4** | Player #11 clip assigned to Player #1. | Number similarity combined with perspective warp consistently defeats uncalibrated OCR. |
+| **Cobblestone FC Ticket #4** | Player #11 clip assigned to Player #1. | Recurrence of similar jersey numbers (#1 vs #11); while optical factors like perspective warp or OCR segmentation errors are hypothesized computer vision edge cases, the empirical evidence confirms recurring identity misattribution requiring human review. |
 | **Analytics Log Telemetry** | 30% of generated recap reels remain unopened; wrong-child thumbnail attribution flagged as a major churn driver. | Delivering clips of other people's children breaks parent trust and drives immediate engagement drop-off. |
 
 ### The Denominator Reality Check
@@ -42,7 +42,7 @@ While marketing dashboards highlighted a **92% share rate**, this metric was com
 ## 3. Goals & Explicit Non-Goals
 
 ### Goals
-- **G-1 (Attribution Integrity):** Ensure 100% of published video clips delivered to a guardian contain only their authorized child as the focal participant.
+- **G-1 (Attribution Integrity):** Phased pilot rollout establishing baseline safety and measuring coach review burden, targeting zero unreviewed child misattributions in published reels.
 - **G-2 (Safeguarding Compliance):** Enforce strict COPPA/GDPR-K guardian consent gates prior to any asset distribution.
 - **G-3 (Coach Ergonomics):** Deliver a frictionless, mobile-first (375px viewport) review interface enabling full roster verification in under 5 minutes per match.
 - **G-4 (Delivery Transparency):** Provide unambiguous visibility into delivery states, supporting idempotent retry of failed transport destinations without duplicate delivery.
@@ -246,11 +246,12 @@ Rather than attempting full automation on degraded video, TouchlineAI uses activ
         ▼
 [ Jersey OCR & Re-ID Feature Extraction ]
         │
-        ├── Confidence >= 0.80 ──► Route to Coach Match Review (Defaults to Proposed)
-        │                          (Coach must still 1-click confirm)
+        ├── Confidence >= 0.90 ──► Auto-Validated Candidate (High Confidence)
+        │
+        ├── Confidence 0.80–0.90 ─► Held for secondary QA / Delayed release queue
         │
         └── Confidence < 0.80 ───► Route to Exception Triage ("Needs Identification")
-            (or OCR Ambiguity)      (Forces explicit selection or removal)
+            (or Ambiguous Numbers)  (Forces explicit selection or removal)
 ```
 
 ### Processing Readiness Contract
@@ -369,6 +370,7 @@ Phase 2: Regional League Expansion (15 Clubs)
         ▼ (After Model Baseline Validation)
 Phase 3: General Availability (Active Learning Exception Routing)
   ├── Automated Publication for Confidence >= 0.90
+  ├── 0.80–0.90: Held for secondary QA / Delayed release queue
   ├── Mandatory Review for Exception Queue (< 0.80)
   └── Continuous Fine-Tuning Pipeline
 ```

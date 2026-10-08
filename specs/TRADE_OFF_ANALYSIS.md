@@ -109,12 +109,12 @@ Yielding to the partner's demand to divert engineering to build live streaming w
 Rather than an outright refusal, we established a **Value Protection Negotiation Strategy**:
 
 ### Script & Communication Blueprint for Enterprise Club Executive
-> *"We hear your board's desire to offer sideline viewing to distant grandparents. However, our recent telemetry identified that 3 out of 10 parents at your academy are currently receiving highlight reels containing children that are not theirs—specifically confusing jersey #4 and #14.*
+> *"We hear your board's desire to offer sideline viewing to distant grandparents. However, customer support tickets have documented repeated wrong-child highlight attributions—specifically confusing jersey #4 and #14—while ~30% of generated reels remain unopened across the dashboard cohort.*
 >
 > *If we stream video live before solving child identity attribution and verified guardian gating, we risk broadcasting minors without parental consent directly onto the open internet.*
 >
 > *Here is our firm commitment:*
-> 1. *We are deploying our Human-in-the-Loop Roster Tagging system this week to guarantee 100% correct clips for all your academy parents.*
+> 1. *We are executing a phased pilot rollout establishing baseline safety and measuring coach review burden before any unmonitored expansion.*
 > 2. *By **October 15, 2026**, our solutions architecture team will deliver a formal feasibility assessment for integrating a dedicated third-party streaming SDK (e.g., LiveKit / Agora) for private parental viewing.*
 > 3. *We will not commit engineering build dates for custom streaming until the identity safety gates are fully operational."*
 
@@ -140,16 +140,14 @@ A classic trap in product management is confusing what customers *say* they want
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ REVEALED TELEMETRY (90-Day Telemetry across All Accounts)                   │
 │ [███                                         ] 6.0% Ever Opened Editor      │
-│ [                                            ] 0.058% Ever Completed an Edit│
+│ [                                            ] <0.06% Finished an Edit      │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Mathematical Breakdown
 - Total Survey Demand: 58% across 210 respondents.
-- Telemetry:
-  $$P(\text{Open Editor}) = 6.0\%$$
-  $$P(\text{Complete Edit} \mid \text{Open Editor}) < 1.0\%$$
-  $$\text{Full Funnel Completion} = 0.06 \times 0.0097 = 0.00058 \quad (< 0.06\%)$$
+- Telemetry: Usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%.
+  $$\text{Funnel Completion} = P(\text{Open Editor}) \times P(\text{Finish} \mid \text{Open Editor}) \le 0.06 \times 0.01 < 0.0006 \quad (< 0.06\%)$$
 
 ### Strategic Takeaway
 Parents fill out surveys saying they want editing features because they believe editing will fix the wrong clips. In reality, parents are busy; they have zero desire to scrub timelines on a 6-inch phone screen on Sunday afternoon. 

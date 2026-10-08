@@ -81,18 +81,17 @@ A quarterly customer survey across 40 youth sports clubs (n = 210 respondents) a
 Based on this, product teams proposed an 8-week initiative to build a desktop-class timeline editor.
 
 ### Telemetry Audit (Revealed Preference)
-We audited 90 days of production telemetry across all active parent accounts. The conversion funnel from generation to edit completion is deconstructed below:
+Usage data across active parent accounts over 90 days establishes clear revealed preference:
 
-| Funnel Stage | Event Definition | Conversion Rate | Step Drop-off |
-|---|---|---|---|
-| **Step 0: Eligible Generated Reels** | Base cohort | 100.0% | — |
-| **Step 1: Editor Entry** | `editor_session_started` | **6.00%** | -94.00% |
-| **Step 2: Tool Interaction** | `timeline_scrub` or `trim_applied` | 1.80% | -70.00% |
-| **Step 3: Save / Export** | `editor_export_completed` | **0.058%** | -96.78% |
+| Funnel Stage | Metric / Event | Telemetry Bound |
+|---|---|---|
+| **Editor Opening** | Opened the video editor (`editor_session_started`) | **6%** |
+| **Editor Completion** | Finished / exported edit among openers | **< 1%** |
+| **Full Funnel Completion** | Finished edit across all accounts ($0.06 \times <0.01$) | **< 0.06%** |
 
-$$\text{Full-Funnel Completion} = P(\text{Open}) \times P(\text{Complete} \mid \text{Open}) = 0.06 \times 0.0097 = \mathbf{0.00058 \quad (< 0.06\%)}$$
+Usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%.
 
-Fewer than **1 out of every 1,700 generated reels** ever completed an edit.
+$$\text{Funnel Completion} = P(\text{Open}) \times P(\text{Finish} \mid \text{Open}) \le 0.06 \times 0.01 < 0.0006 \quad (< 0.06\%)$$
 
 ### The Behavioral Explanation
 Parents stated a desire for editing because they received reels with bad clips (e.g., wrong child or 15 seconds of dead ball time). In their minds, editing was the only perceived mechanism to fix defects. 
@@ -113,14 +112,17 @@ $$\text{CCDR}_w = \frac{\sum_{i \in C_w} Y_i}{|C_w|}$$
 
 Where the binary success indicator $Y_i \in \{0, 1\}$ is defined as:
 
-$$Y_i = \prod_{g \in G_i} \left[ \mathbb{I}(\text{Delivered}_{i,g}) \land \mathbb{I}(\text{Audited}_{i,g}) \land \neg \mathbb{I}(\text{WrongChild}_{i,g}) \right] \times \mathbb{I}\left( \sum_{g \in G_i} \text{Clips}_{i,g} > 0 \lor \text{TrueZero}_{i} \right)$$
+$$Y_i = \prod_{g \in G_i} \left[ \mathbb{I}(\text{Delivered}_{i,g}) \land \mathbb{I}(\text{Audited}_{i,g}) \land \neg \mathbb{I}(\text{WrongChild}_{i,g}) \right] \times \mathbb{I}\left( \sum_{g \in G_i} \text{Clips}_{i,g} > 0 \right)$$
 
 Where:
 - $G_i$ is the set of required games played by child $i$ during game week $w$.
 - $\text{Delivered}_{i,g}$: Authorized delivery receipt confirmed before the 7-day cutoff.
 - $\text{Audited}_{i,g}$: Manifest independently inspected by QA.
 - $\text{WrongChild}_{i,g}$: Binary indicator of any misattributed clip in the delivered reel.
-- $\text{TrueZero}_{i}$: Verified condition that child $i$ genuinely had 0 eligible highlight moments across all games (honest empty state).
+- $\sum_{g \in G_i} \text{Clips}_{i,g} > 0$: Strict requirement of at least one nonempty correctly attributed highlight reel across the game week.
+
+> **Important Metric Alignment with PRD Specification:**
+> While a true-zero-highlight week is handled gracefully in the user experience (delivering an approved honest notice: *"No confirmed highlights for this game"* without fabricating synthetic filler), safe withholding does **NOT** count as a successful highlight delivery in the core metric numerator. An all-true-zero week remains counted in the denominator as an honest zero-highlight miss rather than a tagging failure, ensuring the primary metric strictly measures positive, verified highlight delivery.
 
 ### Denominator Integrity Rules
 1. **No Silent Drops:** An eligible rostered child cannot be removed from the denominator because the coach forgot to review clips or because video processing failed.

@@ -53,7 +53,7 @@ When deploying autonomous AI into sensitive consumer environments—specifically
 
 ## 🧠 The HITL Active Learning Architecture
 
-Computer vision on degraded, low-elevation, wide-angle sports video suffers from optical distortion, fabric wrinkles, occlusion, and motion blur. High model confidence does not guarantee attribution correctness.
+In single-camera youth sports footage, similar jersey numbers routinely lead to identity misattribution. While optical distortions and fabric wrinkles are hypothesized computer vision edge cases, empirical incident tickets demonstrate that high model confidence does not guarantee attribution correctness.
 
 TouchlineAI deploys an **Active Learning & Exception Routing Engine** that transitions from complete human oversight to automated triage:
 
@@ -88,6 +88,9 @@ TouchlineAI deploys an **Active Learning & Exception Routing Engine** that trans
 |                                                                             |
 |  [Raw Video] ──► [CV Detection] ──┬─► Confidence >= 0.90 ──► Auto-Validated*|
 |                                   │   (Clear OCR, 1 Face)                   |
+|                                   │                                         |
+|                                   ├─► 0.80–0.90: Held for secondary QA /    |
+|                                   │   Delayed release queue                 |
 |                                   │                                         |
 |                                   └─► Confidence < 0.80  ──► Coach Review   |
 |                                       (OCR Ambiguity,        Exception Queue|
@@ -128,19 +131,19 @@ A key failure mode in product analytics is relying on vanity metrics calculated 
 
 ### 1. The 92% Share Rate Vanity Trap
 * **The Dashboard Claim:** 92% of parents share their child's highlight reel.
-* **The Mathematical Reality:** The tracking event was instrumented only over **opened reels** ($D_{\text{opened}}$). Production logs revealed that **roughly 30% of generated reels were never opened**:
+* **The Mathematical Reality:** The tracking event was instrumented only over **opened reels** ($D_{\text{opened}}$). Production logs revealed that **~30% of generated reels remain unopened across the dashboard cohort**:
   
   $$S_{\text{effective}} = P(\text{Shared} \mid \text{Opened}) \cdot P(\text{Opened}) = 0.92 \times (1.0 - 0.30) = \mathbf{64.4\%}$$
 
-Delivering misattributed clips directly drives the 30% non-opening rate. Fixing identity attribution is the fastest lever to unlock the remaining 35.6% of unrealized reach.
+Fixing identity attribution and eliminating wrong-child thumbnails directly addresses a primary driver of unengaged and unopened reels across the cohort, unlocking the remaining 35.6% of unrealized reach.
 
 ### 2. Stated vs. Revealed Preference (The Video Editor Fallacy)
 * **Stated Survey Preference:** **58%** of 210 surveyed coaches and parents requested in-app editing and trimming tools.
-* **Revealed Production Telemetry:** In 90 days of telemetry across all active accounts:
+* **Revealed Production Telemetry:** In 90 days of telemetry across all active accounts, usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%:
   
-  $$\text{Full-Funnel Completion} = P(\text{Open Editor}) \times P(\text{Complete Edit} \mid \text{Open}) = 0.06 \times 0.0097 = \mathbf{0.058\% \quad (< 0.06\%)}$$
+  $$\text{Funnel Completion} = P(\text{Open Editor}) \times P(\text{Finish} \mid \text{Open Editor}) \le 0.06 \times 0.01 < 0.0006 \quad (< 0.06\%)$$
 
-Fewer than 1 in 1,700 generated reels ever completed an edit. Building desktop video tools would have wasted 8 engineering weeks on a phantom use case.
+Parents do not want to be video editors; building desktop video tools would have wasted 8 engineering weeks on a phantom use case.
 
 ### 3. North Star Metric: Correct-Child Delivery Rate (CCDR)
 $$\text{CCDR} = \frac{\sum_{i \in \text{Cohort}} \mathbb{I}(\text{Complete-Week Verified Delivery}_i)}{|\text{Eligible Weekly Cohort}|}$$
