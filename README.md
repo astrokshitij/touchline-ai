@@ -24,7 +24,7 @@ No install, no build, no network.
 1. Open `site/index.html` in a browser (double-click it), or run `python3 -m http.server -d site 8000` and visit `http://localhost:8000`.
 2. A narrow window or phone view (375px wide) is the intended layout. Wider windows also work.
 
-The hosted copy at <https://sidelinereel-kshitij.netlify.app> is the build from the assessment. It may not include the fixes in this repo.
+**Live portfolio:** <https://touchline-ai-kshitij.netlify.app> (prototype) and <https://touchline-ai-kshitij.netlify.app/case-study/> (case study). The live site is updated by deploying `site/`, not by pushing to GitHub, so it can lag behind this repo.
 
 ## Demo script (about 4 minutes)
 
