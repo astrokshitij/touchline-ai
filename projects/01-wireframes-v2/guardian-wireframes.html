@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TouchlineAI guardian and QA wireframes (spec-based)</title>
+<style>
+  :root{--bg:#F3F4F6;--surface:#fff;--alt:#F9FAFB;--border:#D1D5DB;--strong:#9CA3AF;--text:#111827;--muted:#6B7280;--primary:#2563EB;--primary-soft:#DBEAFE;--danger:#DC2626;--danger-soft:#FEE2E2;--warn:#B45309;--warn-soft:#FEF3C7;--ok:#047857;--ok-soft:#D1FAE5;--prop:#C026D3;--prop-soft:#FAE8FF;--canvas:#E5E7EB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--canvas);color:var(--text);line-height:1.4;padding:40px}
+  h1{font-size:30px;margin-bottom:6px} .lead{color:var(--muted);font-size:15px;max-width:900px;margin-bottom:28px}
+  .row{display:flex;flex-wrap:wrap;gap:64px;align-items:flex-start}
+  .col{width:375px;display:flex;flex-direction:column;gap:12px}
+  .col h2{font-size:16px} .col .sub{font-size:12px;color:var(--muted);margin-top:-8px}
+  .phone{position:relative;width:375px;background:var(--bg);border:1px solid var(--strong);border-radius:12px;overflow:hidden}
+  .top{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;gap:8px;align-items:center;font-weight:700;font-size:15px}
+  .logo{width:28px;height:28px;border-radius:6px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .body{padding:16px;display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .muted{color:var(--muted);font-size:12px} .small{font-size:11px}
+  .b{font-weight:700} .t14{font-size:14px;font-weight:700}
+  .frame{border:1px dashed var(--strong);background:var(--alt);border-radius:6px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .frame .big{font-size:34px;font-weight:700} .frame .cap{font-size:10px;color:var(--muted)}
+  .btn{display:flex;align-items:center;justify-content:center;border-radius:6px;padding:10px 14px;min-height:40px;font-weight:600;font-size:13px;border:1px solid var(--strong);background:var(--surface)}
+  .btn.p{background:var(--primary);border-color:var(--primary);color:#fff} .btn.d{background:var(--danger);border-color:var(--danger);color:#fff} .btn.x{background:var(--border);border-color:var(--border);color:var(--muted)}
+  .btns{display:flex;gap:8px} .btns .btn{flex:1}
+  .chip{display:inline-block;font-size:10px;font-weight:700;border-radius:6px;padding:2px 6px;background:var(--primary-soft);color:var(--primary)}
+  .chip.prop{background:var(--prop-soft);color:var(--prop)} .chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)}
+  .banner{border:1px solid;border-radius:8px;padding:12px;font-size:12px;display:flex;flex-direction:column;gap:4px}
+  .banner b{font-size:12px}.banner.info{background:var(--primary-soft);border-color:var(--primary)}.banner.warn{background:var(--warn-soft);border-color:var(--warn)}.banner.ok{background:var(--ok-soft);border-color:var(--ok)}.banner.prop{background:var(--prop-soft);border-color:var(--prop);color:var(--prop)}
+  .bubble{background:#fff;border:1px solid var(--border);border-radius:14px 14px 14px 4px;padding:10px 12px;font-size:13px;max-width:300px}
+  .email{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden}.email .h{padding:10px 12px;border-bottom:1px solid var(--border);background:var(--alt);font-size:12px}.email .c{padding:12px;display:flex;flex-direction:column;gap:8px;font-size:13px}
+  .scrim{position:absolute;inset:0;background:rgba(0,0,0,.5)} .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:14px 14px 0 0;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .opt{border:1px solid var(--strong);border-radius:8px;padding:12px;font-size:13px;font-weight:600}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mk{position:absolute;left:1px;width:22px;height:22px;border-radius:50%;background:var(--text);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}.mk.prop{background:var(--prop)}
+  .notes{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+  .notes .t{font-size:10px;font-weight:700;color:var(--muted)} .notes .n{display:flex;gap:8px;font-size:12px;line-height:1.45}.notes .n.prop{color:var(--prop)}
+  .notes .m{flex:none;width:20px;height:20px;border-radius:50%;background:var(--text);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}.notes .n.prop .m{background:var(--prop)}
+  .tag{display:inline-block;margin-bottom:24px;background:#fff;border:1px dashed var(--prop);color:var(--prop);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600}
+</style>
+</head>
+<body>
+<h1>Guardian and QA wireframes</h1>
+<p class="lead">Low-fidelity, 375px. These screens come from the PRD (roles, flow step 6, privacy section and failure mode 1). They are <b>not in the working prototype</b>. Magenta marks proposals that need a product decision. All names and data are fictional.</p>
+<div class="tag">Spec-based extension: not in the prototype</div>
+<div class="row">
+
+<!-- G1 -->
+<div class="col" id="g1"><h2>G1 · Notification</h2><div class="sub">SMS and email, sent only after publication</div>
+  <div class="phone" id="p1"><div class="top"><div class="brand"><div class="logo">T</div>Messages</div><span class="muted">simulated</span></div>
+  <div class="body">
+    <div class="muted small">SMS preview</div>
+    <div class="bubble">TouchlineAI: Liam’s highlights from the U12 game on Oct 5 are ready. View privately: touchline.example/r/8f3k2 &nbsp;·&nbsp; Reply STOP to opt out.</div>
+    <div class="muted small">Email preview</div>
+    <div class="email"><div class="h"><b>Subject:</b> Liam’s highlights from Oct 5 vs Summit FC</div>
+      <div class="c"><div>Hi, your child’s coach reviewed and approved these clips.</div><div class="frame" style="height:90px"><div class="big" style="font-size:22px">#4</div><div class="cap">first clip thumbnail</div></div>
+      <div class="btn p">View Liam’s highlights</div><div class="muted small">Private link. Sharing is off by default. <u>Opt out</u> · <u>Delete my child’s data</u></div></div></div>
+    <div class="mk" style="top:92px">1</div><div class="mk" style="top:296px">2</div><div class="mk prop" style="top:452px">3</div>
+  </div></div>
+  <div class="notes"><div class="t">ANNOTATIONS</div>
+    <div class="n"><span class="m">1</span><span>Sent only to the verified guardian of this child, only after the coach approved the batch (FR-18, FR-21).</span></div>
+    <div class="n"><span class="m">2</span><span>The link is private and token-protected. No social share buttons by default (PRD privacy section).</span></div>
+    <div class="n prop"><span class="m">3</span><span>PROPOSED: say “reviewed by your coach”, but never “100% correct”. Coach review is not proof of accuracy (the AI-use log rejected that claim).</span></div></div>
+</div>
+
+<!-- G2 -->
+<div class="col" id="g2"><h2>G2 · Reel view</h2><div class="sub">Own child’s confirmed clips only</div>
+  <div class="phone" id="p2"><div class="top"><div class="brand"><div class="logo">T</div>TouchlineAI</div><span class="muted">Private</span></div>
+  <div class="body">
+    <div class="card"><div class="t14">Liam T. · #4</div><div class="muted">U12 vs Summit FC · Oct 5, 2026</div></div>
+    <div class="card"><div class="frame"><div class="big">▶</div><div class="cap">clip player (simulated)</div></div>
+      <div class="t14" style="font-size:13px">14:22–14:33 · Right-foot strike on target</div><div class="muted">1 clip in this reel</div></div>
+    <div class="banner info"><b>Checked by Coach Alex before sending</b><span>Spot a clip that is not your child? Tell us and we will hide the reel while we look.</span></div>
+    <div class="btns"><div class="btn">Report a problem</div><div class="btn">Opt out</div></div>
+    <div class="mk" style="top:80px">1</div><div class="mk" style="top:340px">2</div><div class="mk" style="top:450px">3</div>
+  </div></div>
+  <div class="notes"><div class="t">ANNOTATIONS</div>
+    <div class="n"><span class="m">1</span><span>The reel is built only from clips confirmed for this child (FR-12). Thumbnail comes from the first confirmed clip (FR-15).</span></div>
+    <div class="n"><span class="m">2</span><span>A plain statement of what review happened, with no accuracy claim.</span></div>
+    <div class="n"><span class="m">3</span><span>Two always-visible exits: report a problem, and opt out or request deletion (PRD privacy section).</span></div></div>
+</div>
+
+<!-- G3 -->
+<div class="col" id="g3"><h2>G3 · No highlights</h2><div class="sub">The honest empty state, from the guardian’s side</div>
+  <div class="phone" id="p3"><div class="top"><div class="brand"><div class="logo">T</div>TouchlineAI</div><span class="muted">Private</span></div>
+  <div class="body">
+    <div class="card"><div class="t14">Noah B. · #9</div><div class="muted">U12 vs Summit FC · Oct 5, 2026</div></div>
+    <div class="card" style="align-items:center;text-align:center;padding:28px 18px;border-style:dashed">
+      <div class="t14">No confirmed highlights for this game</div>
+      <div class="muted">Noah played, but no moments were confirmed by the coach. We never fill a reel with other children’s clips.</div></div>
+    <div class="banner prop"><span class="chip prop">PROPOSED</span><b>Missed a moment?</b><span>Let the coach know what you saw. They can add it to next week’s review.</span><div class="btn" style="color:var(--text)">Tell the coach</div></div>
+    <div class="mk" style="top:168px">1</div><div class="mk prop" style="top:290px">2</div>
+  </div></div>
+  <div class="notes"><div class="t">ANNOTATIONS</div>
+    <div class="n"><span class="m">1</span><span>The exact notice from the spec (FR-13). It explains rather than apologises, and no substitute clips appear.</span></div>
+    <div class="n prop"><span class="m">2</span><span>PROPOSED, needs a product decision: a way to flag a missed moment. It could improve recall, but it adds coach workload and asks guardians to judge footage.</span></div></div>
+</div>
+
+<!-- G4 -->
+<div class="col" id="g4"><h2>G4 · Report a problem</h2><div class="sub">Wrong-child report. Reel hidden while checked</div>
+  <div class="phone" id="p4" style="height:640px"><div class="top"><div class="brand"><div class="logo">T</div>TouchlineAI</div><span class="muted">Private</span></div>
+  <div class="body" style="opacity:.55">
+    <div class="card"><div class="t14">Liam T. · #4</div><div class="muted">U12 vs Summit FC</div></div>
+    <div class="card"><div class="frame"><div class="big">▶</div></div><div class="t14" style="font-size:13px">14:22–14:33</div></div></div>
+  <div class="scrim"></div>
+  <div class="sheet"><div class="t14">What is wrong?</div>
+    <div class="opt">This is not my child</div><div class="opt">The clip is cut off or unclear</div><div class="opt">Something else</div>
+    <div class="banner prop"><span class="chip prop">PROPOSED</span><span>On “not my child”, the reel is hidden at once and the coach and an auditor are told. No clip stays visible while it is checked.</span></div>
+    <div class="btns"><div class="btn">Cancel</div><div class="btn d">Send report</div></div></div>
+  <div class="mk" style="top:408px">1</div><div class="mk prop" style="top:495px">2</div>
+  </div>
+  <div class="notes"><div class="t">ANNOTATIONS</div>
+    <div class="n"><span class="m">1</span><span>The most important reason is first and in plain words. A wrong-child clip is a trust and safeguarding failure.</span></div>
+    <div class="n prop"><span class="m">2</span><span>PROPOSED: hide first, investigate second (PRD failure mode 1: revoke the reel, open an audit ticket). The exact correction flow is an open product question.</span></div></div>
+</div>
+
+<!-- G5 -->
+<div class="col" id="g5"><h2>G5 · QA audit</h2><div class="sub">Independent auditor, read-only, after publication</div>
+  <div class="phone" id="p5"><div class="top"><div class="brand"><div class="logo">T</div>Audit</div><span class="chip">12 of 40 in sample</span></div>
+  <div class="body">
+    <div class="card"><div class="t14">Batch · U12 vs Summit FC · Oct 5</div><div class="muted">Delivered to: Liam T. (#4) · clip 14:22–14:33</div></div>
+    <div class="split"><div class="card" style="padding:10px"><div class="muted small b">DELIVERED CLIP</div><div class="frame" style="height:110px"><div class="big" style="font-size:24px">#4</div></div></div>
+      <div class="card" style="padding:10px"><div class="muted small b">SOURCE ±10s</div><div class="frame" style="height:110px"><div class="big" style="font-size:24px">▶</div></div></div></div>
+    <div class="card"><div class="t14" style="font-size:13px">Is the focal child the recipient?</div>
+      <div class="btns"><div class="btn p">Correct child</div><div class="btn d">Wrong child</div></div><div class="btn">Can’t tell</div>
+      <div class="muted small">Reason (required for Wrong child / Can’t tell)</div><div class="opt" style="font-weight:400;color:var(--muted)">Select a reason…</div></div>
+    <div class="mk" style="top:170px">1</div><div class="mk" style="top:330px">2</div><div class="mk prop" style="top:440px">3</div>
+  </div></div>
+  <div class="notes"><div class="t">ANNOTATIONS</div>
+    <div class="n"><span class="m">1</span><span>The auditor compares what was delivered with the raw source, independent of the coach (PRD roles). Read-only.</span></div>
+    <div class="n"><span class="m">2</span><span>“Can’t tell” is a legitimate answer, like “Not sure” in other products’ identity flows. Phase 1 audits every batch (PRD section 14).</span></div>
+    <div class="n prop"><span class="m">3</span><span>PROPOSED: a mandatory reason on non-“Correct” verdicts so the audit can find causes. The PRD does not yet specify this.</span></div></div>
+</div>
+
+</div>
+</body>
+</html>

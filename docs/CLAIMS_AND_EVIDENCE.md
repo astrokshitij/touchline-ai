@@ -69,6 +69,15 @@ The original assessment files (Decision Card, submission, materials, AI use log,
 7. **Lock after publish.** The prototype now blocks review changes after publication. The real correction flow (revoke, reissue, notify) is undefined.
 8. **License.** None exists. Pick one, or state "all rights reserved".
 
+## F. Limits of the portfolio projects (added later)
+
+- **Teardowns (`projects/02`, `projects/03`):** built from search-result summaries of public pages. The primary pages could not be opened (network policy), and nothing was tested hands-on. Every claim carries a link and a label, and each file has a verification checklist. **Re-check before publishing.**
+- **Data analysis (`projects/04`):** source numbers are as stated in the brief and not re-verified. Sections 5 and 6 are synthetic or use invented rates, and say so.
+- **Experiment (`projects/05`):** the 70% baseline is from the brief. The 1.5 design effect is an assumption.
+- **Wireframes (`projects/01`):** the Figma file is partly built because the Figma tool-call allowance ran out. Guardian and QA screens are spec-based and carry **proposals** (magenta) that need a product decision.
+- **Pre-mortem (`projects/06`):** likelihood and impact ratings are the author's judgment.
+- **Livestream brief (`projects/07`):** contains no estimates, costs or vendor claims.
+
 ## E. Prototype fixes in this pass
 
 - Reassign modal: Liam T. is now actually selected (before, the last matching option silently overrode it), and the note follows the selected child. A note that names a different child blocks confirm.

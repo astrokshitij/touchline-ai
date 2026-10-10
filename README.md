@@ -14,6 +14,9 @@ A product case study and clickable prototype. It asks one question: **how do you
 - **Design rule:** the coach decides on every clip. Model confidence, even 99%, never skips that step.
 - **Publishing rules:** publication is blocked if any clip is unresolved, any included child lacks consent or a recipient, or any clip is unrenderable. Any change after approval requires a fresh approval. A child with no highlights gets an honest "no confirmed highlights" notice, never someone else's clips.
 
+## Portfolio projects
+Beyond the prototype, the case study is extended into separate projects in [`projects/`](projects): wireframes, two product teardowns (drafts), a reproducible data analysis, an experiment design, a pre-mortem with an AI evaluation plan, and a livestream feasibility brief. See [`projects/README.md`](projects/README.md) for status and evidence quality.
+
 ## Run the prototype
 
 No install, no build, no network.
@@ -86,6 +89,7 @@ logs/AGENTIC_WORKFLOW.md         how AI tools were used and checked
 docs/CLAIMS_AND_EVIDENCE.md      what is fact, inference, target or simulated; open decisions
 docs/REMAINING_WORK.md           what is left to do
 docs/screenshots/                screens from the corrected build
+projects/                        wireframes, teardowns, data analysis, experiment, pre-mortem, feasibility brief
 tests/                           browser checks
 demo/                            assessment-era screenshots and a silent screen recording
 ```
