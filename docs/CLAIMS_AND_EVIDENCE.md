@@ -90,7 +90,7 @@ Still needing **you**: check the source facts in section C against your original
 ## F. Limits of the portfolio projects (added later)
 
 - **Teardowns (`projects/02`, `projects/03`):** built from search-result summaries of public pages. The primary pages could not be opened (network policy), and nothing was tested hands-on. Every claim carries a link and a label, and each file has a verification checklist. **Re-check before publishing.**
-- **Data analysis (`projects/04`):** source numbers are as stated in the brief and not re-verified. Sections 5 and 6 are synthetic or use invented rates, and say so.
+- **Data analysis (`projects/04`):** source numbers are as stated in the brief and were checked against it on 10 October 2026. Sections 5 and 6 are synthetic or use invented rates, and say so.
 - **Experiment (`projects/05`):** the 70% baseline is from the brief. The 1.5 design effect is an assumption.
 - **Wireframes (`projects/01`):** the Figma file is partly built because the Figma tool-call allowance ran out. Guardian and QA screens are spec-based and carry **proposals** (magenta) that need a product decision.
 - **Pre-mortem (`projects/06`):** likelihood and impact ratings are the author's judgment.

@@ -37,7 +37,7 @@ export function summarise(rows) {
       notCheckable: n('not_checkable'),
       brief: (() => { const b = audit.filter(r => r.pass === '2'); const u = b.filter(r => ['no_source', 'overstated', 'contradicted'].includes(r.verdict)).length; return { checked: b.length, supported: b.filter(r => r.verdict === 'supported').length, unsupported: u, notCheckable: b.filter(r => r.verdict === 'not_checkable').length }; })(),
     },
-    pass3: { entries: rows.filter(r => r.pass === '3').length, ...tally(rows.filter(r => r.pass === '3')) },
+    pass3: (() => { const r3 = rows.filter(r => r.pass === '3'); const t3 = tally(r3); return { entries: r3.length, ...t3, fixed: (t3.contradicted || 0) + (t3.overstated || 0) + (t3.no_source || 0) }; })(),
   };
 }
 

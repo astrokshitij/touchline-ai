@@ -1,10 +1,10 @@
-# TouchlineAI — Agentic Workflow & AI Auditing Log
+# TouchlineAI - Agentic Workflow & AI Auditing Log
 ## Multi-Agent Orchestration, Hallucination Rejection & Human-in-the-Loop Engineering
 
 - **Author & Auditor:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
 - **Environment:** Multi-Model Orchestration (ChatGPT-4o, Gemini 1.5/3.8, Antigravity Agentic IDE)
 - **Status:** Portfolio audit trail written at assessment time. The primary record is the original AI use log, kept outside this repo. This copy was not re-checked against it (for example the model name "Gemini 1.5 / 3.8" should be confirmed).
-- **Post-assessment revision (October 2026):** An AI coding assistant (Claude Code) helped revise this repo's documents and prototype after the assessment closed. The author reviews all changes before publishing. See `docs/CLAIMS_AND_EVIDENCE.md`. How the AI-drafted claims were counted and checked is in `docs/AI_EVALS.md`.
+- **Post-assessment revision (October 2026):** An AI coding assistant (Claude Code) helped revise this repo's documents and prototype after the assessment closed. The author reviews all changes before publishing. See `docs/CLAIMS_AND_EVIDENCE.md`. How the AI-drafted claims were counted and checked is in `docs/AI_EVALS.md`. Statements in the table below such as "resolved all ambiguities before implementation" are the assessment-time account; a later outside review still found open spec questions, now answered as proposals in the PRD ("v1 scope decisions").
 
 ---
 

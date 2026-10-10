@@ -14,7 +14,7 @@ Wireframes designed from scratch from the working prototype, with a focus on **s
 ## Problem frame
 - **User:** a volunteer youth-sports coach with limited time, reviewing a match's clips on a phone, who must not send one child's clip to another child's parent.
 - **Job:** confirm who is in each AI-proposed clip, then send every family only their own child's clips.
-- **The risk the design must prevent:** a confident but wrong AI proposal that a tired coach confirms by reflex, then a wrong-child delivery. The case study cites four wrong-child tickets across three clubs (similar jersey numbers) [Source: assessment brief, not re-verified].
+- **The risk the design must prevent:** a confident but wrong AI proposal that a tired coach confirms by reflex, then a wrong-child delivery. The case study cites three wrong-child tickets describing four incidents across three clubs (similar jersey numbers) [Source: assessment brief, checked 10 October 2026].
 - **Constraint:** the prototype uses fictional data and simulated AI and delivery. Every screen says so.
 
 ## Design principles

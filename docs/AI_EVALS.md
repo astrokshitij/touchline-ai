@@ -45,13 +45,14 @@ Of the 14 entries checked against the original brief (pass 2): 8 supported, 5 un
 
 **What pass 1 missed.** Pass 1 had no brief. It found 20 internal problems, but it listed the ticket numbers, the notification figures and the recap details as items to "check against the originals" and left them in place labelled as source. Pass 2 showed that five such entries (P2-09 to P2-13) had no source or were wrong. Pass 1 also softened an invented effort figure to "a proposed 8-week build" (P1-08); pass 2 removed it. So a review that does not hold the source cannot catch invented facts, and a fix can carry the same fault.
 
-## 3. Pass 3 (this change, 9 entries, counted separately)
+## 3. Pass 3 (this change and a follow-up outside review, 15 entries, counted separately)
 
-Done while building the page:
+Pass 3 has two parts:
 
-- Recomputed five statistics used on the case-study page with a short script (Wilson lower bound and pass probabilities, the 64% product, the 5.6-point gap). All five matched (P3-02 to P3-06).
-- Found three wrong or stale statements and fixed them: the case-study page said "80 automated browser checks" when the suite had 92 (P3-01, wrong when written); the README top note and the label table in the claims document still said the scenario figures were "not re-checked" after pass 2 had checked them (P3-08, P3-09, true when written, stale since).
-- One item stays open (P3-07): `docs/PROBLEM_STATEMENT.md` says "210 parents" while other files say "210 respondents". This needs the original brief. The new section avoids the word.
+- **While building the section (P3-01 to P3-09).** Five statistics used on the case-study page were recomputed with a script and all matched (P3-02 to P3-06). Three statements were wrong or stale and were fixed: the page said "80 automated browser checks" when the suite had 92 (P3-01, wrong when written), and the README top note and the claims document's label table still said the scenario figures were "not re-checked" after pass 2 had checked them (P3-08, P3-09, true when written, stale since). One item stays open (P3-07): `docs/PROBLEM_STATEMENT.md` says "210 parents" while other files say "210 respondents". This needs the original brief.
+- **After an independent outside review of the live repo (P3-10 to P3-16).** The reviewer did not have the brief. It found more stale "not re-checked" labels in the PRD, memo, analytics note and project notes (P3-10), a derived figure labelled Source (P3-11), overstated lines in the trade-off memo (P3-12, P3-13), a ticket count error (P3-14), overstated wording on the case-study page (P3-15) and an overclaim in the workflow log (P3-16). All were checked against the repo and the brief paraphrase before fixing. The same review found three questions an engineer would have to ask of the PRD; they are answered as proposals in the PRD's "v1 scope decisions".
+
+Totals for pass 3: 5 supported, 9 fixed (5 contradicted, 3 overstated, 1 no source), 1 open. The audit's own fixes missed items too, which repeats the pass 1 lesson.
 
 Not recomputed: the experiment's "about 1,900 guardians per arm" (it rests on an assumed design effect) and the other figures in `projects/04`.
 

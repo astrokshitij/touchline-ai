@@ -1,15 +1,15 @@
-# TouchlineAI — Metrics Deconstruction & Mathematical Rigor
+# TouchlineAI - Metrics Deconstruction & Mathematical Rigor
 ## The Denominator Audit: Exposing Vanity Metrics, Funnel Fallacies & True Delivery Rates
 
 - **Author:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
-- **Status:** Analytics case-study note. Formulas are the author's. Input numbers come from the assessment materials [Source] and were not re-checked here. Targets are proposals [Target].
+- **Status:** Analytics case-study note. Formulas are the author's. Input numbers come from the assessment materials [Source] and were checked against the original brief on 10 October 2026. Targets are proposals [Target].
 - **Domain:** Telemetry Auditing, Retention Mathematics, Computer Vision Evaluation
 
 ---
 
 ## 1. Executive Summary
 
-In high-growth AI startups, product analytics often mask critical quality failures behind **conditioned denominators**—vanity metrics computed only on successful user subsets. 
+In high-growth AI startups, product analytics often mask critical quality failures behind **conditioned denominators**, vanity metrics computed only on successful user subsets. 
 
 This paper provides a rigorous mathematical deconstruction of two prominent metrics in the TouchlineAI ecosystem:
 1. **The 92% Share Rate Trap:** Why an apparent 92% sharing rate becomes about **64%** across all generated reels, under a stated assumption.

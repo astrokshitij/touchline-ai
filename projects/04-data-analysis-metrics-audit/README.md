@@ -2,7 +2,7 @@
 
 **What this is.** A reproducible analysis that re-derives and stress-tests the numbers behind the case study: the 92% share rate, the 58% who named editing their top ask, the proposed pilot gate, and the North Star metric (CCDR).
 
-**What this is not.** Real product data. Inputs are the figures stated in the assessment brief (not re-verified) plus clearly labelled synthetic simulation. The synthetic parts show *mechanisms*, not findings about a real product.
+**What this is not.** Real product data. Inputs are the figures stated in the assessment brief (the share-rate, survey and editor figures were checked against it on 10 October 2026) plus clearly labelled synthetic simulation. The synthetic parts show *mechanisms*, not findings about a real product.
 
 **Run it:** `pip install numpy scipy matplotlib && python3 analysis.py` writes `charts/` and `results.md`. The random seed is fixed.
 
@@ -25,7 +25,7 @@ Full numbers: [`results.md`](results.md).
 - Finding 6 fed a product decision, now recorded in `docs/CLAIMS_AND_EVIDENCE.md` (section D) and applied to the metrics doc and the PRD.
 
 ## Limits
-- All source numbers are as stated in the brief and were not re-verified.
+- All source numbers are as stated in the brief and were checked against it on 10 October 2026.
 - Section 6 invents outcome rates (12% zero, 3% wrong child, 6% held, 4% failed) purely to show the counting-rule mechanism.
 - The 64.4% assumes an unopened reel is never shared, and that exactly 30% were unopened.
 - Survey and telemetry in finding 3 come from different groups and times.
