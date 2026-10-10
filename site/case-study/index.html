@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TouchlineAI Case Study | Coach-reviewed highlights for youth sports</title>
+<meta name="description" content="A product case study and clickable prototype: how to stop a youth-sports highlights app from sending one child's clip to another child's parent. Fictional data, simulated AI.">
+<meta property="og:title" content="TouchlineAI case study">
+<meta property="og:description" content="Coach-reviewed highlights for youth sports. Prototype, wireframes, data analysis and product decisions.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --bg:#f6f7f9; --surface:#ffffff; --text:#111827; --muted:#4b5563; --border:#d1d5db;
+    --primary:#1d4ed8; --primary-soft:#dbeafe; --warn:#92400e; --warn-soft:#fef3c7;
+    --ok:#047857; --ok-soft:#d1fae5; --danger:#b91c1c; --radius:12px; --max:1040px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b1120; --surface:#111a2e; --text:#f1f5f9; --muted:#aab4c5; --border:#2a3753;
+      --primary:#93c5fd; --primary-soft:#1e3a8a; --warn:#fcd34d; --warn-soft:#3b2a0a; --ok:#6ee7b7; --ok-soft:#06331f; --danger:#fca5a5; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--primary)}
+  .skip{position:absolute;left:-999px;top:0;background:var(--primary);color:#fff;padding:8px 12px;z-index:10}
+  .skip:focus{left:8px;top:8px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  header.site{border-bottom:1px solid var(--border);background:var(--surface)}
+  header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+  .brand{font-weight:800;letter-spacing:-.01em}
+  nav{display:flex;flex-wrap:wrap;gap:6px 14px}
+  nav a{font-size:14px;text-decoration:none;color:var(--muted);padding:6px 0}
+  nav a:hover{color:var(--primary)}
+  .hero{padding:48px 0 28px}
+  .eyebrow{font-size:13px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em}
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.12;letter-spacing:-.02em;margin:10px 0 14px}
+  .lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:760px}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .btn{display:inline-flex;align-items:center;min-height:44px;padding:10px 18px;border-radius:8px;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--text);background:var(--surface)}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+  @media (prefers-color-scheme: dark){.btn.primary{color:#0b1120}}
+  .notice{margin-top:24px;padding:14px 16px;border:1px solid var(--warn);background:var(--warn-soft);color:var(--text);border-radius:var(--radius);font-size:15px}
+  .notice strong{color:var(--warn)}
+  section{padding:36px 0;border-top:1px solid var(--border)}
+  h2{font-size:clamp(22px,3vw,28px);letter-spacing:-.01em;margin-bottom:8px}
+  h3{font-size:17px;margin-bottom:6px}
+  .sub{color:var(--muted);max-width:760px;margin-bottom:20px}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+  .charts{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:700px){.charts{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--primary-soft);color:var(--primary);margin-bottom:8px}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.warn{background:var(--warn-soft);color:var(--warn)}
+  figure{margin:0}
+  figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);background:var(--surface)}
+  figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+  .shots{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+  .stat{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--primary)}
+  table{width:100%;min-width:620px;border-collapse:collapse;font-size:15px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--bg);font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .scroll{overflow-x:auto}
+  ul.clean{list-style:none} ul.clean li{padding:6px 0 6px 22px;position:relative}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--primary)}
+  footer{border-top:1px solid var(--border);padding:28px 0 48px;color:var(--muted);font-size:14px}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:var(--bg);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <span class="brand">TouchlineAI</span>
+    <nav aria-label="Sections">
+      <a href="#problem">Problem</a><a href="#prototype">Prototype</a><a href="#wireframes">Wireframes</a><a href="#analysis">Data</a><a href="#decisions">Decisions</a><a href="#more">More</a><a href="#honest">Limits</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+<div class="hero">
+  <p class="eyebrow">Product case study</p>
+  <h1>How do you stop a youth-sports app sending one child's highlight to another child's parent?</h1>
+  <p class="lead">TouchlineAI is a human-in-the-loop design for AI-tagged youth sports clips. The coach decides every clip, publication is blocked until it is safe, and a child with no highlights gets an honest notice instead of someone else's footage.</p>
+  <div class="cta">
+    <a class="btn primary" href="../index.html">Try the prototype</a>
+    <a class="btn" href="https://github.com/astrokshitij/touchline-ai">Read the code and docs</a>
+    <a class="btn" href="#decisions">See the product decisions</a>
+  </div>
+  <p class="notice"><strong>Read this first.</strong> This is a portfolio project that began as a product-management assessment, now closed. It uses <strong>fictional data</strong>. The AI and the delivery are <strong>simulated</strong>: no video is analysed, no one is recognised, and nothing is sent.</p>
+</div>
+
+<section id="problem">
+  <h2>The problem and the call</h2>
+  <p class="sub">Figures below come from the assessment brief and are labelled as such. Reasoning is marked as inference.</p>
+  <div class="grid g3">
+    <div class="card"><span class="tag">From the brief</span><h3>What was reported</h3>
+      <p>Four support tickets across three clubs described a clip of one child landing in another child's reel, each involving similar jersey numbers (4 and 14, 1 and 11, 7 and 17). About 30% of generated reels went unopened. A flagship club wanted live streaming for a $180k renewal.</p></div>
+    <div class="card"><span class="tag ok">Decision</span><h3>What comes first</h3>
+      <p>Reliable correct-child assignment first. Notification timing is the runner-up. Livestreaming gets a bounded feasibility investigation before any build commitment.</p></div>
+    <div class="card"><span class="tag warn">Design rule</span><h3>The line that never moves</h3>
+      <p>Model confidence, even 99%, never skips the coach. The cause of the wrong-child errors is not stated anywhere in the brief, so this design assumes none.</p></div>
+  </div>
+</section>
+
+<section id="prototype">
+  <h2>The prototype</h2>
+  <p class="sub">A clickable, dependency-free web app (one HTML file). It runs the review-and-publish rules in your browser against fictional data.</p>
+  <div class="grid shots">
+    <figure><img src="assets/proto-1-setup.webp" width="560" height="1212" alt="Setup screen: game selector, team roster with one child missing consent, and a button to run simulated detection" loading="lazy"><figcaption>Setup: missing consent is visible before any AI runs.</figcaption></figure>
+    <figure><img src="assets/proto-2-review.webp" width="560" height="1212" alt="Review screen: a clip card showing jersey 4 on the frame while the AI proposed player number 14, with an amber hint" loading="lazy"><figcaption>Review: the 14-vs-4 case, with a non-blocking hint.</figcaption></figure>
+    <figure><img src="assets/proto-3-reassign.webp" width="560" height="1212" alt="Reassign dialog with the matching player preselected and a note that names the same player" loading="lazy"><figcaption>Reassign: the note always matches the chosen child.</figcaption></figure>
+    <figure><img src="assets/proto-4-blocked.webp" width="560" height="1212" alt="Publish screen blocked, listing unresolved clips and a child with missing consent" loading="lazy"><figcaption>Publish: every blocker listed at once.</figcaption></figure>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><h3>What the rules enforce</h3>
+      <ul class="clean"><li>Every clip starts unresolved. No bulk confirm.</li><li>Removal needs a reason. The reason starts blank.</li><li>Publishing is blocked by unresolved clips, missing consent or recipient, or a clip past the end of the footage.</li><li>Any change after approval requires a fresh approval.</li><li>Excluded children stay visible with their reason.</li><li>After the simulated publish, review is locked.</li></ul></div>
+    <div class="card"><h3>What is simulated</h3>
+      <ul class="clean"><li>Detection and confidence scores are fixed fictional data.</li><li>Frames are drawn graphics, not footage.</li><li>Delivery is simulated, with a failure you can switch on and retry.</li><li>No backend, login or saved data. The decision log resets on reload.</li></ul></div>
+  </div>
+  <p class="sub" style="margin-top:16px">Quality: 80 automated browser checks cover the flow, the publication gates, console errors, outside network requests, and layout at four screen widths. They test this prototype only, not a real product.</p>
+</section>
+
+<section id="wireframes">
+  <h2>Wireframes</h2>
+  <p class="sub">Thirteen coach-flow screens were designed in Figma, with every state: blocked, error, empty, failed delivery, locked. The guardian and QA screens below come from the spec and are not in the prototype. Magenta marks proposals that still need a decision.</p>
+  <figure><img src="assets/wireframes-guardian-qa.webp" width="1800" height="835" alt="Five low-fidelity phone wireframes: notification, reel view, no-highlights view, report a problem, and QA audit" loading="lazy"><figcaption>Guardian and QA screens (spec-based). The full flow, screen inventory and a usability test plan are in the repository.</figcaption></figure>
+</section>
+
+<section id="analysis">
+  <h2>Data analysis</h2>
+  <p class="sub">A reproducible audit of the numbers behind the case. Inputs are the brief's figures plus clearly labelled synthetic simulation. Nothing here is real product data.</p>
+  <div class="grid g4">
+    <div class="card"><div class="stat">~64%</div><p>of all generated reels were shared, not 92%. The 92% counted only reels that were opened.</p></div>
+    <div class="card"><div class="stat">5.6 pts</div><p>of reels were opened but not shared, so "35.6% of reach to unlock" overstates the prize.</p></div>
+    <div class="card"><div class="stat">485 / 500</div><p>correct clips (97%) are needed to pass a gate of 95% at 95% confidence.</p></div>
+    <div class="card"><div class="stat">57%</div><p>chance that a truly 97%-accurate system passes at 500 audited clips. At 1,000 it is about 88%.</p></div>
+  </div>
+  <div class="grid charts" style="margin-top:20px">
+    <figure><img src="assets/chart-1-share-rate.webp" width="900" height="384" alt="Bar showing 64.4% of reels opened and shared, 5.6% opened but not shared, 30% never opened" loading="lazy"><figcaption>Where the 92% went.</figcaption></figure>
+    <figure><img src="assets/chart-3-power.webp" width="900" height="456" alt="Chart of the probability that the audit gate passes as the number of audited clips grows, for four true accuracy levels" loading="lazy"><figcaption>How many audited clips the gate needs.</figcaption></figure>
+    <figure><img src="assets/chart-2-gate.webp" width="900" height="432" alt="Wilson lower bound against observed accuracy at 500 audited clips, crossing 0.95 at 97 percent" loading="lazy"><figcaption>The proposed gate at 500 clips.</figcaption></figure>
+    <figure><img src="assets/chart-4-ccdr.webp" width="900" height="408" alt="Two bars comparing the North Star metric under two counting rules on a synthetic cohort" loading="lazy"><figcaption>Counting rule changes the metric by about 10 points (synthetic, invented rates).</figcaption></figure>
+  </div>
+</section>
+
+<section id="decisions">
+  <h2>Product decisions</h2>
+  <p class="sub">Eleven decisions, each with a reason, are recorded in the repository. These are the ones that shaped the design.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Question</th><th>Decision</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Can high confidence skip the coach?</td><td>No, at any phase. Confidence only orders and flags the queue.</td><td>A confident model can still be wrong, and a wrong-child delivery is a trust and safeguarding failure.</td></tr>
+      <tr><td>Does an honest zero-highlight week count as success?</td><td>A verified true-zero week does. A missed moment is a miss. Report Highlight Coverage next to the metric.</td><td>Counting honest zero as a miss lowered the metric by about 10 points in the synthetic cohort and pushes toward padding reels.</td></tr>
+      <tr><td>How strict is the Phase 1 gate?</td><td>At least 50 clean matches, a lower bound of at least 0.95 on at least 1,000 audited clips, and no open wrong-child incident.</td><td>At 500 clips a good system fails the gate about half the time.</td></tr>
+      <tr><td>Warn when the frame's jersey differs from the assigned child?</td><td>Yes, as a non-blocking hint, then test it.</td><td>Cheap and aimed at the 14-vs-4 failure. The risk is warning fatigue, so it goes in the usability test.</td></tr>
+      <tr><td>Review after publishing?</td><td>Locked. A revoke-and-reissue flow is future work.</td><td>The delivered batch must not drift from what was sent.</td></tr>
+      <tr><td>Where do teardowns stand?</td><td>Published as labelled drafts.</td><td>They rest on public pages that were read second-hand, so claiming hands-on work would mislead.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="more">
+  <h2>More in the repository</h2>
+  <div class="grid g3">
+    <div class="card"><span class="tag ok">Done</span><h3>Experiment design</h3><p>Notification timing, with sample sizes: about 1,900 guardians per arm to detect a 5-point lift, using an assumed clustering factor.</p></div>
+    <div class="card"><span class="tag ok">Done</span><h3>Pre-mortem and AI evaluation plan</h3><p>Ten failure stories with early warnings, and a plan to measure models by slice before trusting any of them.</p></div>
+    <div class="card"><span class="tag ok">Done</span><h3>Livestream feasibility brief</h3><p>A bounded five-day plan and decision template. It claims no cost or effort estimates.</p></div>
+    <div class="card"><span class="tag warn">Draft</span><h3>Teardown: Veo</h3><p>How a mass-market AI sports camera handles an event assigned to the wrong player. Needs hands-on verification.</p></div>
+    <div class="card"><span class="tag warn">Draft</span><h3>Teardown: Hudl Assist</h3><p>Human tagging as a service, plus Google Photos as a pattern for correcting AI face groups. Needs hands-on verification.</p></div>
+    <div class="card"><span class="tag">Docs</span><h3>Claims and evidence</h3><p>Every claim is labelled source, inference, target or simulated, with the open checks listed.</p></div>
+  </div>
+</section>
+
+<section id="honest">
+  <h2>Limits, stated plainly</h2>
+  <ul class="clean">
+    <li>The scenario figures (tickets, 30% unopened, 92% share, 58% survey) come from the assessment brief and were not independently re-verified.</li>
+    <li>No model was built or evaluated. No accuracy claim is made anywhere.</li>
+    <li>Checks run in your browser, so they show the intended rules. A real system must enforce them on a server.</li>
+    <li>Consent handling is a mock and has had no legal review.</li>
+    <li>The two teardowns are desk research and are marked as drafts.</li>
+    <li>Evaluation scores from the assessment, where mentioned elsewhere, are a reviewer's estimates, not official employer results.</li>
+  </ul>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Built by <a href="https://github.com/astrokshitij">Kshitij Pandey</a>. All rights reserved: viewing and linking are welcome. All people, clubs and data are fictional. Nothing here is legal, safeguarding or compliance advice.</p>
+    <p style="margin-top:8px"><a href="../index.html">Open the prototype</a> · <a href="https://github.com/astrokshitij/touchline-ai">GitHub</a></p>
+  </div>
+</footer>
+</body>
+</html>
