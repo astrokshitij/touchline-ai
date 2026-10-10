@@ -379,7 +379,9 @@ await section('11. case-study page', async () => {
 await section('12. AI evals section', async () => {
   const siteDir = path.dirname(fileURLToPath(SITE));
   const csUrl = new URL('case-study/index.html', SITE).href;
-  const sum = summarise(loadLedger());
+  const ledgerRows = loadLedger();
+  check('ledger: every row has the right number of fields and a unique id', new Set(ledgerRows.map(r => r.id)).size === ledgerRows.length && ledgerRows.every(r => r.id && r.verdict));
+  const sum = summarise(ledgerRows);
   const a = sum.audit;
   const widths = [[320, 640], [375, 812], [768, 1024], [1280, 800]];
 
@@ -410,6 +412,7 @@ await section('12. AI evals section', async () => {
       const wrong = [];
       for (const [k, v] of Object.entries(expected)) { const got = await read(k); if (got !== v) wrong.push(`${k}: page ${got}, ledger ${v}`); }
       for (const k of ['entries', 'supported', 'fixed', 'open']) { const v = sum.pass3[k]; const got = Number((await page.locator(`#ai-evals [data-ledger3="${k}"]`).first().innerText()).trim()); if (got !== v) wrong.push(`pass3 ${k}: page ${got}, ledger ${v}`); }
+      for (const k of ['entries', 'noSource', 'overstated', 'inconsistent', 'defect']) { const got = Number((await page.locator(`#ai-evals [data-orig="${k}"]`).first().innerText()).trim()); if (got !== sum.orig[k]) wrong.push(`orig ${k}: page ${got}, ledger ${sum.orig[k]}`); }
       check('ai evals: every number on the page matches the claims ledger', wrong.length === 0, wrong.join('; '));
       check('ai evals: the parts of "unsupported" add up', a.unsupported === a.noSource + a.overstated + a.contradicted);
       check('ai evals: the parts of "checked" add up', a.checked === a.supported + a.unsupported + a.inconsistent + a.notCheckable, JSON.stringify(a));
@@ -420,7 +423,7 @@ await section('12. AI evals section', async () => {
 
       const slopText = text + fs.readFileSync(path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), 'utf8') + fs.readFileSync(path.join(siteDir, '..', 'docs', 'ai-evals', 'ORIGINAL_RUBRIC.md'), 'utf8').split('## Layer C')[0];
       check('ai evals: slop checklist on the new text (no em dashes, no stock phrases)', !/\u2014/.test(slopText) && !/enhance user experience|drive engagement|seamless|consider exploring|leverage/i.test(slopText));
-      check('ai evals: says the original scores are not in the repo', /not in this repository, so none are reported/.test(text));
+      check('ai evals: says the other original scores are not in the repo', /not in this repository, so none are reported/.test(text));
 
       // links: relative ones resolve to files; repo links resolve to files in this checkout; external ones are only checked for form
       const hrefs = await page.$$eval('a[href]', as => as.map(x => x.getAttribute('href')));

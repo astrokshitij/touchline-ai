@@ -6,7 +6,7 @@ Written October 2026, after the assessment closed. Purpose: keep **source facts*
 
 **Update, 10 October 2026:** the author supplied the original problem statement (the five assessment materials). Every **Source** claim in this repo was then checked against it. Section C records the result, including **claims I had gotten wrong or invented** and have now corrected.
 
-Still not available: the author's own Decision Card, submission and AI-use log. Anything that came from those (the October 15 date, the 1-5 prioritisation scores, the targets) is labelled as the author's judgment or a proposal, not as a fact from the brief.
+Later on 10 October the author's AI-use log was read and is used in `docs/AI_EVALS.md`. The prioritisation weights and 1-5 scores were checked against the submission table and match. The Decision Card itself and the October 15 date are still not compared. Anything that came from those (the October 15 date, the 1-5 prioritisation scores, the targets) is labelled as the author's judgment or a proposal, not as a fact from the brief.
 
 ## A. How claims are labelled
 

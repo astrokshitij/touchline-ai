@@ -3,7 +3,7 @@
 
 - **Author:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
 - **Status:** Case-study decision memo: the author's recommendation. No company or leadership team approved it.
-- **Scenario:** Companies and customers come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). Labels: **[Source]** from the assessment materials (checked against the original brief on 10 October 2026), **[Inference]** reasoning, **[Judgment]** the author's scoring or proposal.
+- **Scenario:** Company and customer names are changed for this portfolio (the brief uses different names; see `docs/PROBLEM_STATEMENT.md`). Labels: **[Source]** from the assessment materials (checked against the original brief on 10 October 2026), **[Inference]** reasoning, **[Judgment]** the author's scoring or proposal.
 
 ---
 
@@ -12,7 +12,7 @@
 In the assessment scenario, the product team faced a high-stakes enterprise dilemma:
 
 **The Enterprise Demand:**
-The flagship customer, **Enterprise Club Partner**, the biggest club account, a **$180,000-a-season contract** with renewal and signups in six weeks [Source], wants every game live-streamed for grandparents and college scouts [Source]. The brief does not say the club threatened to leave.
+The flagship customer, called **Enterprise Club Partner** here, is the biggest club account at **$180k a season**, with renewal and signups in six weeks [Source]. Its executive director wants every game live-streamed for grandparents and college scouts, and asked whether it is on the roadmap before she talks to her board [Source]. The VP of Sales reports that she will take it to her board as a reason to shop around if it is not on the roadmap before renewal [Source, secondhand].
 
 **The Product Reality:**
 At the same time, three support tickets across three clubs (soccer, lacrosse and little league) described four wrong-child incidents: a child wearing #14 shown a #4 child's clip, a coach who saw it twice with similar, swapped-digit numbers, and a #1 child shown a #11 clip [Source]. The tickets give no cause. The 94%-confidence version of this case is the prototype's simulation, not a source fact.
