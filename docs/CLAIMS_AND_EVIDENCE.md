@@ -12,7 +12,7 @@ Still not available: the author's own Decision Card, submission and AI-use log. 
 
 | Label | Meaning |
 |---|---|
-| **Source** | Stated in the assessment materials. Not re-checked here. |
+| **Source** | Stated in the assessment materials. Checked against the original brief on 10 October 2026 (section C). |
 | **Inference** | Reasoning from source facts. May be wrong. |
 | **Assumption** | Needed for a calculation. Stated next to it. |
 | **Target** | A proposed number or policy. No validation behind it. |

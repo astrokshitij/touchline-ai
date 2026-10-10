@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
+import { loadLedger, summarise } from '../docs/ai-evals/count.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 // SITE_FILE lets you point the same checks at another build (for example an older copy).
@@ -195,6 +196,8 @@ await section('4. gates, exclusion, approval reset, zero-highlight', async () =>
   await page.click('#btnPublishBatch');
   check('publish: 11 simulated deliveries (Sofia excluded)', (await page.locator('#deliveryDispatchLog .audit-entry').count()) === 11);
   check('publish: wording says simulated and not ground truth', (await page.locator('#deliverySummaryText').innerText()).includes('does not establish ground-truth accuracy'));
+  const summaryText = await page.locator('#deliverySummaryText').innerText();
+  check('publish: no "100%" or "zero wrong child" accuracy boast', !/100\s*%|zero wrong/i.test(summaryText), summaryText);
   check('publish: badge no longer claims an idempotency key', !(await page.locator('#deliveryIdempotencyBadge').innerText()).toLowerCase().includes('key'));
   await page.evaluate(() => handlePublishBatch());
   check('duplicate publish is blocked', log.dialogs.some(d => d.includes('Duplicate Delivery Blocked')));
@@ -261,6 +264,16 @@ await section('6b. jersey hint', async () => {
   await reassignC2ToLiam(page);
   check('after reassigning to Liam T. (#4) the hint disappears', (await clip(page, '14:22').locator('.jersey-hint').count()) === 0);
   check('console clean', log.consoleErrors.length === 0 && log.pageErrors.length === 0);
+  await context.close();
+});
+
+// ---------------------------------------------------------------- 6c. no bulk-confirm shortcut
+await section('6c. no bulk confirm', async () => {
+  const { page, context } = await openApp();
+  await runDetection(page);
+  const controls = await page.$$eval('button, a, [role=button]', els => els.map(e => e.textContent.trim()));
+  check('review: no bulk / quick / confirm-all control', !controls.some(t => /confirm all|bulk|quick confirm|approve all/i.test(t)), JSON.stringify(controls.filter(t => /all|bulk|quick/i.test(t))));
+  check('review: no such function in the page code', !(await page.evaluate(() => typeof window.quickConfirmUncontested !== 'undefined')));
   await context.close();
 });
 
@@ -346,7 +359,7 @@ await section('11. case-study page', async () => {
     if (w === 375 && SHOTS) await page.screenshot({ path: path.join(SHOTS, 'case-study-375.png'), fullPage: true });
     if (w === 1280 && SHOTS) await page.screenshot({ path: path.join(SHOTS, 'case-study-1280.png'), fullPage: true });
     if (w === 1280) {
-      check('case study: has a single h1 and the honesty notice', (await page.locator('h1').count()) === 1 && (await page.locator('.notice').innerText()).includes('simulated'));
+      check('case study: has a single h1 and the honesty notice', (await page.locator('h1').count()) === 1 && (await page.locator('.hero .notice').innerText()).includes('simulated'));
       const links = await page.$$eval('a[href^="#"]', as => as.map(a => a.getAttribute('href')));
       const missing = [];
       for (const l of links) if (l.length > 1 && !(await page.$(l))) missing.push(l);
@@ -360,6 +373,77 @@ await section('11. case-study page', async () => {
   const { page, context } = await openApp();
   check('prototype footer links to the case study', (await page.getAttribute('footer a[href="case-study/index.html"]', 'href')) === 'case-study/index.html');
   await context.close();
+});
+
+// ---------------------------------------------------------------- 12. AI evals section
+await section('12. AI evals section', async () => {
+  const siteDir = path.dirname(fileURLToPath(SITE));
+  const csUrl = new URL('case-study/index.html', SITE).href;
+  const sum = summarise(loadLedger());
+  const a = sum.audit;
+  const widths = [[320, 640], [375, 812], [768, 1024], [1280, 800]];
+
+  for (const [w, h] of widths) {
+    const context = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await context.newPage();
+    const errs = [], ext = [];
+    page.on('console', m => m.type() === 'error' && errs.push(m.text()));
+    page.on('pageerror', e => errs.push(String(e)));
+    page.on('request', r => { const u = r.url(); if (!u.startsWith('file:') && !u.startsWith('data:')) ext.push(u); });
+    await page.goto(csUrl + '#ai-evals');
+    await page.waitForLoadState('load');
+    const sec = page.locator('#ai-evals');
+    check(`ai evals ${w}px: section is present and visible`, (await sec.count()) === 1 && (await sec.isVisible()));
+    const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(`ai evals ${w}px: no horizontal overflow`, over <= 0, String(over));
+    const secOver = await page.evaluate(() => { const s = document.getElementById('ai-evals'); return [...s.querySelectorAll('*')].filter(e => !e.closest('.scroll') && e.getBoundingClientRect().right > document.documentElement.clientWidth + 1).map(e => e.tagName + '.' + e.className).slice(0, 5); });
+    check(`ai evals ${w}px: nothing in the section spills past the screen outside the scrolling table`, secOver.length === 0, JSON.stringify(secOver));
+    check(`ai evals ${w}px: no console errors, no outside requests`, errs.length === 0 && ext.length === 0, JSON.stringify({ errs, ext }));
+    if (w === 375 && SHOTS) await sec.screenshot({ path: path.join(SHOTS, 'ai-evals-375.png') });
+    if (w === 1280 && SHOTS) await sec.screenshot({ path: path.join(SHOTS, 'ai-evals-1280.png') });
+
+    if (w === 1280) {
+      check('ai evals: nav links to the section', (await page.locator('nav a[href="#ai-evals"]').count()) === 1);
+      // numbers on the page must equal the ledger
+      const read = async k => Number((await page.locator(`#ai-evals [data-ledger="${k}"]`).first().innerText()).trim());
+      const expected = { checked: a.checked, unsupported: a.unsupported, noSource: a.noSource, overstated: a.overstated, contradicted: a.contradicted, supported: a.supported, inconsistent: a.inconsistent, pass1: a.pass1, pass2: a.pass2 };
+      const wrong = [];
+      for (const [k, v] of Object.entries(expected)) { const got = await read(k); if (got !== v) wrong.push(`${k}: page ${got}, ledger ${v}`); }
+      for (const [k, v] of Object.entries(sum.pass3)) { const got = Number((await page.locator(`#ai-evals [data-ledger3="${k}"]`).first().innerText()).trim()); if (got !== v) wrong.push(`pass3 ${k}: page ${got}, ledger ${v}`); }
+      check('ai evals: every number on the page matches the claims ledger', wrong.length === 0, wrong.join('; '));
+      check('ai evals: the parts of "unsupported" add up', a.unsupported === a.noSource + a.overstated + a.contradicted);
+      check('ai evals: the parts of "checked" add up', a.checked === a.supported + a.unsupported + a.inconsistent + a.notCheckable, JSON.stringify(a));
+      check('ai evals: passes add up to the total', a.checked === a.pass1 + a.pass2);
+      const text = await sec.innerText();
+      check('ai evals: states its scope and limits', /No AI model was built or evaluated/.test(text) && /Limits of this audit/.test(text) && /not an error rate/i.test(text));
+      check('ai evals: no hype or guarantee wording', !/perfect|flawless|revolution|game-chang|cutting-edge|state-of-the-art|guarantee|100% accura/i.test(text), text.match(/perfect|flawless|revolution|game-chang|cutting-edge|state-of-the-art|guarantee|100% accura/i)?.[0]);
+
+      // links: relative ones resolve to files; repo links resolve to files in this checkout; external ones are only checked for form
+      const hrefs = await page.$$eval('a[href]', as => as.map(x => x.getAttribute('href')));
+      const repoRoot = path.resolve(siteDir, '..');
+      const bad = [];
+      for (const h of hrefs) {
+        if (h.startsWith('#') || h.startsWith('mailto:')) continue;
+        const m = h.match(/^https:\/\/github\.com\/astrokshitij\/touchline-ai\/blob\/main\/(.+?)(?:#.*)?$/);
+        if (m) { if (!fs.existsSync(path.join(repoRoot, decodeURIComponent(m[1])))) bad.push(h); continue; }
+        if (/^https:\/\//.test(h)) continue;
+        if (/^[a-z]+:/i.test(h)) { bad.push(h); continue; }
+        const target = path.resolve(path.dirname(fileURLToPath(csUrl)), h.split('#')[0]);
+        if (!fs.existsSync(target)) bad.push(h);
+      }
+      check('case study: no broken links (relative and repo links exist; external links are https)', bad.length === 0, JSON.stringify(bad));
+      const imgs = await page.$$eval('img', is => is.map(i => i.getAttribute('src')));
+      const missingImgs = imgs.filter(src => !fs.existsSync(path.resolve(path.dirname(fileURLToPath(csUrl)), src)));
+      check('case study: every image file exists', missingImgs.length === 0, JSON.stringify(missingImgs));
+    }
+    await context.close();
+  }
+
+  // The public page and the audit files must not mention personal social accounts (hard boundary).
+  const files = [path.join(siteDir, 'index.html'), path.join(siteDir, 'case-study', 'index.html'),
+    path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), path.join(siteDir, '..', 'docs', 'ai-evals', 'claims-ledger.csv')];
+  const hits = files.filter(f => /instagram|youtube|tiktok|facebook|twitter|linkedin/i.test(fs.readFileSync(f, 'utf8'))).map(f => path.basename(f));
+  check('no mention of personal social-media accounts in the site or the audit files', hits.length === 0, JSON.stringify(hits));
 });
 
 await browser.close();

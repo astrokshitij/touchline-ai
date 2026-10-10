@@ -5,7 +5,7 @@ A product case study and clickable prototype. It asks one question: **how do you
 > **Read this first**
 > - This is a portfolio project that started as a product-management assessment. The assessment is closed. Nobody has approved, built or shipped this.
 > - The prototype uses **fictional data**. The "AI" and the "delivery" are **simulated**. It does not analyse video, recognise anyone, or send any email or SMS.
-> - Numbers about the scenario (tickets, share rates, survey results) come from the assessment materials. They are not re-checked in this repo. Targets and thresholds are proposals, not results. See [`docs/CLAIMS_AND_EVIDENCE.md`](docs/CLAIMS_AND_EVIDENCE.md).
+> - Numbers about the scenario (tickets, share rates, survey results) come from the assessment materials and were checked against the original brief on 10 October 2026. Targets and thresholds are proposals, not results. See [`docs/CLAIMS_AND_EVIDENCE.md`](docs/CLAIMS_AND_EVIDENCE.md).
 
 ## The idea in one minute
 
@@ -87,6 +87,8 @@ specs/TRADE_OFF_ANALYSIS.md      prioritisation memo
 analytics/METRICS_DECONSTRUCTION.md   the share-rate and editor numbers, and the CCDR metric
 logs/AGENTIC_WORKFLOW.md         how AI tools were used and checked
 docs/CLAIMS_AND_EVIDENCE.md      what is fact, inference, target or simulated; open decisions
+docs/AI_EVALS.md                 how AI-drafted claims were checked: method, counts, limits
+docs/ai-evals/                   the claims ledger (CSV) and the script that counts it
 docs/REMAINING_WORK.md           what is left to do
 docs/screenshots/                screens from the corrected build
 projects/                        wireframes, teardowns, data analysis, experiment, pre-mortem, feasibility brief
