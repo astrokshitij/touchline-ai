@@ -326,6 +326,42 @@ for (const [w, h] of [[320, 640], [375, 812], [768, 1024], [1280, 800]]) {
   await context.close();
 }
 
+// ---------------------------------------------------------------- 11. public case-study page
+await section('11. case-study page', async () => {
+  const csUrl = pathToFileURL(path.join(path.dirname(new URL(SITE).pathname), 'case-study', 'index.html')).href;
+  for (const [w, h] of [[320, 640], [375, 812], [768, 1024], [1280, 800]]) {
+    const context = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await context.newPage();
+    const errs = [], ext = [];
+    page.on('console', m => m.type() === 'error' && errs.push(m.text()));
+    page.on('pageerror', e => errs.push(String(e)));
+    page.on('request', r => { const u = r.url(); if (!u.startsWith('file:') && !u.startsWith('data:')) ext.push(u); });
+    await page.goto(csUrl);
+    await page.waitForLoadState('load');
+    await page.evaluate(async () => { for (const i of document.images) { i.loading = 'eager'; } await Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))); });
+    const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    const broken = await page.evaluate(() => [...document.images].filter(i => !i.naturalWidth).map(i => i.src));
+    check(`case study ${w}px: no horizontal overflow`, over <= 0, String(over));
+    check(`case study ${w}px: no console errors, no outside requests, no broken images`, errs.length === 0 && ext.length === 0 && broken.length === 0, JSON.stringify({ errs, ext, broken }));
+    if (w === 375 && SHOTS) await page.screenshot({ path: path.join(SHOTS, 'case-study-375.png'), fullPage: true });
+    if (w === 1280 && SHOTS) await page.screenshot({ path: path.join(SHOTS, 'case-study-1280.png'), fullPage: true });
+    if (w === 1280) {
+      check('case study: has a single h1 and the honesty notice', (await page.locator('h1').count()) === 1 && (await page.locator('.notice').innerText()).includes('simulated'));
+      const links = await page.$$eval('a[href^="#"]', as => as.map(a => a.getAttribute('href')));
+      const missing = [];
+      for (const l of links) if (l.length > 1 && !(await page.$(l))) missing.push(l);
+      check('case study: every in-page link has a target', missing.length === 0, JSON.stringify(missing));
+      const back = await page.getAttribute('a.btn.primary', 'href');
+      check('case study: prototype button points to the prototype', back === '../index.html', back);
+    }
+    await context.close();
+  }
+  // prototype links to the case study
+  const { page, context } = await openApp();
+  check('prototype footer links to the case study', (await page.getAttribute('footer a[href="case-study/index.html"]', 'href')) === 'case-study/index.html');
+  await context.close();
+});
+
 await browser.close();
 const failed = results.filter(r => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
