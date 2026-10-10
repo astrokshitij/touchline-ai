@@ -9,7 +9,7 @@ A product case study and clickable prototype. It asks one question: **how do you
 
 ## The idea in one minute
 
-- **Source facts (from the assessment brief):** four support tickets across three clubs reported a clip of one child in another child's reel, always with similar jersey numbers (#4/#14, #1/#11, #7/#17). About 30% of generated reels were unopened. A flagship club wanted live streaming for a $180k renewal.
+- **Source facts (checked against the assessment brief):** three support tickets across three clubs (soccer, lacrosse and little league) described four wrong-child incidents: a child wearing #14 shown a #4 child's clip, a coach who saw it twice with similar, swapped-digit numbers, and a #1 child shown a #11 clip. About 30% of generated reels were unopened. A flagship club wanted every game live-streamed for grandparents and college scouts, tied to a $180k-a-season renewal. Full evidence map: [`docs/PROBLEM_STATEMENT.md`](docs/PROBLEM_STATEMENT.md).
 - **Decision:** fix reliable correct-child assignment first. Notification timing is the runner-up. Livestreaming gets a bounded feasibility investigation before anyone commits to a build.
 - **Design rule:** the coach decides on every clip. Model confidence, even 99%, never skips that step.
 - **Publishing rules:** publication is blocked if any clip is unresolved, any included child lacks consent or a recipient, or any clip is unrenderable. Any change after approval requires a fresh approval. A child with no highlights gets an honest "no confirmed highlights" notice, never someone else's clips.
@@ -61,7 +61,7 @@ How each requirement maps to the prototype: [Appendix A of the PRD](specs/PRD_SP
 - The jersey-mismatch warning is a hint only. It cannot tell the coach who is right, and whether it helps or causes warning fatigue is untested.
 - The decision log has no durable store, and shared-jersey cases, roles and guardian views are not built.
 - Consent handling is a mock. It has had no legal review.
-- The scenario figures (tickets, 30% unopened, 92% share, 58% survey) are from the assessment materials and were not re-verified in this repo.
+- The scenario figures (tickets, 30% unopened, 92% share, 58% survey) were checked against the assessment brief on 10 October 2026. Targets, thresholds and simulated values added by this repo are labelled as such. See `docs/CLAIMS_AND_EVIDENCE.md`.
 - Evaluation scores from the assessment, where mentioned elsewhere, are a reviewer's estimates, not official employer results.
 - All rights reserved for now (see [`LICENSE`](LICENSE)). Viewing and linking are welcome.
 

@@ -46,7 +46,7 @@ The TouchlineAI project utilized an advanced multi-agent AI pair-programming and
 During the engineering lifecycle, the AI agents produced sophisticated hallucinations that would have catastrophically degraded system safety and strategic rigor if accepted uncritically. Below are the key rejected claims:
 
 ### Case Study 1: The Gemini "Fabric-Fold OCR" Hallucination
-- **Context:** Analyzing customer complaints regarding jersey number misidentifications across clubs (#4 vs #14 at Tier-1 Academy, #1 vs #11 at Cobblestone FC).
+- **Context:** Analyzing customer complaints regarding jersey number misidentifications across clubs (#14 vs #4 at the flagship soccer club, #1 vs #11 at a little-league club, and "swapped digits" at a lacrosse club).
 - **AI Proposed Output (Gemini):**
   > *"The failure is caused by an OCR character-segmentation model defect where fabric folds and jersey wrinkles cause the neural network to mistakenly segment single-digit numbers into two bounding boxes, misclassifying 4 as 14."*
 - **Human Verification:** Checked source incident reports (`S4`, `S5`, `S6`).

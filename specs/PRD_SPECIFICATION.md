@@ -16,7 +16,7 @@
 **TouchlineAI** is an AI-powered sports highlights platform designed to detect, tag, and deliver personalized game clips of youth athletes directly to verified guardians. 
 
 ### Core Architectural Principle
-**Zero Unvetted Autonomous Publication.** Four support tickets across three clubs [Source] describe a clip of one child landing in another child's reel, each involving similar jersey numbers (#4/#14, #1/#11, #7/#17). The tickets give no technical cause, so this spec assumes none (not blur, not occlusion, not OCR). The "#4 shown as #14 at 94% confidence" case is the prototype's own scenario [Simulated]. It illustrates why a confidence score cannot replace a human check: a model can be confident and wrong.
+**Zero Unvetted Autonomous Publication.** Three support tickets across three clubs [Source] describe four incidents of one child's clip landing in another child's reel, each involving similar jersey numbers (#14/#4, #1/#11, and "swapped digits" at a lacrosse club). The tickets give no technical cause, so this spec assumes none (not blur, not occlusion, not OCR). The "#4 shown as #14 at 94% confidence" case is the prototype's own scenario [Simulated]. It illustrates why a confidence score cannot replace a human check: a model can be confident and wrong.
 
 To reduce the risk of wrong-child deliveries, which are a trust and safeguarding failure:
 1. **Mandatory Human-in-the-Loop (HITL):** Every proposed highlight assignment—regardless of reported model confidence—must be explicitly confirmed, reassigned, or removed by the team's verified coach before publication.
@@ -27,14 +27,14 @@ To reduce the risk of wrong-child deliveries, which are a trust and safeguarding
 
 ## 2. Problem Statement & Empirical Evidence
 
-Youth sports video platforms face an existential tension between viral engagement features and core identity attribution. Four support tickets from three clubs, plus one analytics finding, shape this spec:
+Youth sports video platforms face an existential tension between viral engagement features and core identity attribution. Three support tickets (four incidents) from three clubs, plus one analytics finding, shape this spec:
 
 | Incident Source | Empirical Evidence | Systemic Implication |
 |---|---|---|
-| **Tier-1 Academy Ticket #1** [Source] | Jersey #4 highlight delivered into Jersey #14's personal reel. | [Inference] Similar numbers can be confused. The ticket does not say why. |
-| **Brightwater SC Tickets #2 & #3** [Source] | Two separate wrong-child reel deliveries involving similar jersey numbers (#1 vs #11, #7 vs #17). | [Inference] The problem recurs at a second club. |
-| **Cobblestone FC Ticket #4** [Source] | Player #11 clip assigned to Player #1. | [Inference] A third club, same pattern (similar numbers). Cause still unknown. |
-| **Analytics log** [Source] | About 30% of generated reels were unopened. | [Hypothesis, not shown by the data] Wrong-child clips may reduce opening. The log does not establish that. |
+| **Ticket 1: flagship club parent** [Source] | A child wearing #14 had a clip of a different child, #4, in her highlight reel. | [Inference] Similar numbers can be confused. The ticket does not say why. |
+| **Ticket 2: lacrosse club coach** [Source] | Twice this season a clip in a player's reel was clearly a different kid. Both times the numbers were similar, "just swapped digits". | [Inference] The problem recurs, and a coach noticed. Cause not stated. |
+| **Ticket 3: little-league parent** [Source] | A child wearing #1 had a clip of a #11 child in his reel. | [Inference] A third club and sport, same pattern. Cause still unknown. |
+| **Analytics note** [Source] | About 30% of generated reels were never opened. The analytics team's note says most sit unopened because the notification arrives late at night, or because the thumbnail shows the wrong kid ("support tickets suggest"). | [Hypothesis, not tested] Both causes are suggestions, not measurements. The brief has no timing data. |
 
 ### The Denominator Reality Check
 While marketing dashboards highlighted a **92% share rate**, this metric was computed exclusively on *opened* reels ($D_{opened}$). Because about 30% of generated reels were never opened, the share rate across all generated reels is about **64%** ($0.92 \times 0.70 = 0.644$), assuming a reel that is never opened is never shared [Assumption]. The data does not show that accuracy is the main reason reels go unopened. Attribution is prioritised because a wrong-child delivery is a trust and safeguarding failure in its own right.

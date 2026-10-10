@@ -75,10 +75,10 @@ open_rate, finish_cond = 0.06, 0.01
 bound = open_rate * finish_cond
 out += ["## 3. Editor funnel (source bounds)", "",
         f"- Opened editor: **{open_rate:.0%}**; finished among openers: **< {finish_cond:.0%}**; so finished overall **< {bound:.2%}**.",
-        "- Stated survey demand was 58% (n = 210, 40 clubs). Survey and telemetry cover different groups, so the gap is suggestive, not exact.",
+        "- In the survey (210 respondents, 40 clubs), 58% named editing controls their single biggest ask. Survey and telemetry cover different groups, so the gap is suggestive, not exact.",
         "- Illustration (SYNTHETIC cohort): per 100,000 accounts, at most 6,000 open the editor and fewer than 60 finish an edit.", ""]
 fig, ax = plt.subplots(figsize=(7.5, 3.2))
-stages = ["Said they want editing\n(survey, 58%)", "Opened the editor\n(telemetry, 6%)", "Finished an edit\n(telemetry, < 0.06%)"]
+stages = ["Named editing their\nbiggest ask (survey, 58%)", "Opened the editor\n(6% of parents)", "Finished an edit\n(< 0.06% of parents)"]
 vals = [58, 6, 0.06]
 bars = ax.bar(stages, vals, color=[GREY, BLUE, RED])
 for b, v in zip(bars, vals):

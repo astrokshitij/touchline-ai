@@ -3,10 +3,10 @@
 **Status:** a plan and a decision template. **No estimate, vendor quote, cost or timeline for a build is claimed.** The case study ranks full livestreaming below correct-child assignment and notification timing. It commits only to a **bounded feasibility assessment**, proposed for **October 15, 2026**, before any build commitment [Source: assessment materials; date proposed, not re-verified].
 
 ## The request
-A flagship club customer asked for live streaming of weekend matches as part of a $180k contract renewal [Source: assessment brief].
+A flagship club's executive director asked for live streaming of **every game**, not only highlight clips, so **grandparents and college scouts** can watch in real time. Renewal and signups open in six weeks, and the account is about $180k a season [Source: assessment brief].
 
 ## What this investigation must answer
-1. **Who may watch, and how is that enforced?** Private guardian viewing only, or anyone? A coach cannot review a live stream before viewers see it, so access and consent must be designed first.
+1. **Who may watch, and how is that enforced?** The request names grandparents and **college scouts**. Scouts are third parties, not guardians, so a guardian-only design would not deliver what was asked, and letting outsiders watch live footage of children raises the consent bar. A coach cannot review a live stream before viewers see it, so access and consent must be designed first.
 2. **Consent and safeguarding:** whose consent is needed (every child on the pitch, including opponents), and what happens for a child whose guardian has not consented? **Needs legal review.**
 3. **Build, buy or partner?** Third-party streaming SDKs such as LiveKit or Agora are named only as examples. **None has been evaluated.**
 4. **Field conditions:** what connectivity exists at the venues, and what is the failure behaviour when it drops?
