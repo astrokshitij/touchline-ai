@@ -34,7 +34,7 @@ The original was time-boxed to 120 minutes. This repository is the **extended, p
 | Livestreaming for the biggest club? | A **bounded feasibility investigation** before any build commitment, because it is a different product, scouts are third parties, and consent has to be designed first | `projects/07-livestream-feasibility-brief` |
 | Not building? | The **parent video editor**: stated demand did not show up in behaviour. Also the cosmetic tickets | `specs/TRADE_OFF_ANALYSIS.md` |
 | The misleading metric? | 92% is about 64% of all reels, under a stated assumption | `projects/04-data-analysis-metrics-audit` |
-| Prototype? | Clickable, with the review and publish rules enforced and 92 browser checks | `site/` and the live case study |
+| Prototype? | Clickable, with the review and publish rules enforced and an automated browser test suite | `site/` and the live case study |
 | AI workflow note? | What AI drafted, what stayed human, and the claims rejected | `logs/AGENTIC_WORKFLOW.md` |
 
 ## What the brief does not say

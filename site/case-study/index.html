@@ -76,7 +76,7 @@
   <div class="wrap">
     <span class="brand">TouchlineAI</span>
     <nav aria-label="Sections">
-      <a href="#problem">Problem</a><a href="#prototype">Prototype</a><a href="#wireframes">Wireframes</a><a href="#analysis">Data</a><a href="#decisions">Decisions</a><a href="#more">More</a><a href="#honest">Limits</a>
+      <a href="#problem">Problem</a><a href="#prototype">Prototype</a><a href="#wireframes">Wireframes</a><a href="#analysis">Data</a><a href="#decisions">Decisions</a><a href="#ai-evals">AI evals</a><a href="#more">More</a><a href="#honest">Limits</a>
     </nav>
   </div>
 </header>
@@ -125,7 +125,7 @@
     <div class="card"><h3>What is simulated</h3>
       <ul class="clean"><li>Detection and confidence scores are fixed fictional data.</li><li>Frames are drawn graphics, not footage.</li><li>Delivery is simulated, with a failure you can switch on and retry.</li><li>No backend, login or saved data. The decision log resets on reload.</li></ul></div>
   </div>
-  <p class="sub" style="margin-top:16px">Quality: 80 automated browser checks cover the flow, the publication gates, console errors, outside network requests, and layout at four screen widths. They test this prototype only, not a real product.</p>
+  <p class="sub" style="margin-top:16px">Quality: automated browser checks cover the flow, the publication gates, console errors, outside network requests, and layout at four screen widths. They test this prototype only, not a real product.</p>
 </section>
 
 <section id="wireframes">
@@ -165,6 +165,62 @@
       <tr><td>Where do teardowns stand?</td><td>Published as labelled drafts.</td><td>They rest on public pages that were read second-hand, so claiming hands-on work would mislead.</td></tr>
     </tbody>
   </table></div>
+</section>
+
+<section id="ai-evals">
+  <h2>AI evals: how AI was used, and how its output was checked</h2>
+  <p class="sub">AI tools drafted much of the documents and the prototype. Their output was treated as a draft to be checked, not as a source. This section reports what the checks found. Every count below comes from a <a href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/ai-evals/claims-ledger.csv">ledger file in the repository</a>, and the browser tests fail if this page and the ledger disagree.</p>
+  <p class="notice"><strong>Scope.</strong> No AI model was built or evaluated in this project. This is an audit of AI-<em>drafted text and code</em>. The plan for evaluating a future detection model is in the pre-mortem project and is a plan only.</p>
+
+  <div class="grid g4" style="margin-top:20px">
+    <div class="card"><div class="stat" data-ledger="checked">34</div><p>AI-drafted claims checked in two review passes.</p></div>
+    <div class="card"><div class="stat" data-ledger="unsupported">21</div><p>were unsupported: <span data-ledger="noSource">12</span> with no source, <span data-ledger="overstated">7</span> stronger than the evidence allows, <span data-ledger="contradicted">2</span> contradicted by the brief.</p></div>
+    <div class="card"><div class="stat" data-ledger="supported">8</div><p>matched the original brief.</p></div>
+    <div class="card"><div class="stat" data-ledger="inconsistent">4</div><p>contradicted another part of the repository. One more is author-sourced and cannot be checked against the brief.</p></div>
+  </div>
+  <p class="sub" style="margin-top:12px">These are counts of ledger rows, not an error rate. The rows are the claims that were chosen or flagged for checking, not a sample of every sentence in the repository.</p>
+
+  <h3 style="margin-top:28px">What was checked, how, and what changed</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>What the AI produced</th><th>How it was checked</th><th>What failed</th><th>What changed</th></tr></thead>
+    <tbody>
+      <tr><td>Specific details: a jersey pair, notification open rates by day, recap length and window, a survey question, an effort estimate, club names</td><td>Each compared with the original brief</td><td>None of them is in the brief (five rows: four with no source, one with the wrong club sports)</td><td>Removed everywhere, including this page. The brief's own hypothesis (late-night notifications) replaced the invented one</td></tr>
+      <tr><td>Technical causes for the wrong-child errors, and a claim that they drive the unopened reels</td><td>Compared with the support tickets and the analytics note</td><td>The tickets give no cause. The analytics note only suggests one</td><td>Causes deleted. The spec says the cause is unknown. The link to unopened reels is labelled a hypothesis</td></tr>
+      <tr><td>Numbers that were arithmetic, such as 64.4% and "35.6% to unlock"</td><td>Recomputed and the assumptions written out</td><td>The values needed assumptions (30% unopened, unopened never shared) that were not stated, and 35.6% included opened-but-unshared reels</td><td>Restated as about 64% with both assumptions, and as a 30% / about 6% split</td></tr>
+      <tr><td>Approvals, legal wording and prototype claims: "Approved by Product Leadership", "COPPA violations", "immutable audit trail", a cited test file</td><td>Read against the repository itself</td><td>Nobody approved anything, no legal review exists, the prototype keeps an in-memory log, and the cited test file was missing</td><td>Marked as drafts or hypotheses, reworded, and replaced by a test suite that can be run</td></tr>
+      <tr><td>Shortcuts that weaken the safety rule: a bulk-confirm button, a "100% zero wrong child" banner, silently excluding children without consent (from the assessment-time log)</td><td>Compared with the product rule that the coach decides every clip</td><td>Each one would let an unchecked or hidden decision through</td><td>Rejected. Every clip starts unresolved, the success message says delivery is simulated, and exclusions stay visible</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="grid g2" style="margin-top:24px">
+    <div class="card"><span class="tag warn">Pass 1</span><h3>Review without the source</h3>
+      <p><span data-ledger="pass1">20</span> entries. The reviewer had only the repository: its own files, its AI log and arithmetic. It found real internal problems. It also left the invented ticket, notification and recap details in place, listing them as things to check against the originals.</p></div>
+    <div class="card"><span class="tag ok">Pass 2</span><h3>Review against the brief</h3>
+      <p><span data-ledger="pass2">14</span> entries. With the original brief supplied by the author, 8 matched and 5 did not (4 had no source, 1 was wrong). One more is author-sourced and not in the brief. Pass 1 had also softened an invented effort figure to "a proposed 8-week build". Pass 2 removed it.</p></div>
+  </div>
+  <p class="sub" style="margin-top:16px"><strong>While building this section</strong> (counted separately, <span data-ledger3="entries">9</span> entries). <span data-ledger3="supported">5</span> statistics used on this page were recomputed with a script and all matched. <span data-ledger3="contradicted">3</span> statements were wrong or out of date and were fixed: this page said 80 browser checks when the suite had 92, and two notes still said the scenario figures had not been re-checked after they had been. <span data-ledger3="open">1</span> question is still open because it needs the original brief: whether the survey respondents were all parents.</p>
+
+  <h3 style="margin-top:28px">What the work taught</h3>
+  <ul class="clean">
+    <li>An AI that drafts without a source fills gaps with plausible detail. The invented items were specific and confident, which is why they were easy to miss.</li>
+    <li>A review that does not hold the source cannot catch invented facts. Checking against the original brief found what an internal review could not.</li>
+    <li>A fix can carry the same fault. The effort figure was softened, not removed, until the second pass.</li>
+    <li>Safety rules need tests, not just wording. Several tests now guard the rules the AI proposed to bend.</li>
+    <li>Labelling is part of the fix. The main documents now mark claims as source, inference, target or simulated.</li>
+  </ul>
+
+  <h3 style="margin-top:24px">Limits of this audit</h3>
+  <ul class="clean">
+    <li>Both review passes were run with an AI coding assistant. The author supplied the original brief and reviews the changes. The brief is not published here, so pass 2 cannot be re-run by a reader.</li>
+    <li>The verdicts are classifications made by reading each row. They are not measurements.</li>
+    <li>Almost all of the problem entries (24 of 25) were already in the first commit. The commit history does not record which AI tool drafted them, so that attribution rests on the author's statement and the assessment log.</li>
+    <li>Five further rejections from the assessment itself (a fabricated cause, a users-versus-reels mix-up, a bulk-confirm button, an unverifiable "100%" banner, silent exclusion) are self-reported in the workflow log and are not counted above.</li>
+  </ul>
+  <div class="cta">
+    <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/AI_EVALS.md">Method and full results</a>
+    <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/ai-evals/claims-ledger.csv">The claims ledger</a>
+    <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/projects/06-premortem-and-ai-eval-plan/README.md">Plan for evaluating a future model</a>
+  </div>
 </section>
 
 <section id="more">
