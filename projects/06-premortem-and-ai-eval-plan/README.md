@@ -36,7 +36,7 @@ Two linked documents: a **pre-mortem** (imagine the pilot failed, work backwards
 |---|---|---|
 | Moment detection | Does it find the plays worth clipping? | Misses (recall) are invisible to a coach who only reviews what is shown |
 | Person detection and tracking | Is the right player followed through the clip? | Tracking errors turn into identity errors |
-| Jersey number reading | Is the number read correctly, and when is it unreadable? | Source tickets involve number pairs such as 4/14, 1/11, 7/17 |
+| Jersey number reading | Is the number read correctly, and when is it unreadable? | Source tickets involve number pairs such as 14/4 and 1/11, and "swapped digits" |
 | Identity assignment | Is the clip assigned to the right rostered child, including shared numbers? | This is the product's actual promise |
 
 ### Dataset

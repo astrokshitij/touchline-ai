@@ -18,7 +18,7 @@
 ## 3. Editor funnel (source bounds)
 
 - Opened editor: **6%**; finished among openers: **< 1%**; so finished overall **< 0.06%**.
-- Stated survey demand was 58% (n = 210, 40 clubs). Survey and telemetry cover different groups, so the gap is suggestive, not exact.
+- In the survey (210 respondents, 40 clubs), 58% named editing controls their single biggest ask. Survey and telemetry cover different groups, so the gap is suggestive, not exact.
 - Illustration (SYNTHETIC cohort): per 100,000 accounts, at most 6,000 open the editor and fewer than 60 finish an edit.
 
 ## 4. The proposed pilot gate (Wilson lower bound >= 0.95 at n = 500 audited clips)

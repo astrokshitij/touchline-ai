@@ -13,7 +13,7 @@ In high-growth AI startups, product analytics often mask critical quality failur
 
 This paper provides a rigorous mathematical deconstruction of two prominent metrics in the TouchlineAI ecosystem:
 1. **The 92% Share Rate Trap:** Why an apparent 92% sharing rate becomes about **64%** across all generated reels, under a stated assumption.
-2. **The Editor Adoption Fallacy:** How a 58% survey demand collapsed into a **<0.06% full-funnel completion rate** in real production telemetry.
+2. **The Editor Adoption Fallacy:** How 58% of respondents naming editing controls their single biggest ask collapsed into a **<0.06% full-funnel completion rate** in production telemetry.
 3. **The North Star Metric:** The formal mathematical formulation of **Correct-Child Delivery Rate (CCDR)** as the true measure of end-to-end product value.
 
 ---
@@ -59,13 +59,17 @@ $$S_{\text{effective}} = 0.92 \times 0.70 = \mathbf{0.644 \quad (64.4\%)}$$
 └──────────────────────────────┴──────────────────────────────────────────────┘
 ```
 
-### The Auto-Recap Metric Conflation
-The dashboard also reported a **90% auto-recap Share-button click rate**. Stakeholders erroneously conflated this with the 92% highlight reel share rate. 
+### Two Similar Numbers: 90% and 92%
+Two figures in the materials look alike and are easy to confuse:
+- **92% Reel Share Rate** (product-health dashboard, this week): reels shared to at least one other person, calculated only over reels a parent opened.
+- **90%** (research summary, last 90 days, all accounts): the Share button on the weekly auto-recap is used in 90% of recaps sent.
 
-Auditing the underlying tracking revealed:
-- **Different Artifact:** Auto-recap is a 15-second team-wide aggregate score reel, whereas personal reels are individual player clips.
-- **Different Event:** The 90% metric recorded a single button click, not a completed external social broadcast.
-- **Different Window:** Recaps were measured on a 24-hour window; personal reels were measured on a 90-day cohort.
+They differ in three ways:
+- **Artifact:** a personal highlight reel versus the weekly team auto-recap.
+- **Event:** "shared to at least one other person" versus "the Share button was used".
+- **Denominator and window:** opened reels this week versus recaps sent over 90 days.
+
+Neither number says how many generated reels reached a second person.
 
 **Product Consequence:** The 92% figure overstated reach. About 64% of generated reels were opened and shared. The remaining ~36% split into roughly 30% never opened and roughly 6% opened but not shared. Not being shared is not the same as failing to deliver value, and this data does not show why reels went unopened.
 
@@ -74,19 +78,15 @@ Auditing the underlying tracking revealed:
 ## 3. The Editor Funnel Fallacy: Stated vs. Revealed Preference
 
 ### The Survey Anomaly (Stated Preference)
-A quarterly customer survey across 40 youth sports clubs (n = 210 respondents) asked:
-> *"What features would improve your experience with highlight videos?"*
-> **Result: 58% requested in-app editing and trimming tools.**
-
-Based on this, product teams proposed an 8-week initiative to build a desktop-class timeline editor.
+A quarterly parent survey (210 respondents across 40 clubs) found that **more editing controls, so a parent can trim their kid's reel and add their own music, was the top requested improvement. 58% named it as their single biggest ask.**
 
 ### Telemetry Audit (Revealed Preference)
-Usage data across active parent accounts over 90 days establishes clear revealed preference:
+Usage data over the last 90 days, across all accounts, shows what parents actually did:
 
 | Funnel Stage | Metric / Event | Telemetry Bound |
 |---|---|---|
-| **Editor Opening** | Opened the video editor (`editor_session_started`) | **6%** |
-| **Editor Completion** | Finished / exported edit among openers | **< 1%** |
+| **Editor Opening** | Parents who opened the Reel Editor | **6%** |
+| **Editor Completion** | Parents who finished an edit, among those who opened it | **< 1%** |
 | **Full Funnel Completion** | Finished edit across all accounts ($0.06 \times <0.01$) | **< 0.06%** |
 
 Usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%.

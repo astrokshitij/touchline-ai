@@ -3,7 +3,7 @@
 **Status:** a design only. No experiment has run, and no result is claimed. The case study ranks notification timing as the **runner-up** priority behind reliable correct-child assignment.
 
 ## Why a test, not a rollout
-The brief reports that opens look higher when parents are notified Sunday evening rather than Saturday afternoon (about 85% vs 70%) [Source: assessment materials, correlational, not re-verified]. A correlation like this can come from many things (which teams notify when, game types, the audience). Only a randomised test shows whether *changing the timing* changes opens.
+The analytics team's note in the brief says most of the roughly 30% of reels that are never opened sit unopened because the notification arrives late at night, or because the thumbnail shows the wrong kid (it says "support tickets suggest") [Source: assessment brief; a hypothesis, not a measured result]. The brief has no data on when notifications are sent or when parents open them. Only a randomised test shows whether *changing the send time* changes opens.
 
 ## Order of work (an inference)
 Run this **after** the attribution fixes. Wrong-child reels may depress opens [Hypothesis, not shown by data], which would contaminate any timing result.
@@ -12,8 +12,8 @@ Run this **after** the attribution fixes. Wrong-child reels may depress opens [H
 
 | Item | Choice | Why |
 |---|---|---|
-| Hypothesis | Sending the notification on Sunday evening raises the share of guardians who open the reel within 72 hours, versus Saturday afternoon | The brief's correlation |
-| Arms | A: Saturday afternoon (current). B: Sunday evening | Keep it to one change |
+| Hypothesis | Sending the notification inside a daytime or early-evening window in the guardian's local time raises the share of guardians who open the reel within 72 hours, versus sending whenever the reel is ready | The analytics note's late-night hypothesis |
+| Arms | A: current behaviour (sent when the reel is ready, including late at night). B: held and sent in a fixed local-time window, chosen from open-time data | Keep it to one change |
 | Unit of randomisation | **Team**, not guardian | Parents on a team talk to each other. Randomising guardians inside a team leaks the treatment |
 | Primary metric | Reel **opened** within 72 hours of the send, over **all** notified guardians | Uses the full denominator, no conditioning on prior opens |
 | Secondary | Time to first open; share of opened reels shared (shown separately, never as the headline) | |
@@ -36,7 +36,7 @@ Baseline open rate 70% (from the brief), two-sided alpha 0.05, power 80%. Script
 
 The 1.5 design effect is an **assumption**. Real clustering depends on team sizes and how similar guardians on a team are. Estimate it from past data before committing.
 
-**Reading it.** The claimed 15-point gap would be easy to detect. A realistic effect is probably smaller, so plan for +5 points unless there is a reason not to. That is about 1,900 guardians per arm, which tells you how many teams you need.
+**Reading it.** The size of the effect is unknown, because the brief has no timing data. A realistic effect is probably small, so plan for +5 points unless a pilot suggests otherwise. That is about 1,900 guardians per arm, which tells you how many teams you need.
 
 ## Risks and how they are handled
 - **Weekend effects:** randomising by team means both arms experience the same weekends.

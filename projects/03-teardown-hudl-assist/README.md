@@ -29,7 +29,7 @@ Coach uploads game + supplies roster details
 - **Output matches the ask.** Athlete playlists and highlight reels are the personalised artifact players and families want.
 
 ## 4. Trade-offs and gaps
-- **Latency is the price.** About a day. For youth families the Saturday-game, Sunday-evening rhythm may tolerate that, which links to the notification-timing question [Inference].
+- **Latency is the price.** About a day. Whether families would tolerate that wait is untested, and it links to the notification-timing question [Inference].
 - **Cost and eligibility.** Pricing and whether youth or recreational teams can order the service were [Not found].
 - **Error handling is undocumented in what I saw.** I found no description of what happens when a tag is wrong, or who is accountable [Not found].
 - **Scale limits.** A staffed model grows with headcount. A coach-in-the-loop model grows with coach time, which is why TouchlineAI measures review burden [Inference].
@@ -41,7 +41,7 @@ Coach uploads game + supplies roster details
 | Analysts verify, ~24h | Coach verifies, minutes | Fast, but depends on a volunteer coach's time. Track abandonment (PRD failure mode 2) |
 | Roster details supplied by customer | Roster and consent confirmed on Setup | Keep it. Consent and delivery gates are the added safety layer |
 | Highlight reels per athlete | Reels per child, honest zero state | Make the zero state a feature, not an apology |
-| Quoted turnaround | No turnaround promised | If review takes a coach 5 minutes, "reels by Sunday evening" is a concrete, testable promise |
+| Quoted turnaround | No turnaround promised | If review takes a coach 5 minutes, "reels ready the same day" is a concrete, testable promise |
 
 ## 6. Reference pattern: correcting AI face groups in Google Photos
 Not a sports product, but the closest everyday example of people correcting machine identity labels. From Google's help page and secondary summaries (the primary page was not opened):

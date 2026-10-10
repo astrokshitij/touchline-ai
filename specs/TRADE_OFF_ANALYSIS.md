@@ -15,7 +15,7 @@ In the assessment scenario, the product team faced a high-stakes enterprise dile
 The flagship customer, **Enterprise Club Partner (Tier-1 Academy)**, a **$180,000 contract** up for renewal in six weeks [Source], asked for live streaming of weekend matches immediately, or it might leave [Source].
 
 **The Product Reality:**
-At the same time, four support tickets from three clubs (Tier-1 Academy, Brightwater SC, Cobblestone FC) reported wrong-child clips, for example a jersey #4 clip in jersey #14's reel [Source]. The tickets give no cause. The 94%-confidence version of this case is the prototype's simulation, not a source fact.
+At the same time, three support tickets across three clubs (soccer, lacrosse and little league) described four wrong-child incidents: a child wearing #14 shown a #4 child's clip, a coach who saw it twice with similar, swapped-digit numbers, and a #1 child shown a #11 clip [Source]. The tickets give no cause. The 94%-confidence version of this case is the prototype's simulation, not a source fact.
 
 Sending one child's highlights to another child's parent is a serious breach of trust and a safeguarding concern [Inference].
 
@@ -46,13 +46,13 @@ $$\text{Priority Score} = 0.35 \times \text{Core Impact} + 0.30 \times \text{Evi
 
 #### 1. Roster Tagging & Coach HITL Correction (Score: 4.15 — RANK #1: SHIP NEXT)
 - **Core Impact (5/5):** Direct fulfillment of the primary job-to-be-done: *"Deliver my child's highlights accurately."* Delivering the wrong child breaks the core value proposition irreversibly.
-- **Evidence Rigor (4/5):** Concrete, corroborated ticket evidence from three separate clubs (Tier-1 Academy, Brightwater, Cobblestone) documenting jersey number collision (#4 vs #14, #1 vs #11).
+- **Evidence Rigor (4/5):** Concrete, corroborated ticket evidence from three separate clubs (a soccer club, a lacrosse club and a little-league club) documenting jersey number confusion (#14 vs #4, #1 vs #11, and "swapped digits" at a lacrosse club).
 - **Breadth (3/5):** Directly affects every match, every team, and every generated reel.
 - **Commercial Risk Protection (4/5):** If highlights remain inaccurate, no parent will pay subscription fees, rendering any downstream upsell (including streaming) worthless.
 
 #### 2. Notification Timing Optimization (Score: 2.75 — RANK #2: RUNNER-UP)
-- **Core Impact (3/5):** The materials report a link between notification timing and open rates (70% versus 85% for Sunday evening versus Saturday afternoon) [Source; correlation only, not re-checked here].
-- **Evidence Rigor (2/5):** Correlational, not a controlled test, so it does not show that changing the timing would raise opens.
+- **Core Impact (3/5):** The analytics team's note says most never-opened reels sit unopened because the notification arrives late at night, or because the thumbnail shows the wrong kid [Source: the note's own wording is "support tickets suggest", so this is a hypothesis].
+- **Evidence Rigor (2/5):** An internal hypothesis with no test. The brief has no data on when notifications are sent or when parents open them.
 - **Decision:** Validate behavioral open patterns before re-architecting notification microservices.
 
 #### 3. Full Live Video Streaming (Score: 2.25 — RANK #3: DEFERRED / INVESTIGATE BOUNDED)
@@ -63,7 +63,7 @@ $$\text{Priority Score} = 0.35 \times \text{Core Impact} + 0.30 \times \text{Evi
 
 #### 4. Parent In-App Video Editor Controls (Score: 1.85 — RANK #4: REJECT / DEPRIORITIZE)
 - **Core Impact (2/5):** Enables parents to trim clips or re-order music.
-- **Evidence Rigor (2/5):** Stated preference anomaly (58% survey request) completely refuted by telemetry (<0.06% funnel completion).
+- **Evidence Rigor (2/5):** Stated preference anomaly (58% named editing controls as their single biggest ask) completely refuted by telemetry (<0.06% funnel completion).
 - **Decision:** Do not allocate engineering cycles to desktop editing tools.
 
 #### 5. Cosmetic Polish: Watermarks & App Icons (Score: 1.00 — PARKED)
@@ -71,7 +71,7 @@ $$\text{Priority Score} = 0.35 \times \text{Core Impact} + 0.30 \times \text{Evi
 
 ---
 
-## 3. Deconstructing the Enterprise Ultimatum ($180k ARR)
+## 3. Deconstructing the Enterprise Ultimatum ($180k a season)
 
 ### Why Diverting Engineering to Streaming Now Is Risky
 
@@ -110,13 +110,13 @@ Rather than an outright refusal, we established a **Value Protection Negotiation
 ### Script & Communication Blueprint for Enterprise Club Executive
 > Illustrative script written by the author for the case study; it was not delivered to anyone.
 >
-> *"We hear your board's desire to offer sideline viewing to distant grandparents. However, customer support tickets have documented repeated wrong-child highlight attributions—specifically confusing jersey #4 and #14—while ~30% of generated reels remain unopened across the dashboard cohort.*
+> *"We hear your board's wish to let grandparents and college scouts watch games in real time. However, customer support tickets have documented repeated wrong-child highlight attributions—specifically confusing jersey #4 and #14—while ~30% of generated reels remain unopened across the dashboard cohort.*
 >
 > *If we stream video live before solving child identity attribution and guardian gating, we would be putting live video of children in front of viewers before consent and access rules are in place.*
 >
 > *Here is our firm commitment:*
 > 1. *We are executing a phased pilot rollout establishing baseline safety and measuring coach review burden before any unmonitored expansion.*
-> 2. *By **October 15, 2026** [proposed date], our team will deliver a feasibility assessment for private parental viewing, including whether to build or buy (third-party streaming SDKs such as LiveKit or Agora are named only as examples; none has been evaluated).*
+> 2. *By **October 15, 2026** [proposed date], our team will deliver a feasibility assessment for live viewing by grandparents and college scouts, including who may watch, how consent is enforced, and whether to build or buy (third-party streaming SDKs such as LiveKit or Agora are named only as examples; none has been evaluated).*
 > 3. *We will not commit a build date for streaming until the identity safety gates are working."*
 
 ### Why This Position Protects the Business
@@ -134,7 +134,7 @@ A classic trap in product management is confusing what customers *say* they want
                 STATED VS. REVEALED PREFERENCE FUNNEL
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ STATED PREFERENCE (Survey of 210 respondents across 40 clubs)               │
-│ [████████████████████████████████████████████] 58% "We need editing tools!" │
+│ [████████████████████████████████████████████] 58% top ask: editing tools │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
                                       ▼
@@ -146,14 +146,14 @@ A classic trap in product management is confusing what customers *say* they want
 ```
 
 ### Mathematical Breakdown
-- Total Survey Demand: 58% across 210 respondents.
+- 58% of 210 respondents named editing controls (trim a reel, add music) as their single biggest ask.
 - Telemetry: Usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%.
   $$\text{Funnel Completion} = P(\text{Open Editor}) \times P(\text{Finish} \mid \text{Open Editor}) \le 0.06 \times 0.01 < 0.0006 \quad (< 0.06\%)$$
 
 ### Strategic Takeaway
 One possible reason for the gap is that people asked for editing hoping to fix bad clips [Hypothesis, not tested]. The two numbers also come from different groups and times (survey respondents versus account telemetry), so the comparison is suggestive, not exact.
 
-An 8-week editor build was proposed [Source]. It would not address wrong-child delivery [Inference]. The data points toward fixing accuracy at the source, with coach review, before adding editing tools [Inference].
+More editing controls (trim a reel, add music) were the top requested improvement [Source]. Building them would not address wrong-child delivery [Inference]. The data points toward fixing accuracy at the source, with coach review, before adding editing tools [Inference].
 
 ---
 

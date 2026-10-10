@@ -1,6 +1,6 @@
 # Data analysis: a metrics audit of the TouchlineAI scenario
 
-**What this is.** A reproducible analysis that re-derives and stress-tests the numbers behind the case study: the 92% share rate, the 58% editor demand, the proposed pilot gate, and the North Star metric (CCDR).
+**What this is.** A reproducible analysis that re-derives and stress-tests the numbers behind the case study: the 92% share rate, the 58% who named editing their top ask, the proposed pilot gate, and the North Star metric (CCDR).
 
 **What this is not.** Real product data. Inputs are the figures stated in the assessment brief (not re-verified) plus clearly labelled synthetic simulation. The synthetic parts show *mechanisms*, not findings about a real product.
 
@@ -12,7 +12,7 @@
 |---|---|---|---|
 | 1 | The "92% share rate" is about **64%** of all generated reels (0.92 x 0.70), under the assumption that unopened reels are never shared. The "35.6% of reach to unlock" framing is wrong: about 5.6 points are reels that were opened and still not shared. | Source numbers + 1 assumption | `01_share_rate_decomposition.png` |
 | 2 | The 64.4% headline has false precision. Over plausible input ranges (20-40% unopened, 0-10% sharing without opening) it spans **55% to 76%**. Say "about 64%". | Sensitivity analysis | `02_share_rate_sensitivity.png` |
-| 3 | Editor: 6% opened, under 1% of those finished, so **under 0.06%** finished. 58% said they wanted editing. Different populations, so suggestive, not exact. | Source bounds | `03_editor_funnel.png` |
+| 3 | Editor: 6% opened, under 1% of those finished, so **under 0.06%** finished. 58% of surveyed parents named editing controls their single biggest ask. Different populations, so suggestive, not exact. | Source bounds | `03_editor_funnel.png` |
 | 4 | The proposed pilot gate (Wilson lower bound >= 0.95 at 500 audited clips) needs **485 of 500 correct (97.0%)**. | Computed | `04_wilson_gate.png` |
 | 5 | A system that is *truly* 97% accurate passes that gate only **57%** of the time at n = 500. Truly 98% passes 95% of the time. Truly 96% passes 15% of the time. So the audit size is a real product decision. **Decision taken:** the Phase 1 gate uses at least 1,000 audited clips. | Exact binomial | `05_gate_power.png` |
 | 6 | Whether an honest zero-highlight week counts as success changes CCDR by about **10 points** in a synthetic cohort. **Decision taken:** a verified true-zero week counts as a success, a missed moment counts as a miss, and CCDR is always reported beside Highlight Coverage so it cannot be gamed by withholding. | Synthetic, invented rates | `06_ccdr_rules.png` |
