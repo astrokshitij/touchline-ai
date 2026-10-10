@@ -24,7 +24,7 @@ No install, no build, no network.
 1. Open `site/index.html` in a browser (double-click it), or run `python3 -m http.server -d site 8000` and visit `http://localhost:8000`.
 2. A narrow window or phone view (375px wide) is the intended layout. Wider windows also work.
 
-**Live portfolio:** <https://touchline-ai-kshitij.netlify.app> (prototype) and <https://touchline-ai-kshitij.netlify.app/case-study/> (case study). The live site is updated by deploying `site/`, not by pushing to GitHub, so it can lag behind this repo.
+**Live portfolio:** <https://touchline-ai-kshitij.netlify.app> (prototype) and <https://touchline-ai-kshitij.netlify.app/case-study/> (case study). **Wireframes (Figma, view only):** <https://www.figma.com/design/ldS1cRoozKTRGsuvzqhAWZ?node-id=5-10>. The Figma file is partly built: the 13 coach-flow screens are done; its brief and guardian pages are not (see `projects/01-wireframes-v2`). The live site is updated by deploying `site/`, not by pushing to GitHub, so it can lag behind this repo.
 
 ## Demo script (about 4 minutes)
 
