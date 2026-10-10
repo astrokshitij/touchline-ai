@@ -3,7 +3,8 @@
 
 - **Author & Auditor:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
 - **Environment:** Multi-Model Orchestration (ChatGPT-4o, Gemini 1.5/3.8, Antigravity Agentic IDE)
-- **Status:** Portfolio Audit Trail & Verification Ledger
+- **Status:** Portfolio audit trail written at assessment time. The primary record is the original AI use log, kept outside this repo. This copy was not re-checked against it (for example the model name "Gemini 1.5 / 3.8" should be confirmed).
+- **Post-assessment revision (October 2026):** An AI coding assistant (Claude Code) helped revise this repo's documents and prototype after the assessment closed. The author reviews all changes before publishing. See `docs/CLAIMS_AND_EVIDENCE.md`.
 
 ---
 
@@ -95,8 +96,8 @@ During the engineering lifecycle, the AI agents produced sophisticated hallucina
 | **Phase 3: Spec Drafting** | PRD Formulation (FR-1 to FR-24) | ChatGPT-4o | Drafted initial requirements, but left processing fallback and mixed-game weekly success metrics loosely defined. | Enforced strict Processing Readiness contract (`processing_ready`) and formal Wilson-interval aggregation rules. | Ran desk-review test against likely engineering blockers; resolved all ambiguities before implementation. |
 | **Phase 4: Prototype UI** | Interactive Web Prototype | Antigravity | Included a bulk-confirmation button and premature "100% accuracy" delivery banners. | **REJECTED & PURGED** bulk confirm and unverified accuracy claims; restored individual review. | Manual code review and E2E DOM inspection; verified compliance with FR-6, FR-7, and FR-21. |
 | **Phase 5: Preflight Gates** | Publication Blocker Verification | Antigravity | Allowed partial publication where unconsented children were silently excluded from the delivery batch. | **REJECTED** silent quarantine. Enforced atomic batch holding (FR-17, FR-18) requiring explicit consent or exclusion. | Automated test suite in `scratch/test_e2e.js` verifying hard block on missing consent. |
-| **Phase 6: E2E Testing** | Headless Chrome Automation | Antigravity | Ran 12 automated test cases via Chrome DevTools Protocol at 375px mobile viewport. | Verified that all 12 test assertions passed with 0 console errors and zero horizontal overflow. | Reviewed test execution logs and CDP output buffers. |
-| **Phase 7: Asset Synthesis** | Walkthrough Video & Narration | ChatGPT-4o | Synthesized spoken narrative aligning screen states with strategic PRD trade-offs. | Verified spoken cues against actual public prototype click-paths and captured video frames. | Frame-by-frame verification of 182.5s H.264 video at 1920x1080 resolution. |
+| **Phase 6: E2E Testing** (historical; the original `scratch/test_e2e.js` is not in this repo, and a new suite is in `tests/`) | Headless Chrome Automation | Antigravity | Ran 12 automated test cases via Chrome DevTools Protocol at 375px mobile viewport. | Verified that all 12 test assertions passed with 0 console errors and zero horizontal overflow. | Reviewed test execution logs and CDP output buffers. |
+| **Phase 7: Asset Synthesis** (the repo copy of the video is the silent screen recording; the narrated version was submitted separately) | Walkthrough Video & Narration | ChatGPT-4o | Synthesized spoken narrative aligning screen states with strategic PRD trade-offs. | Verified spoken cues against actual public prototype click-paths and captured video frames. | Frame-by-frame verification of 182.5s H.264 video at 1920x1080 resolution. |
 
 ---
 
