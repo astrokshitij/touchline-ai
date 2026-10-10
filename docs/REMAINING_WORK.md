@@ -14,7 +14,6 @@ Updated after the portfolio-projects pass. Items already done are listed at the 
 - [ ] Prototype polish: "Unknown" display for missing fields (FR-5); close modals with Escape and trap focus; a screen-reader pass; replace `alert()` pop-ups with inline messages.
 - [ ] Run the usability test with and without the jersey-mismatch warning (`projects/01-wireframes-v2`).
 - [ ] Edit the Figma C4 annotation from "PROPOSED" to "Decided: shipped".
-- [ ] Decide whether to publish your own Instagram analysis as a second data project. It needs a fresh data pull and your consent to publish.
 
 ## 2. Livestream feasibility (bounded, no build commitment)
 Follow `projects/07-livestream-feasibility-brief`. The plan runs Oct 10 to Oct 15, 2026 and ends in a one-page decision memo with real vendor input.
