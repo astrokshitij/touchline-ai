@@ -200,6 +200,18 @@
   </div>
   <p class="sub" style="margin-top:16px"><strong>While building this section</strong> (counted separately, <span data-ledger3="entries">9</span> entries). <span data-ledger3="supported">5</span> statistics used on this page were recomputed with a script and all matched. <span data-ledger3="contradicted">3</span> statements were wrong or out of date and were fixed: this page said 80 browser checks when the suite had 92, and two notes still said the scenario figures had not been re-checked after they had been. <span data-ledger3="open">1</span> question is still open because it needs the original brief: whether the survey respondents were all parents.</p>
 
+  <h3 style="margin-top:28px">The rubric the checks followed</h3>
+  <p class="sub">Checking was designed at the start, not added afterwards. Every output, AI-drafted or the author's own, was to be scored 1 to 5 against a written rubric.</p>
+  <div class="grid g3">
+    <div class="card"><span class="tag">Scoring</span><h3>Gates and a verdict</h3>
+      <p>Some criteria are gates. A gate below 3 means redo. Any criterion below 4 means fix. Otherwise ship. Each verdict names the cheapest fix and what it costs in time.</p></div>
+    <div class="card"><span class="tag">Layers</span><h3>Three kinds of check</h3>
+      <p>An ingest check after reading each source (complete? nothing invented? metric traps?). A rubric per task: prioritisation, spec, prototype, AI-use note, pushback, video. A slop checklist for any AI output.</p></div>
+    <div class="card"><span class="tag warn">Slop checklist</span><h3>A line fails if it has</h3>
+      <p>A number with no source. A quote not in the materials. Boilerplate that fits any product. Hedging with no decision. Numbers that differ between sections. Features or users that do not exist. Padding. An em dash.</p></div>
+  </div>
+  <p class="sub" style="margin-top:16px">The rubric assigns two judges: a quick self-check by the same model family, and an independent second-model judge at three checkpoints. <strong>The filled-in scores from the original run are not in this repository, so none are reported here.</strong> The slop checklist was run again over the text of this section, and the browser tests check the counts against the ledger and check for em dashes and stock phrases. A paraphrase of the rubric is in the repository.</p>
+
   <h3 style="margin-top:28px">What the work taught</h3>
   <ul class="clean">
     <li>An AI that drafts without a source fills gaps with plausible detail. The invented items were specific and confident, which is why they were easy to miss.</li>
@@ -219,6 +231,7 @@
   <div class="cta">
     <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/AI_EVALS.md">Method and full results</a>
     <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/ai-evals/claims-ledger.csv">The claims ledger</a>
+    <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/ai-evals/ORIGINAL_RUBRIC.md">The scoring rubric</a>
     <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/projects/06-premortem-and-ai-eval-plan/README.md">Plan for evaluating a future model</a>
   </div>
 </section>
