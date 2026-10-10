@@ -1,4 +1,4 @@
-# TouchlineAI — Product Requirements Document (PRD)
+# TouchlineAI - Product Requirements Document (PRD)
 ## Human-in-the-Loop Computer Vision & Highlight Engine for Youth Sports
 
 - **Document Version:** 3.1 (case-study specification, revised after the assessment)
@@ -7,7 +7,7 @@
 - **Scenario:** Companies and customers named here come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). All prototype data is fictional.
 - **Domain:** Computer Vision (CV), Active Learning, Minor Child Safeguarding. Consent and privacy rules such as COPPA and GDPR-K may apply. This document is not legal advice and has had no legal review.
 
-> **How to read the labels.** **[Source]** = stated in the assessment materials (not re-checked in this repo; see `docs/CLAIMS_AND_EVIDENCE.md`). **[Inference]** = reasoning from source facts, not proven. **[Target]** = a proposed number or policy with no validation behind it. **[Simulated]** = behaviour of the prototype with fictional data. Unlabelled requirements (FR-x) are design intent.
+> **How to read the labels.** **[Source]** = stated in the assessment materials (checked against the original brief on 10 October 2026; see `docs/CLAIMS_AND_EVIDENCE.md`). **[Inference]** = reasoning from source facts, not proven. **[Target]** = a proposed number or policy with no validation behind it. **[Simulated]** = behaviour of the prototype with fictional data. Unlabelled requirements (FR-x) are design intent.
 
 ---
 
@@ -19,7 +19,7 @@
 **Zero Unvetted Autonomous Publication.** Three support tickets across three clubs [Source] describe four incidents of one child's clip landing in another child's reel, each involving similar jersey numbers (#14/#4, #1/#11, and "swapped digits" at a lacrosse club). The tickets give no technical cause, so this spec assumes none (not blur, not occlusion, not OCR). The "#4 shown as #14 at 94% confidence" case is the prototype's own scenario [Simulated]. It illustrates why a confidence score cannot replace a human check: a model can be confident and wrong.
 
 To reduce the risk of wrong-child deliveries, which are a trust and safeguarding failure:
-1. **Mandatory Human-in-the-Loop (HITL):** Every proposed highlight assignment—regardless of reported model confidence—must be explicitly confirmed, reassigned, or removed by the team's verified coach before publication.
+1. **Mandatory Human-in-the-Loop (HITL):** Every proposed highlight assignment, regardless of reported model confidence, must be explicitly confirmed, reassigned, or removed by the team's verified coach before publication.
 2. **Atomic Batch Validation:** Highlights are published exclusively as an immutable, validated batch for the entire team. If any included child lacks verified parental consent or recipient destination, the entire batch is held.
 3. **Honest Empty States:** A child with zero detected or confirmed highlights receives an honest, transparent notice ("No confirmed highlights for this game"). The system strictly prohibits synthetic filler or substituting teammate clips.
 
@@ -46,16 +46,22 @@ While marketing dashboards highlighted a **92% share rate**, this metric was com
 ### Goals
 - **G-1 (Attribution Integrity):** No clip reaches a guardian without an explicit coach decision, and every published batch can be independently audited. Pilot target: zero known wrong-child deliveries [Target]. The pilot also measures coach review burden.
 - **G-2 (Safeguarding):** Enforce guardian-consent gates before any asset is distributed. Whether this satisfies COPPA or GDPR-K needs legal review.
-- **G-3 (Coach Ergonomics):** Deliver a frictionless, mobile-first (375px viewport) review interface aiming for full roster verification in under 5 minutes per match [Target, not tested with coaches].
+- **G-3 (Coach Ergonomics):** Deliver a frictionless, mobile-first (375px viewport) review interface aiming for full roster verification at a median of 4.5 minutes per match or less (see section 13) [Target, not tested with coaches].
 - **G-4 (Delivery Transparency):** Provide unambiguous visibility into delivery states, supporting idempotent retry of failed transport destinations without duplicate delivery.
 
 ### Explicit Non-Goals
 - **NG-1 (No Unvetted Livestreaming):** Reject unvetted, raw real-time streaming demands until core CV attribution and child consent infrastructures are hardened.
 - **NG-2 (No Auto-Publish Bypasses):** No level of model confidence, even 99.9%, may bypass coach review. Confidence may only order the review queue and flag uncertain clips.
 - **NG-3 (No Synthetic Filler):** Under no circumstances may the system pad a low-activity player's reel with team celebrations or other players' actions to simulate high engagement.
-- **NG-4 (No In-App Non-Linear Video Editor):** Do not build heavy desktop-style clip trimming or timeline editing suites. Telemetry shows under 0.06% of accounts finished an edit [Source]; [Inference] this points to accuracy, not editing tools, as the better investment.
+- **NG-4 (No In-App Non-Linear Video Editor):** Do not build heavy desktop-style clip trimming or timeline editing suites. Telemetry shows 6% of parents opened the editor and under 1% of those finished an edit [Source], so under 0.06% of parents [Inference, arithmetic]; [Inference] this points to accuracy, not editing tools, as the better investment.
 
 ---
+
+### v1 scope decisions [Proposal, author to confirm]
+Added after an outside review found three questions an engineer would have to ask. These are proposals on the author's behalf and can be reversed by editing this block.
+1. **Detection pipeline.** v1 specifies the review, consent and publish layer around the existing detection that already proposes moments. It does not select, build or benchmark a model. Improving detection is evaluated under `projects/06-premortem-and-ai-eval-plan`.
+2. **Sharing.** The Share button exists today and is used on opened reels [Source]. v1 leaves guardian-initiated sharing of their own child's reel unchanged and adds no automatic posting. Whether shared links should stay private is open for legal review.
+3. **Opted-out children in the background.** v1 has no automatic detection or blurring. The coach can remove any clip. This is a known gap and an open risk for legal review.
 
 ## 4. User Personas & Role-Based Access Control (RBAC)
 
@@ -352,9 +358,9 @@ Feature: TouchlineAI Highlight Review & Publication Pipeline
 > Proposed design only. Retention periods, consent wording and legal basis need legal review.
 
 1. **Authentication Boundary:** Video reels are private, unlisted, token-authenticated assets accessible only by the verified guardian.
-2. **Zero Public Indexing:** Robot meta-tags and no-index headers prevent search engine indexing. External social sharing buttons are strictly disabled by default.
+2. **Zero Public Indexing:** Robot meta-tags and no-index headers prevent search engine indexing. No automatic posting to social networks. A guardian sharing their own child's reel works as today [Proposal; see v1 scope decisions].
 3. **Right to Be Forgotten / Opt-Out:** When a parent requests deletion or opt-out, the system revokes public access tokens immediately and marks raw source files for purge within 30 days [Target; period needs legal input].
-4. **Incidental Minors:** If an opted-out child appears in the background of another child's highlight, the clip must be flagged for algorithmic background blurring or removed by coach review.
+4. **Incidental Minors:** If an opted-out child appears in the background of another child's highlight, the coach can remove the clip. Automatic detection of background children and blurring are not in v1 [Proposal; open risk for legal review].
 
 ---
 

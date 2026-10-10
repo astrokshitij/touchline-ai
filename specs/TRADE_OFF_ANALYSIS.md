@@ -1,9 +1,9 @@
-# TouchlineAI — Strategic Trade-off Analysis & Product Prioritization
+# TouchlineAI - Strategic Trade-off Analysis & Product Prioritization
 ## Navigating the $180k Enterprise Ultimatum vs. Foundational Computer Vision Integrity
 
 - **Author:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
 - **Status:** Case-study decision memo: the author's recommendation. No company or leadership team approved it.
-- **Scenario:** Companies and customers come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). Labels: **[Source]** from the assessment materials (not re-checked here), **[Inference]** reasoning, **[Judgment]** the author's scoring or proposal.
+- **Scenario:** Companies and customers come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). Labels: **[Source]** from the assessment materials (checked against the original brief on 10 October 2026), **[Inference]** reasoning, **[Judgment]** the author's scoring or proposal.
 
 ---
 
@@ -12,7 +12,7 @@
 In the assessment scenario, the product team faced a high-stakes enterprise dilemma:
 
 **The Enterprise Demand:**
-The flagship customer, **Enterprise Club Partner (Tier-1 Academy)**, a **$180,000 contract** up for renewal in six weeks [Source], asked for live streaming of weekend matches immediately, or it might leave [Source].
+The flagship customer, **Enterprise Club Partner**, the biggest club account, a **$180,000-a-season contract** with renewal and signups in six weeks [Source], wants every game live-streamed for grandparents and college scouts [Source]. The brief does not say the club threatened to leave.
 
 **The Product Reality:**
 At the same time, three support tickets across three clubs (soccer, lacrosse and little league) described four wrong-child incidents: a child wearing #14 shown a #4 child's clip, a coach who saw it twice with similar, swapped-digit numbers, and a #1 child shown a #11 clip [Source]. The tickets give no cause. The 94%-confidence version of this case is the prototype's simulation, not a source fact.
@@ -44,29 +44,29 @@ $$\text{Priority Score} = 0.35 \times \text{Core Impact} + 0.30 \times \text{Evi
 
 ### Deep Dive into Candidate Rankings
 
-#### 1. Roster Tagging & Coach HITL Correction (Score: 4.15 — RANK #1: SHIP NEXT)
+#### 1. Roster Tagging & Coach HITL Correction (Score: 4.15 - RANK #1: SHIP NEXT)
 - **Core Impact (5/5):** Direct fulfillment of the primary job-to-be-done: *"Deliver my child's highlights accurately."* Delivering the wrong child breaks the core value proposition irreversibly.
 - **Evidence Rigor (4/5):** Concrete, corroborated ticket evidence from three separate clubs (a soccer club, a lacrosse club and a little-league club) documenting jersey number confusion (#14 vs #4, #1 vs #11, and "swapped digits" at a lacrosse club).
-- **Breadth (3/5):** Directly affects every match, every team, and every generated reel.
-- **Commercial Risk Protection (4/5):** If highlights remain inaccurate, no parent will pay subscription fees, rendering any downstream upsell (including streaming) worthless.
+- **Breadth (3/5) [Judgment]:** The evidence is three tickets describing four incidents at three clubs [Source]. How often it happens across all reels is unknown.
+- **Commercial Risk Protection (4/5):** If highlights stay inaccurate, renewals are at risk because clubs pay per season [Inference], and any downstream upsell (including streaming) loses its footing.
 
-#### 2. Notification Timing Optimization (Score: 2.75 — RANK #2: RUNNER-UP)
+#### 2. Notification Timing Optimization (Score: 2.75 - RANK #2: RUNNER-UP)
 - **Core Impact (3/5):** The analytics team's note says most never-opened reels sit unopened because the notification arrives late at night, or because the thumbnail shows the wrong kid [Source: the note's own wording is "support tickets suggest", so this is a hypothesis].
 - **Evidence Rigor (2/5):** An internal hypothesis with no test. The brief has no data on when notifications are sent or when parents open them.
 - **Decision:** Validate behavioral open patterns before re-architecting notification microservices.
 
-#### 3. Full Live Video Streaming (Score: 2.25 — RANK #3: DEFERRED / INVESTIGATE BOUNDED)
-- **Core Impact (2/5):** Shifts TouchlineAI from an asynchronous highlight engine into a synchronous live broadcast utility—a different kind of product. Its cost and effort have not been estimated [Inference].
+#### 3. Full Live Video Streaming (Score: 2.25 - RANK #3: DEFERRED / INVESTIGATE BOUNDED)
+- **Core Impact (2/5):** Shifts TouchlineAI from an asynchronous highlight engine into a synchronous live broadcast utility, a different kind of product. Its cost and effort have not been estimated [Inference].
 - **Evidence Rigor (2/5):** Driven by executive feedback from a single club executive rather than broad parent demand.
 - **Commercial Exposure (5/5):** $180,000 seasonal account at risk.
 - **Decision:** Make no build commitment. Run a bounded feasibility investigation first (what is needed, who owns consent and access, build versus buy), then decide.
 
-#### 4. Parent In-App Video Editor Controls (Score: 1.85 — RANK #4: REJECT / DEPRIORITIZE)
+#### 4. Parent In-App Video Editor Controls (Score: 1.85 - RANK #4: REJECT / DEPRIORITIZE)
 - **Core Impact (2/5):** Enables parents to trim clips or re-order music.
 - **Evidence Rigor (2/5):** Stated preference anomaly (58% named editing controls as their single biggest ask) completely refuted by telemetry (<0.06% funnel completion).
 - **Decision:** Do not allocate engineering cycles to desktop editing tools.
 
-#### 5. Cosmetic Polish: Watermarks & App Icons (Score: 1.00 — PARKED)
+#### 5. Cosmetic Polish: Watermarks & App Icons (Score: 1.00 - PARKED)
 - Customer support ticket explicitly noted watermark opacity defect was "not urgent." Parked to preserve focus.
 
 ---
@@ -110,7 +110,7 @@ Rather than an outright refusal, we established a **Value Protection Negotiation
 ### Script & Communication Blueprint for Enterprise Club Executive
 > Illustrative script written by the author for the case study; it was not delivered to anyone.
 >
-> *"We hear your board's wish to let grandparents and college scouts watch games in real time. However, customer support tickets have documented repeated wrong-child highlight attributions—specifically confusing jersey #4 and #14—while ~30% of generated reels remain unopened across the dashboard cohort.*
+> *"We hear your board's wish to let grandparents and college scouts watch games in real time. However, customer support tickets have documented repeated wrong-child highlight attributions, specifically confusing jersey #4 and #14, while ~30% of generated reels remain unopened across the dashboard cohort.*
 >
 > *If we stream video live before solving child identity attribution and guardian gating, we would be putting live video of children in front of viewers before consent and access rules are in place.*
 >

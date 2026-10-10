@@ -409,7 +409,7 @@ await section('12. AI evals section', async () => {
       const expected = { checked: a.checked, unsupported: a.unsupported, noSource: a.noSource, overstated: a.overstated, contradicted: a.contradicted, supported: a.supported, inconsistent: a.inconsistent, pass1: a.pass1, pass2: a.pass2 };
       const wrong = [];
       for (const [k, v] of Object.entries(expected)) { const got = await read(k); if (got !== v) wrong.push(`${k}: page ${got}, ledger ${v}`); }
-      for (const [k, v] of Object.entries(sum.pass3)) { const got = Number((await page.locator(`#ai-evals [data-ledger3="${k}"]`).first().innerText()).trim()); if (got !== v) wrong.push(`pass3 ${k}: page ${got}, ledger ${v}`); }
+      for (const k of ['entries', 'supported', 'fixed', 'open']) { const v = sum.pass3[k]; const got = Number((await page.locator(`#ai-evals [data-ledger3="${k}"]`).first().innerText()).trim()); if (got !== v) wrong.push(`pass3 ${k}: page ${got}, ledger ${v}`); }
       check('ai evals: every number on the page matches the claims ledger', wrong.length === 0, wrong.join('; '));
       check('ai evals: the parts of "unsupported" add up', a.unsupported === a.noSource + a.overstated + a.contradicted);
       check('ai evals: the parts of "checked" add up', a.checked === a.supported + a.unsupported + a.inconsistent + a.notCheckable, JSON.stringify(a));
@@ -446,6 +446,12 @@ await section('12. AI evals section', async () => {
   // The public page and the audit files must not mention personal social accounts (hard boundary).
   const files = [path.join(siteDir, 'index.html'), path.join(siteDir, 'case-study', 'index.html'),
     path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), path.join(siteDir, '..', 'docs', 'ai-evals', 'claims-ledger.csv'), path.join(siteDir, '..', 'docs', 'ai-evals', 'ORIGINAL_RUBRIC.md')];
+  const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? (['node_modules', '.git'].includes(e.name) ? [] : walk(path.join(d, e.name))) : [path.join(d, e.name)]);
+  const textFiles = walk(path.join(siteDir, '..')).filter(f => /\.(md|html|csv|mjs)$/.test(f));
+  const dashFiles = textFiles.filter(f => fs.readFileSync(f, 'utf8').includes('\u2014')).map(f => path.relative(path.join(siteDir, '..'), f));
+  check('no em dashes anywhere in the repo text (author rubric)', dashFiles.length === 0, JSON.stringify(dashFiles));
+  const staleLabel = textFiles.filter(f => /not re-checked (here|in this repo)|not re-verified\)?\.?$/m.test(fs.readFileSync(f, 'utf8')) && !/AI_EVALS|claims-ledger|e2e\.mjs/.test(f)).map(f => path.relative(path.join(siteDir, '..'), f));
+  check('no stale "not re-checked" source labels (figures were checked 10 Oct 2026)', staleLabel.length === 0, JSON.stringify(staleLabel));
   const hits = files.filter(f => /instagram|youtube|tiktok|facebook|twitter|linkedin/i.test(fs.readFileSync(f, 'utf8'))).map(f => path.basename(f));
   check('no mention of personal social-media accounts in the site or the audit files', hits.length === 0, JSON.stringify(hits));
 });

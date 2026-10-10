@@ -159,7 +159,7 @@
     <tbody>
       <tr><td>Can high confidence skip the coach?</td><td>No, at any phase. Confidence only orders and flags the queue.</td><td>A confident model can still be wrong, and a wrong-child delivery is a trust and safeguarding failure.</td></tr>
       <tr><td>Does an honest zero-highlight week count as success?</td><td>A verified true-zero week does. A missed moment is a miss. Report Highlight Coverage next to the metric.</td><td>Counting honest zero as a miss lowered the metric by about 10 points in the synthetic cohort and pushes toward padding reels.</td></tr>
-      <tr><td>How strict is the Phase 1 gate?</td><td>At least 50 clean matches, a lower bound of at least 0.95 on at least 1,000 audited clips, and no open wrong-child incident.</td><td>At 500 clips a good system fails the gate about half the time.</td></tr>
+      <tr><td>How strict is the Phase 1 gate?</td><td>At least 50 clean matches, a lower bound of at least 0.95 on at least 1,000 audited clips, and no open wrong-child incident.</td><td>At 500 clips a truly 97%-accurate system fails the gate about 43% of the time.</td></tr>
       <tr><td>Warn when the frame's jersey differs from the assigned child?</td><td>Yes, as a non-blocking hint, then test it.</td><td>Cheap and aimed at the 14-vs-4 failure. The risk is warning fatigue, so it goes in the usability test.</td></tr>
       <tr><td>Review after publishing?</td><td>Locked. A revoke-and-reissue flow is future work.</td><td>The delivered batch must not drift from what was sent.</td></tr>
       <tr><td>Where do teardowns stand?</td><td>Published as labelled drafts.</td><td>They rest on public pages that were read second-hand, so claiming hands-on work would mislead.</td></tr>
@@ -173,7 +173,7 @@
   <p class="notice"><strong>Scope.</strong> No AI model was built or evaluated in this project. This is an audit of AI-<em>drafted text and code</em>. The plan for evaluating a future detection model is in the pre-mortem project and is a plan only.</p>
 
   <div class="grid g4" style="margin-top:20px">
-    <div class="card"><div class="stat" data-ledger="checked">34</div><p>AI-drafted claims checked in two review passes.</p></div>
+    <div class="card"><div class="stat" data-ledger="checked">34</div><p>claims checked in two review passes. The drafts were AI-assisted.</p></div>
     <div class="card"><div class="stat" data-ledger="unsupported">21</div><p>were unsupported: <span data-ledger="noSource">12</span> with no source, <span data-ledger="overstated">7</span> stronger than the evidence allows, <span data-ledger="contradicted">2</span> contradicted by the brief.</p></div>
     <div class="card"><div class="stat" data-ledger="supported">8</div><p>matched the original brief.</p></div>
     <div class="card"><div class="stat" data-ledger="inconsistent">4</div><p>contradicted another part of the repository. One more is author-sourced and cannot be checked against the brief.</p></div>
@@ -198,10 +198,10 @@
     <div class="card"><span class="tag ok">Pass 2</span><h3>Review against the brief</h3>
       <p><span data-ledger="pass2">14</span> entries. With the original brief supplied by the author, 8 matched and 5 did not (4 had no source, 1 was wrong). One more is author-sourced and not in the brief. Pass 1 had also softened an invented effort figure to "a proposed 8-week build". Pass 2 removed it.</p></div>
   </div>
-  <p class="sub" style="margin-top:16px"><strong>While building this section</strong> (counted separately, <span data-ledger3="entries">9</span> entries). <span data-ledger3="supported">5</span> statistics used on this page were recomputed with a script and all matched. <span data-ledger3="contradicted">3</span> statements were wrong or out of date and were fixed: this page said 80 browser checks when the suite had 92, and two notes still said the scenario figures had not been re-checked after they had been. <span data-ledger3="open">1</span> question is still open because it needs the original brief: whether the survey respondents were all parents.</p>
+  <p class="sub" style="margin-top:16px"><strong>While building this section and after an outside review</strong> (counted separately, <span data-ledger3="entries">15</span> entries). <span data-ledger3="supported">5</span> statistics used on this page were recomputed with a script and all matched. <span data-ledger3="fixed">9</span> statements were wrong, overstated or out of date and were fixed. They include this page's "80 browser checks", "not re-checked" labels left in the specs after the figures had been checked, and overstated lines in the trade-off memo and the PRD. <span data-ledger3="open">1</span> question is still open because it needs the original brief: whether the survey respondents were all parents.</p>
 
   <h3 style="margin-top:28px">The rubric the checks followed</h3>
-  <p class="sub">Checking was designed at the start, not added afterwards. Every output, AI-drafted or the author's own, was to be scored 1 to 5 against a written rubric.</p>
+  <p class="sub">Per the author, checking was planned at the start: every output, AI-drafted or the author's own, was to be scored 1 to 5 against a written rubric.</p>
   <div class="grid g3">
     <div class="card"><span class="tag">Scoring</span><h3>Gates and a verdict</h3>
       <p>Some criteria are gates. A gate below 3 means redo. Any criterion below 4 means fix. Otherwise ship. Each verdict names the cheapest fix and what it costs in time.</p></div>
@@ -214,11 +214,9 @@
 
   <h3 style="margin-top:28px">What the work taught</h3>
   <ul class="clean">
-    <li>An AI that drafts without a source fills gaps with plausible detail. The invented items were specific and confident, which is why they were easy to miss.</li>
-    <li>A review that does not hold the source cannot catch invented facts. Checking against the original brief found what an internal review could not.</li>
+    <li>An AI that drafts without a source fills gaps with plausible, confident detail. A review that does not hold the source cannot catch it.</li>
     <li>A fix can carry the same fault. The effort figure was softened, not removed, until the second pass.</li>
     <li>Safety rules need tests, not just wording. Several tests now guard the rules the AI proposed to bend.</li>
-    <li>Labelling is part of the fix. The main documents now mark claims as source, inference, target or simulated.</li>
   </ul>
 
   <h3 style="margin-top:24px">Limits of this audit</h3>
@@ -256,8 +254,7 @@
     <li>Checks run in your browser, so they show the intended rules. A real system must enforce them on a server.</li>
     <li>Consent handling is a mock and has had no legal review.</li>
     <li>The two teardowns are desk research and are marked as drafts.</li>
-    <li>Evaluation scores from the assessment, where mentioned elsewhere, are a reviewer's estimates, not official employer results.</li>
-  </ul>
+      </ul>
 </section>
 
 </div>
