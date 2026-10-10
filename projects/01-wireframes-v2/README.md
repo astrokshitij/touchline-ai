@@ -4,7 +4,7 @@ Wireframes designed from scratch from the working prototype, with a focus on **s
 
 | Deliverable | Where | Status |
 |---|---|---|
-| Coach flow, 13 screens at 375px, with numbered annotations tied to requirements | [Figma file](https://www.figma.com/design/ldS1cRoozKTRGsuvzqhAWZ), page "Wireframes · Coach" | **Built** |
+| Coach flow, 13 screens at 375px, with numbered annotations tied to requirements | [Figma file, coach screens](https://www.figma.com/design/ldS1cRoozKTRGsuvzqhAWZ?node-id=5-10), page "Wireframes · Coach" | **Built** |
 | Design tokens (30 variables) and ~25 components | Same Figma file, page 1 | **Built** |
 | Guardian and QA screens (5) | [`guardian-wireframes.html`](guardian-wireframes.html) and [`guardian/`](guardian) images | **Built** (HTML, same low-fi style) |
 | User flow | Mermaid diagram below | **Built** |

@@ -43,7 +43,7 @@ Follow `projects/06-premortem-and-ai-eval-plan`, part 2: build the evaluation se
 - Public case-study page: `site/case-study/index.html` (deploys with the prototype at `/case-study/`). It has been tested at 320, 375, 768 and 1280 px.
 - Before showing it: deploy to the portfolio Netlify site only (never the recruiter's site), then open `/case-study/` on the public link and check the images load.
 - In the repo README, make sure the "Live demo" links point to the portfolio site, not the recruiter's.
-- Set the Figma file to "anyone with the link can view" and add its link to the README and case study.
+- ~~Set the Figma file to view-only and link it~~ Done: linked from the README and case study (direct link to the coach screens).
 
 ## Done in this pass
 - Prototype bugs fixed and covered by 72 browser checks (`tests/`).
