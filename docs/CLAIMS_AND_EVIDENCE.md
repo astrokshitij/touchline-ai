@@ -58,16 +58,25 @@ The original assessment files (Decision Card, submission, materials, AI use log,
 9. The AI log: "Gemini 1.5 / 3.8" looks like a typo.
 10. The assessment's required form for the Decision Card, which these documents should match.
 
-## D. Decisions that need your product judgment
+## D. Product decisions taken (October 2026)
 
-1. **Confidence and review.** I removed all auto-publish and delayed-release tiers, based on your rule that high confidence never bypasses coach review. If your submission had them, tell me how to present them (for example, as a rejected option).
-2. **Zero-highlight and CCDR.** The current metric counts an honest zero-highlight week as a miss in the numerator. Is that your intended definition?
-3. **CCDR with sampled audits.** Keep "every record audited", or define an estimate with an interval?
-4. **Phase 1 gate.** "50 clean matches and CCDR 95%" and "Wilson lower bound 95% at 500 audited clips" are two gates. Both, or one?
-5. **Jersey-mismatch warning.** Should Review warn when a confirmed child's jersey differs from the frame? It would help, but could also train coaches to ignore warnings.
-6. **Reassign preselect.** The modal now preselects the single roster player whose jersey matches the frame. This is generic, not hard-coded to one clip, but it is still a suggestion that could bias a coach. Keep it?
-7. **Lock after publish.** The prototype now blocks review changes after publication. The real correction flow (revoke, reissue, notify) is undefined.
-8. **License.** None exists. Pick one, or state "all rights reserved".
+You asked me to decide as the PM. These are my decisions, with reasons. Each is reversible by editing the files named. **They are recommendations I made on your behalf, so read them before you rely on them.**
+
+| # | Question | Decision | Why | Applied in |
+|---|---|---|---|---|
+| 1 | Can high confidence ever skip coach review? | **No, at any phase.** Confidence only orders and flags the queue. | Matches your rule. A confident model can still be wrong, and the cost of a wrong-child delivery is a trust and safeguarding failure. | PRD sections 3, 8, 14 |
+| 2 | Does an honest zero-highlight week count as a CCDR success? | **A verified true-zero week is a success. A missed moment is a miss.** CCDR is always reported beside **Highlight Coverage**. | Counting honest zero as a miss lowered CCDR by about 10 points in the synthetic cohort and pushes toward padding reels. The coverage companion stops CCDR being gamed by withholding. | Metrics doc, PRD section 13, `projects/04` |
+| 3 | CCDR when audits are sampled | **Phase 1 audits every batch (exact). Later phases report an estimate with a Wilson 95% interval from a stratified sample. Unaudited records never count as success.** | Keeps the metric honest as audit coverage drops. | PRD section 13 |
+| 4 | Phase 1 gate | **All must hold: at least 50 clean matches, Wilson 95% lower bound of at least 0.95 on at least 1,000 audited clips, no unresolved wrong-child incident.** | At 500 clips a truly 97%-accurate system passes only about 57% of the time. At 1,000 it passes about 88%, a fairer test. | PRD section 14, `projects/04` |
+| 5 | Jersey-mismatch warning | **Ship it, as a non-blocking hint.** It appears when the number seen in the frame differs from the assigned child, or when the number is unreadable. It never confirms, rejects or skips a clip. **Validate in the usability test** with and without it. | Cheap, directly targets the 14-vs-4 failure. Risk is warning fatigue, which the test measures. | Prototype, 8 new tests, wireframe C4 |
+| 6 | Reassign preselects the player whose jersey matches the frame | **Keep**, labelled "Preselected because jersey #N matches. Verify visually." | Speeds the common case. Same warning-fatigue risk, same test. | Prototype, wireframe C5 |
+| 7 | Review after publish | **Locked.** A real correction flow (revoke, reissue, notify, audit) is on the roadmap, not designed. | The delivered manifest must not drift from what was sent. | Prototype, wireframe C12, remaining work |
+| 8 | License | **All rights reserved for now** (see `LICENSE`). | This is a portfolio. Visibility matters more than reuse, and you can loosen to MIT later. You cannot take a permissive license back once others copy the repo. | `LICENSE`, README |
+| 9 | Publish your Instagram analysis as a data project? | **Not now.** | Needs a fresh data pull and your consent to publish. The TouchlineAI audit already fills the Data Analysis gap. | Remaining work |
+| 10 | Teardowns | **Publish as clearly labelled drafts**, not as finished work. | They rest on search summaries. Presenting them as hands-on would be misleading. | `projects/02`, `projects/03` |
+| 11 | The October 15 feasibility date | **Keep.** | It is the memo's proposed commitment. The five-day plan fits. | `projects/07` |
+
+Still needing **you**: check the source facts in section C against your original files, and do the teardown hands-on lists.
 
 ## F. Limits of the portfolio projects (added later)
 

@@ -41,8 +41,8 @@
 ## 6. CCDR under two counting rules (SYNTHETIC cohort, invented rates)
 
 - Cohort: 120 child-weeks. Invented outcome rates: zero-highlight 12%, wrong child 3%, held 6%, delivery failure 4%.
-- Rule A (honest zero = miss, the current choice): CCDR = **75.8%**
-- Rule B (honest zero = success): CCDR = **85.8%**
-- Difference: 10.0 points, driven entirely by how common zero-highlight weeks are. A quiet-playing child is not a product failure, so Rule A can punish honest behaviour.
-- This is the product decision flagged in docs/CLAIMS_AND_EVIDENCE.md (item D2). The rates are made up; only the mechanism is the finding.
+- Rule A (honest zero = miss, REJECTED): CCDR = **75.8%**
+- Rule B (verified true-zero = success, ADOPTED): CCDR = **85.8%**
+- Difference: 10.0 points, driven entirely by how common zero-highlight weeks are. A quiet-playing child is not a product failure, so Rule A would punish honest behaviour and push toward padding reels.
+- Product decision (October 2026): adopt Rule B, always report Highlight Coverage beside CCDR, and count a *missed* moment as a miss. The rates are made up; only the mechanism is the finding.
 

@@ -1744,6 +1744,21 @@ function renderReviewQueue() {
       `;
     }
 
+    // Non-blocking hint: compare the number seen in the frame with the child currently assigned.
+    // It never confirms, rejects or skips anything. The coach still decides every clip.
+    let jerseyHintHtml = '';
+    if (clip.status !== 'removed') {
+      const seenNumber = Number(clip.observedJersey); // NaN when the number is not readable
+      const decided = clip.status !== 'unresolved';
+      if (Number.isNaN(seenNumber)) {
+        jerseyHintHtml = `<div class="banner banner-warning jersey-hint"><div><strong>Number not readable on this frame.</strong> Verify who this is another way before deciding.</div></div>`;
+      } else if (assignedPlayer.jersey !== seenNumber) {
+        jerseyHintHtml = decided
+          ? `<div class="banner banner-warning jersey-hint"><div><strong>Heads-up:</strong> this clip is assigned to ${assignedPlayer.name} (#${assignedPlayer.jersey}), but the frame shows jersey #${seenNumber}.</div></div>`
+          : `<div class="banner banner-warning jersey-hint"><div><strong>Check this clip:</strong> the frame shows jersey #${seenNumber}, but the AI proposed ${assignedPlayer.name} (#${assignedPlayer.jersey}). Confirm only if you can verify who this is.</div></div>`;
+      }
+    }
+
     // Individual action controls only (every clip requires explicit decision)
     let actionsHtml = '';
     if (STATE.isPublished) {
@@ -1794,6 +1809,8 @@ function renderReviewQueue() {
       <div style="font-size: 12px; color: #f8fafc;">
         ${clip.description}
       </div>
+
+      ${jerseyHintHtml}
 
       <div class="clip-meta-grid">
         <div>

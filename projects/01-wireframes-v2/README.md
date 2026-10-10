@@ -58,7 +58,7 @@ Solid lines are in the prototype. Dotted lines are from the spec only.
 | C1 | Setup and roster | Consent gaps visible before AI runs; roster confirmed first | FR-1, 2, 3, 18, 24 |
 | C2 | Detection running | Progress is explicit and labelled simulated | FR-19, 24 |
 | C3 | Review queue | Every clip starts unresolved; no bulk action | FR-4 to 9, 6 |
-| C4 | Clip focus, 14-vs-4 | **Proposed** jersey-mismatch warning and "confidence is a hint" | FR-4, 8 (proposal) |
+| C4 | Clip focus, 14-vs-4 | Jersey-mismatch warning and "confidence is a hint". **Decided: shipped in the prototype as a non-blocking hint** | FR-4, 8 |
 | C5 / C5b | Reassign, normal and blocked | Note always matches the chosen child | FR-8, 10 |
 | C6 | Remove | A reason is truly mandatory | FR-9, 11 |
 | C7 | Publish blocked | All blockers at once; two explicit consent paths | FR-16, 17, 18, 21 |
@@ -76,7 +76,7 @@ Solid lines are in the prototype. Dotted lines are from the spec only.
 - **Thumbnails show the jersey in the clip.** A wrong-child confirm can no longer look right (C8).
 - **Excluded children stay on the page** with the reason and the number of withheld clips (C8).
 - **Lock after publish**, with an explicit open question about corrections (C12).
-- **Proposals are magenta and labelled.** C4, G1, G3, G4 and G5 carry proposals that need a product decision. They are not hidden in the main design.
+- **Proposals are magenta and labelled.** G1, G3, G4 and G5 carry proposals that still need a product decision. The C4 warning has been decided and built in the prototype. The Figma annotation on C4 still says "PROPOSED" and should be edited by hand.
 
 ## Usability test plan (proposed, not run)
 **Goal:** find out whether coaches actually catch a confident wrong proposal.

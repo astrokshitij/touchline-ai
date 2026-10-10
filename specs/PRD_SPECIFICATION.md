@@ -363,9 +363,10 @@ Feature: TouchlineAI Highlight Review & Publication Pipeline
 ### Primary North Star Metric: Correct-Child Delivery Rate (CCDR)
 $$\text{CCDR} = \frac{\text{Eligible Children with Confirmed, Audited, Correct Highlight Reels}}{\text{Total Eligible Generated Children in Weekly Cohort}}$$
 
-- **Measurement note:** The numerator needs an independent audit of each counted record. If audits are sampled in later phases, CCDR becomes an estimate and should be reported with a Wilson interval (see `analytics/METRICS_DECONSTRUCTION.md`). The exact estimator is an open product decision.
+- **Measurement rule (decided, October 2026):** In Phase 1 every published batch is audited, so CCDR is exact. In later phases, where audits are sampled, CCDR is reported as an **estimate with a Wilson 95% interval** from a stratified sample, and an unaudited record is never counted as a success.
 - **Denominator:** Every eligible child rostered on an active team during the frozen weekly cohort (Monday 00:00 to Monday 00:00 local time). Must include unpublished, unopened, and zero-highlight records.
-- **Numerator:** Children whose guardians received a verified delivery containing at least one correctly attributed highlight and zero misattributed clips, validated by independent QA audit.
+- **Numerator:** Children whose guardians received a verified delivery with zero misattributed clips, validated by independent QA audit, and who either received at least one correctly attributed highlight or had a **verified true-zero week** (honest notice delivered). A week where the system **missed** a real moment is a miss. Product decision, October 2026.
+- **Companion metric, Highlight Coverage:** share of eligible children with at least one confirmed highlight. Always reported next to CCDR so CCDR cannot be improved by withholding.
 
 ### Safety Guardrails
 - **Zero Known Wrong-Child Deliveries [Target]:** Any single confirmed wrong-child incident pauses pilot rollout for that club.
@@ -383,8 +384,10 @@ Phase 1: Controlled Single-Club Pilot
   ├── Independent QA audit of 100% of published reels
   └── No public sharing
         │
-        ▼ Proposed gate: 50 clean matches and CCDR >= 95%, plus the Wilson-interval
-        │ gate in the metrics doc (both to hold; product decision needed)
+        ▼ Gate (decided, October 2026; all must hold): at least 50 clean matches, a Wilson 95%
+        │ lower bound of at least 0.95 on at least 1,000 audited clips, and no unresolved
+        │ wrong-child incident. 1,000 clips, not 500, because at 500 a system that is truly
+        │ 97% accurate passes only about 57% of the time (see projects/04).
 Phase 2: Regional League Expansion
   ├── Faster review tooling (queue ordering, one-clip-at-a-time mode). Every clip still needs a coach decision.
   ├── Sampled QA audit (rate to be set; 20% was floated)

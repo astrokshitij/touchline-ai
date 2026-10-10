@@ -14,15 +14,15 @@
 | 2 | The 64.4% headline has false precision. Over plausible input ranges (20-40% unopened, 0-10% sharing without opening) it spans **55% to 76%**. Say "about 64%". | Sensitivity analysis | `02_share_rate_sensitivity.png` |
 | 3 | Editor: 6% opened, under 1% of those finished, so **under 0.06%** finished. 58% said they wanted editing. Different populations, so suggestive, not exact. | Source bounds | `03_editor_funnel.png` |
 | 4 | The proposed pilot gate (Wilson lower bound >= 0.95 at 500 audited clips) needs **485 of 500 correct (97.0%)**. | Computed | `04_wilson_gate.png` |
-| 5 | A system that is *truly* 97% accurate passes that gate only **57%** of the time at n = 500. Truly 98% passes 95% of the time. Truly 96% passes 15% of the time. So the audit size is a real product decision. | Exact binomial | `05_gate_power.png` |
-| 6 | Whether an honest zero-highlight week counts as success changes CCDR by about **10 points** in a synthetic cohort. A quiet-playing child is not a product failure, so the current rule can punish honest behaviour. | Synthetic, invented rates | `06_ccdr_rules.png` |
+| 5 | A system that is *truly* 97% accurate passes that gate only **57%** of the time at n = 500. Truly 98% passes 95% of the time. Truly 96% passes 15% of the time. So the audit size is a real product decision. **Decision taken:** the Phase 1 gate uses at least 1,000 audited clips. | Exact binomial | `05_gate_power.png` |
+| 6 | Whether an honest zero-highlight week counts as success changes CCDR by about **10 points** in a synthetic cohort. **Decision taken:** a verified true-zero week counts as a success, a missed moment counts as a miss, and CCDR is always reported beside Highlight Coverage so it cannot be gamed by withholding. | Synthetic, invented rates | `06_ccdr_rules.png` |
 
 Full numbers: [`results.md`](results.md).
 
 ## Why this matters for the product
 - Finding 1 and 2 change how you should *talk* about the data. They also show the attribution priority does not depend on a causal claim the data cannot support.
 - Findings 4 and 5 turn a vague "high accuracy" gate into a concrete audit-size decision: more audited clips means a fairer test of a good system.
-- Finding 6 is a pending product decision (see `docs/CLAIMS_AND_EVIDENCE.md`, item D2).
+- Finding 6 fed a product decision, now recorded in `docs/CLAIMS_AND_EVIDENCE.md` (section D) and applied to the metrics doc and the PRD.
 
 ## Limits
 - All source numbers are as stated in the brief and were not re-verified.

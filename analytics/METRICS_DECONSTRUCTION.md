@@ -112,19 +112,23 @@ $$\text{CCDR}_w = \frac{\sum_{i \in C_w} Y_i}{|C_w|}$$
 
 Where the binary success indicator $Y_i \in \{0, 1\}$ is defined as:
 
-$$Y_i = \prod_{g \in G_i} \left[ \mathbb{I}(\text{Delivered}_{i,g}) \land \mathbb{I}(\text{Audited}_{i,g}) \land \neg \mathbb{I}(\text{WrongChild}_{i,g}) \right] \times \mathbb{I}\left( \sum_{g \in G_i} \text{Clips}_{i,g} > 0 \right)$$
+$$Y_i = \prod_{g \in G_i} \left[ \mathbb{I}(\text{Delivered}_{i,g}) \land \mathbb{I}(\text{Audited}_{i,g}) \land \neg \mathbb{I}(\text{WrongChild}_{i,g}) \right] \times \mathbb{I}\left( \sum_{g \in G_i} \text{Clips}_{i,g} > 0 \;\lor\; \text{TrueZero}_i \right)$$
 
 Where:
 - $G_i$ is the set of required games played by child $i$ during game week $w$.
 - $\text{Delivered}_{i,g}$: Authorized delivery receipt confirmed before the 7-day cutoff.
 - $\text{Audited}_{i,g}$: Manifest independently inspected by QA.
 - $\text{WrongChild}_{i,g}$: Binary indicator of any misattributed clip in the delivered reel.
-- $\sum_{g \in G_i} \text{Clips}_{i,g} > 0$: Strict requirement of at least one nonempty correctly attributed highlight reel across the game week.
+- $\sum_{g \in G_i} \text{Clips}_{i,g} > 0$: at least one correctly attributed highlight across the game week.
+- $\text{TrueZero}_i$: the independent audit verified that child $i$ genuinely had no eligible highlight moment, and the honest no-highlights notice was delivered.
 
-> **Design choice, open for product decision:** whether an honest zero-highlight week should count as a success or a miss. The text below records the current choice.
+> **Product decision (October 2026): a verified true-zero week counts as a success; a missed moment counts as a miss.**
 >
-> **Alignment with the PRD:**
-> While a true-zero-highlight week is handled gracefully in the user experience (delivering an approved honest notice: *"No confirmed highlights for this game"* without fabricating synthetic filler), safe withholding does **NOT** count as a successful highlight delivery in the core metric numerator. An all-true-zero week remains counted in the denominator as an honest zero-highlight miss rather than a tagging failure, ensuring the primary metric strictly measures positive, verified highlight delivery.
+> CCDR measures *correct delivery*. A child who genuinely had no highlight moment and received the honest notice was not wronged, so that week is a success. A week where the system *missed* a real moment is a miss, because the child lost something they should have had. The audit decides which one it was (see the taxonomy below).
+>
+> **Anti-gaming rule:** CCDR can never be raised by withholding. It is always reported next to **Highlight Coverage** (share of eligible children with at least one confirmed highlight). If coverage falls while CCDR rises, that is a warning, not a win.
+>
+> **Why not count honest zero as a miss?** In the synthetic cohort in `projects/04`, that rule lowered CCDR by about 10 points purely because some children play little. It would punish honest behaviour and push toward padding reels, which the product forbids.
 
 ### Denominator Integrity Rules
 1. **No Silent Drops:** An eligible rostered child cannot be removed from the denominator because the coach forgot to review clips or because video processing failed.
@@ -146,8 +150,8 @@ When $Y_i = 0$, the failure must be mapped to exactly one primary root-cause cat
 │ 2. HELD / UNRESOLVED PIPELINE (Severity 2 - Operational Blockage)           │
 │    Unresolved coach review, missing guardian consent, or failed render      │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ 3. ZERO HIGHLIGHTS (Severity 3 - Honest Empty State)                        │
-│    Sub-classified into True-Zero (Playtime/Action) vs Missed-Moment (CV Gap)│
+│ 3. MISSED MOMENT (Severity 3 - a real moment was not captured)             │
+│    True-Zero (verified no moment) is NOT a miss and counts as success       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ 4. DELIVERY TRANSPORT FAILURE (Severity 4 - Network / Infrastructure)       │
 │    Approved manifest committed, but SMS/Email webhook returned 5xx/timeout  │

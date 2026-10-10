@@ -139,12 +139,12 @@ ccdr_a = good.sum() / cohort                       # zero-highlight week counts 
 ccdr_b = (good.sum() + zero.sum()) / cohort        # honest zero counts as success
 out += ["## 6. CCDR under two counting rules (SYNTHETIC cohort, invented rates)", "",
         f"- Cohort: {cohort} child-weeks. Invented outcome rates: zero-highlight {p_zero:.0%}, wrong child {p_wrong:.0%}, held {p_held:.0%}, delivery failure {p_fail:.0%}.",
-        f"- Rule A (honest zero = miss, the current choice): CCDR = **{ccdr_a:.1%}**",
-        f"- Rule B (honest zero = success): CCDR = **{ccdr_b:.1%}**",
-        f"- Difference: {100 * (ccdr_b - ccdr_a):.1f} points, driven entirely by how common zero-highlight weeks are. A quiet-playing child is not a product failure, so Rule A can punish honest behaviour.",
-        "- This is the product decision flagged in docs/CLAIMS_AND_EVIDENCE.md (item D2). The rates are made up; only the mechanism is the finding.", ""]
+        f"- Rule A (honest zero = miss, REJECTED): CCDR = **{ccdr_a:.1%}**",
+        f"- Rule B (verified true-zero = success, ADOPTED): CCDR = **{ccdr_b:.1%}**",
+        f"- Difference: {100 * (ccdr_b - ccdr_a):.1f} points, driven entirely by how common zero-highlight weeks are. A quiet-playing child is not a product failure, so Rule A would punish honest behaviour and push toward padding reels.",
+        "- Product decision (October 2026): adopt Rule B, always report Highlight Coverage beside CCDR, and count a *missed* moment as a miss. The rates are made up; only the mechanism is the finding.", ""]
 fig, ax = plt.subplots(figsize=(7.5, 3.4))
-labs = ["Rule A\n(zero = miss)", "Rule B\n(zero = success)"]
+labs = ["Rule A, rejected\n(zero = miss)", "Rule B, adopted\n(true zero = success)"]
 ax.bar(labs, [ccdr_a, ccdr_b], color=[BLUE, AMBER])
 for i, v in enumerate([ccdr_a, ccdr_b]):
     ax.text(i, v + 0.01, f"{v:.1%}", ha="center")

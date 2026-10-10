@@ -31,7 +31,7 @@ The hosted copy at <https://sidelinereel-kshitij.netlify.app> is the build from 
 | Step | Do this | You should see |
 |---|---|---|
 | 1 | On **Setup**, press *Run Simulated AI Moment Detection* | 11 proposed clips, every one **unresolved** |
-| 2 | On **Review**, open the clip at 14:22 | The frame shows jersey **#4**, but the AI proposed **Maya S. (#14)** at 94% |
+| 2 | On **Review**, open the clip at 14:22 | The frame shows jersey **#4**, but the AI proposed **Maya S. (#14)** at 94%. An amber hint says so, and does not block anything |
 | 3 | Press *Reassign* | Liam T. (#4) is preselected and the note names Liam. Change the player and the note follows. A note naming a different child blocks confirm |
 | 4 | Confirm, then try *Preview & Publish* | **Publication Blocked**: unresolved clips and Sofia H.'s missing consent |
 | 5 | Press *Remove* on a clip and confirm without a reason | Refused. A reason is mandatory |
@@ -58,12 +58,12 @@ How each requirement maps to the prototype: [Appendix A of the PRD](specs/PRD_SP
 - Checks run in your browser, so they only show the intended rules. A real system must enforce them on a server.
 - No real model has been built or evaluated. No accuracy claim is made anywhere in this repo.
 - Confidence thresholds are deliberately not defined. There is no calibration data.
-- The prototype does not warn when a confirmed child's jersey differs from the number in the frame. Whether it should is an open product decision.
+- The jersey-mismatch warning is a hint only. It cannot tell the coach who is right, and whether it helps or causes warning fatigue is untested.
 - The decision log has no durable store, and shared-jersey cases, roles and guardian views are not built.
 - Consent handling is a mock. It has had no legal review.
 - The scenario figures (tickets, 30% unopened, 92% share, 58% survey) are from the assessment materials and were not re-verified in this repo.
 - Evaluation scores from the assessment, where mentioned elsewhere, are a reviewer's estimates, not official employer results.
-- No license file has been added yet (see [`docs/REMAINING_WORK.md`](docs/REMAINING_WORK.md)).
+- All rights reserved for now (see [`LICENSE`](LICENSE)). Viewing and linking are welcome.
 
 ## Tests
 

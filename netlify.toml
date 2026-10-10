@@ -1,0 +1,10 @@
+# If this repository is linked to a Netlify site, deploy the static prototype only.
+[build]
+  publish = "site"
+  # no build command: the prototype is a single static HTML file with no dependencies
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"

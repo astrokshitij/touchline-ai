@@ -246,6 +246,24 @@ await section('6. thumbnail cannot hide a wrong-child confirm', async () => {
   await context.close();
 });
 
+// ---------------------------------------------------------------- 6b. jersey hint is shown, non-blocking, and tracks the decision
+await section('6b. jersey hint', async () => {
+  const { page, context, log } = await openApp();
+  await runDetection(page);
+  check('hint appears on exactly two clips at the start (14:22 mismatch, 29:10 unreadable)', (await page.locator('.jersey-hint').count()) === 2, String(await page.locator('.jersey-hint').count()));
+  check('hint on 14:22 names #4 and Maya S. (#14)', (await clip(page, '14:22').locator('.jersey-hint').innerText()).includes('#4') && (await clip(page, '14:22').locator('.jersey-hint').innerText()).includes('Maya S. (#14)'));
+  check('hint on 29:10 says the number is not readable', (await clip(page, '29:10').locator('.jersey-hint').innerText()).includes('not readable'));
+  check('a matching clip (04:12) has no hint', (await clip(page, '04:12').locator('.jersey-hint').count()) === 0);
+  check('the hint does not remove or disable any action (still 3 buttons)', (await clip(page, '14:22').locator('.clip-actions button').count()) === 3);
+  await clip(page, '14:22').getByRole('button', { name: /Confirm/ }).click();
+  check('confirming the mismatched clip keeps a Heads-up', (await clip(page, '14:22').locator('.jersey-hint').innerText()).includes('Heads-up'));
+  await clip(page, '14:22').getByRole('button', { name: /Change/ }).click();
+  await reassignC2ToLiam(page);
+  check('after reassigning to Liam T. (#4) the hint disappears', (await clip(page, '14:22').locator('.jersey-hint').count()) === 0);
+  check('console clean', log.consoleErrors.length === 0 && log.pageErrors.length === 0);
+  await context.close();
+});
+
 // ---------------------------------------------------------------- 7. clip beyond the footage blocks publication
 await section('7. clip beyond the footage blocks publication', async () => {
   const { page, context } = await openApp();

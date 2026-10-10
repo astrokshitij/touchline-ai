@@ -4,16 +4,16 @@ Updated after the portfolio-projects pass. Items already done are listed at the 
 
 ## 1. Immediate (small, no new infrastructure)
 
-- [ ] Resolve the open decisions in `docs/CLAIMS_AND_EVIDENCE.md` section D.
+- [ ] Read the product decisions taken for you (`docs/CLAIMS_AND_EVIDENCE.md` section D) and change any you disagree with.
 - [ ] Check the source facts in section C against the original assessment files, then correct anything that differs.
 - [ ] **Teardowns:** do the hands-on to-do lists in `projects/02` and `projects/03` (re-open every source link, try the products, add your own screenshots). Until then they are drafts.
 - [ ] **Figma:** finish the file by hand (`projects/01-wireframes-v2/README.md`, "What is left in Figma"): brief page, flow, guardian page, three polish fixes, prototype links. The tool-call allowance on the Starter plan is used up for the month.
 - [ ] Re-record `demo/prototype_walkthrough.mp4` from the corrected build, or label it "assessment build". Replace or archive the old `demo/` screenshots.
 - [ ] Add the narrated video link once it is available again.
-- [ ] Redeploy the Netlify build when you approve the changes (the hosted copy is the assessment build).
-- [ ] Add a LICENSE file or state "all rights reserved".
+- [ ] **Hosting:** the hosted Netlify copy is the assessment build. Either link the Netlify site to this repo (it reads `netlify.toml`, publishing `site/`), or enable GitHub Pages (Settings, Pages, source "GitHub Actions"). Neither could be done or verified from here.
 - [ ] Prototype polish: "Unknown" display for missing fields (FR-5); close modals with Escape and trap focus; a screen-reader pass; replace `alert()` pop-ups with inline messages.
-- [ ] Decide on the jersey-mismatch warning (proposed in wireframe C4).
+- [ ] Run the usability test with and without the jersey-mismatch warning (`projects/01-wireframes-v2`).
+- [ ] Edit the Figma C4 annotation from "PROPOSED" to "Decided: shipped".
 - [ ] Decide whether to publish your own Instagram analysis as a second data project. It needs a fresh data pull and your consent to publish.
 
 ## 2. Livestream feasibility (bounded, no build commitment)
