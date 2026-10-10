@@ -328,7 +328,7 @@ for (const [w, h] of [[320, 640], [375, 812], [768, 1024], [1280, 800]]) {
 
 // ---------------------------------------------------------------- 11. public case-study page
 await section('11. case-study page', async () => {
-  const csUrl = pathToFileURL(path.join(path.dirname(new URL(SITE).pathname), 'case-study', 'index.html')).href;
+  const csUrl = new URL('case-study/index.html', SITE).href; // URL-relative: works on Windows and POSIX
   for (const [w, h] of [[320, 640], [375, 812], [768, 1024], [1280, 800]]) {
     const context = await browser.newContext({ viewport: { width: w, height: h } });
     const page = await context.newPage();
