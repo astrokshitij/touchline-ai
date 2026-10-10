@@ -72,9 +72,8 @@ You asked me to decide as the PM. These are my decisions, with reasons. Each is 
 | 6 | Reassign preselects the player whose jersey matches the frame | **Keep**, labelled "Preselected because jersey #N matches. Verify visually." | Speeds the common case. Same warning-fatigue risk, same test. | Prototype, wireframe C5 |
 | 7 | Review after publish | **Locked.** A real correction flow (revoke, reissue, notify, audit) is on the roadmap, not designed. | The delivered manifest must not drift from what was sent. | Prototype, wireframe C12, remaining work |
 | 8 | License | **All rights reserved for now** (see `LICENSE`). | This is a portfolio. Visibility matters more than reuse, and you can loosen to MIT later. You cannot take a permissive license back once others copy the repo. | `LICENSE`, README |
-| 9 | Publish your Instagram analysis as a data project? | **Not now.** | Needs a fresh data pull and your consent to publish. The TouchlineAI audit already fills the Data Analysis gap. | Remaining work |
-| 10 | Teardowns | **Publish as clearly labelled drafts**, not as finished work. | They rest on search summaries. Presenting them as hands-on would be misleading. | `projects/02`, `projects/03` |
-| 11 | The October 15 feasibility date | **Keep.** | It is the memo's proposed commitment. The five-day plan fits. | `projects/07` |
+| 9 | Teardowns | **Publish as clearly labelled drafts**, not as finished work. | They rest on search summaries. Presenting them as hands-on would be misleading. | `projects/02`, `projects/03` |
+| 10 | The October 15 feasibility date | **Keep.** | It is the memo's proposed commitment. The five-day plan fits. | `projects/07` |
 
 Still needing **you**: check the source facts in section C against your original files, and do the teardown hands-on lists.
 
