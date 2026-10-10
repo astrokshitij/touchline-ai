@@ -69,6 +69,10 @@ Not recomputed: the experiment's "about 1,900 guardians per arm" (it rests on an
 
 Three of these are now guarded by tests in `tests/e2e.mjs`: no bulk or confirm-all control exists, the publish message carries no "100%" or "zero wrong child" boast, and an excluded child stays visible with a reason.
 
+## 4b. The rubric behind the checks
+
+The author supplied the scoring rubric used to plan the original assessment (gates, a verdict rule, an ingest check, per-task rubrics and a slop checklist). A paraphrase is in [`ai-evals/ORIGINAL_RUBRIC.md`](ai-evals/ORIGINAL_RUBRIC.md). It is a design. The filled-in scores from the original run are not in this repo, so none are reported. Its Layer C slop checklist was re-run over the new text in this section (no em dashes, no stock phrases, counts tied to the ledger).
+
 ## 5. Limits of these numbers
 
 - **Not an error rate.** The ledger holds the claims that were flagged or chosen for checking. It is not a random sample of everything in the repo. 21 of 34 must not be read as "62% of AI claims are wrong".

@@ -418,6 +418,10 @@ await section('12. AI evals section', async () => {
       check('ai evals: states its scope and limits', /No AI model was built or evaluated/.test(text) && /Limits of this audit/.test(text) && /not an error rate/i.test(text));
       check('ai evals: no hype or guarantee wording', !/perfect|flawless|revolution|game-chang|cutting-edge|state-of-the-art|guarantee|100% accura/i.test(text), text.match(/perfect|flawless|revolution|game-chang|cutting-edge|state-of-the-art|guarantee|100% accura/i)?.[0]);
 
+      const slopText = text + fs.readFileSync(path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), 'utf8') + fs.readFileSync(path.join(siteDir, '..', 'docs', 'ai-evals', 'ORIGINAL_RUBRIC.md'), 'utf8').split('## Layer C')[0];
+      check('ai evals: slop checklist on the new text (no em dashes, no stock phrases)', !/\u2014/.test(slopText) && !/enhance user experience|drive engagement|seamless|consider exploring|leverage/i.test(slopText));
+      check('ai evals: says the original scores are not in the repo', /not in this repository, so none are reported/.test(text));
+
       // links: relative ones resolve to files; repo links resolve to files in this checkout; external ones are only checked for form
       const hrefs = await page.$$eval('a[href]', as => as.map(x => x.getAttribute('href')));
       const repoRoot = path.resolve(siteDir, '..');
@@ -441,7 +445,7 @@ await section('12. AI evals section', async () => {
 
   // The public page and the audit files must not mention personal social accounts (hard boundary).
   const files = [path.join(siteDir, 'index.html'), path.join(siteDir, 'case-study', 'index.html'),
-    path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), path.join(siteDir, '..', 'docs', 'ai-evals', 'claims-ledger.csv')];
+    path.join(siteDir, '..', 'docs', 'AI_EVALS.md'), path.join(siteDir, '..', 'docs', 'ai-evals', 'claims-ledger.csv'), path.join(siteDir, '..', 'docs', 'ai-evals', 'ORIGINAL_RUBRIC.md')];
   const hits = files.filter(f => /instagram|youtube|tiktok|facebook|twitter|linkedin/i.test(fs.readFileSync(f, 'utf8'))).map(f => path.basename(f));
   check('no mention of personal social-media accounts in the site or the audit files', hits.length === 0, JSON.stringify(hits));
 });
