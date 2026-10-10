@@ -2,7 +2,7 @@
 
 A paraphrase, anonymised like `docs/PROBLEM_STATEMENT.md`. The author wrote the rubric to score every output, whether AI-drafted or the author's own, against the assessment's five stated criteria. This copy was supplied by the author on 10 October 2026.
 
-> **What this shows and what it does not.** It shows that checking was designed before the work, with pass/fail gates and a shared checklist. The filled-in scores from the original run are **not in this repository**, so no score is reported anywhere. Whether each layer was run as written is the author's account, not something the repo can confirm.
+> **What this shows and what it does not.** It shows that checking was designed before the work, with pass/fail gates and a shared checklist. The scores from the original run are **not in this repository**, except for the one B2 result noted at the end. Whether each layer was run as written is the author's account, not something the repo can confirm.
 
 ## How scoring worked
 - Each criterion is scored 1 to 5. A 5 is specific, evidenced and has no gaps. A 3 is acceptable but generic or partly evidenced. A 1 is missing or wrong.
@@ -41,10 +41,12 @@ A line fails if it has:
 
 Each hit is logged in the AI-use log as checked or rejected. Those entries are the raw material for the AI-use note.
 
-## Who judged (as the rubric assigns it)
+## Who judged (as the rubric assigns it; see the note below on what happened)
 - Chat self-checks with a quick scoring footer. Same model family, so not independent.
 - A second-model judge gives the independent verdict at three checkpoints: the ranking, the spec, and the final document with the prototype source.
 - The author ran the prototype click test personally.
+
+In the run, per the author's AI-use log, the second-model judge became unavailable and a separate reviewer from the drafting model family took over. The log calls that "a second review, not an independent model family". One recorded result: a spec (B2) checkpoint with every criterion at 4 or 5, gates passed, verdict SHIP.
 
 ## Applied again in October 2026
 Layer C was run over the text added for the case-study "AI evals" section. Result: no em dashes, no stock boilerplate phrases, and every count on the page matches `claims-ledger.csv` (enforced by the browser tests). This is a check of the new text only.

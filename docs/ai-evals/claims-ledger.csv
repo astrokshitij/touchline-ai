@@ -1,51 +1,66 @@
 id,pass,claim,first_seen,checked_against,verdict,outcome
-P1-01,1,"PRD 'Approved for Implementation (B2 SHIP Gate Passed)'; memo 'Approved by Product Leadership'",15becab,repo cross-check,no_source,Marked as case-study drafts with no approval
-P1-02,1,"'Jersey #4 as #14 at 94% confidence' presented as a ticket fact",15becab,repo cross-check,no_source,Relabelled as simulated (94% is the prototype scenario)
-P1-03,1,"Technical causes of the wrong-child errors: stroke morphology / perspective warp / OCR segmentation / fabric folds",15becab,repo cross-check + AI log,no_source,Removed; spec says the cause is unknown
-P1-04,1,"'Misattribution is a structural CV limitation'",15becab,repo cross-check,no_source,Reworded to 'recurs at three clubs; cause unknown'
-P1-05,1,"'Wrong-child thumbnails are a major churn driver' / 'directly drives the 30% non-opening'",15becab,repo cross-check + AI log,overstated,Now a labelled hypothesis
-P1-06,1,"'Unlocking the remaining 35.6% of reach' / 'over 35% of reels fail to deliver value'",15becab,arithmetic,overstated,Replaced with the 30% / about 6% split
-P1-07,1,"64.4% stated as exact",15becab,arithmetic,overstated,Shown as about 64% with both assumptions stated
-P1-08,1,"Editor 'would have wasted 8 engineering weeks'; '0% of the problem'; '6-inch phone'",15becab,repo cross-check,no_source,Pass 1 softened it to 'a proposed 8-week build'; pass 2 removed it
-P1-09,1,"Parents 'stated editing to fix bad clips'; 'cognitive load was prohibitive'",15becab,repo cross-check,overstated,Marked as hypothesis; survey-vs-telemetry caveat added
+P1-01,1,PRD 'Approved for Implementation (B2 SHIP Gate Passed)'; memo 'Approved by Product Leadership',15becab,repo cross-check,no_source,Marked as case-study drafts with no approval
+P1-02,1,'Jersey #4 as #14 at 94% confidence' presented as a ticket fact,15becab,repo cross-check,no_source,Relabelled as simulated (94% is the prototype scenario)
+P1-03,1,Technical causes of the wrong-child errors: stroke morphology / perspective warp / OCR segmentation / fabric folds,15becab,repo cross-check + AI log,no_source,Removed; spec says the cause is unknown
+P1-04,1,'Misattribution is a structural CV limitation',15becab,repo cross-check,no_source,Reworded to 'recurs at three clubs; cause unknown'
+P1-05,1,'Wrong-child thumbnails are a major churn driver' / 'directly drives the 30% non-opening',15becab,repo cross-check + AI log,overstated,Now a labelled hypothesis
+P1-06,1,'Unlocking the remaining 35.6% of reach' / 'over 35% of reels fail to deliver value',15becab,arithmetic,overstated,Replaced with the 30% / about 6% split
+P1-07,1,64.4% stated as exact,15becab,arithmetic,overstated,Shown as about 64% with both assumptions stated
+P1-08,1,Editor 'would have wasted 8 engineering weeks'; '0% of the problem'; '6-inch phone',15becab,repo cross-check,no_source,Pass 1 softened it to 'a proposed 8-week build'; pass 2 removed it
+P1-09,1,Parents 'stated editing to fix bad clips'; 'cognitive load was prohibitive',15becab,repo cross-check,overstated,Marked as hypothesis; survey-vs-telemetry caveat added
 P1-10,1,"AWS G5, multi-CDN, WebRTC, 'multimillion-dollar' streaming",15becab,repo cross-check,no_source,Removed; no estimate exists
-P1-11,1,"'Public broadcast of unconsented minors'",15becab,repo cross-check,overstated,Reworded as a risk if consent and access are not designed first
-P1-12,1,"COPPA/GDPR-K 'enforced' / 'violations'",15becab,repo cross-check,overstated,Now 'may apply; no legal review'
-P1-13,1,"Phase 3 auto-publish at confidence 0.90; 'held / delayed release' at 0.80-0.90; 'auto-validated candidate'",15becab,repo cross-check,no_source,Removed; confidence never skips the coach
-P1-14,1,"Phase 1 'audit 100%' versus '10% sample' in Failure Mode 1",not pinned,repo cross-check,inconsistent,Failure Mode 1 now points to the phase plan
-P1-15,1,"CCDR needs every record audited but later phases audit samples",15becab,repo cross-check,inconsistent,Recorded as an open estimator decision
-P1-16,1,"Maya 'L.' in PRD and README versus 'S.' in the prototype",15becab,repo cross-check,inconsistent,Now 'Maya S.' everywhere
+P1-11,1,'Public broadcast of unconsented minors',15becab,repo cross-check,overstated,Reworded as a risk if consent and access are not designed first
+P1-12,1,COPPA/GDPR-K 'enforced' / 'violations',15becab,repo cross-check,overstated,Now 'may apply; no legal review'
+P1-13,1,Phase 3 auto-publish at confidence 0.90; 'held / delayed release' at 0.80-0.90; 'auto-validated candidate',15becab,repo cross-check,no_source,Removed; confidence never skips the coach
+P1-14,1,Phase 1 'audit 100%' versus '10% sample' in Failure Mode 1,not pinned,repo cross-check,inconsistent,Failure Mode 1 now points to the phase plan
+P1-15,1,CCDR needs every record audited but later phases audit samples,15becab,repo cross-check,inconsistent,Recorded as an open estimator decision
+P1-16,1,Maya 'L.' in PRD and README versus 'S.' in the prototype,15becab,repo cross-check,inconsistent,Now 'Maya S.' everywhere
 P1-17,1,"README 'immutable audit trail', 'idempotency key', 'production PRD', MIT badge",15becab,repo cross-check,overstated,Reworded; badge removed
-P1-18,1,"README cites scratch/test_e2e.js and '12/12 passed'",15becab,repo cross-check,no_source,New runnable suite in tests/
-P1-19,1,"'$180k ARR' versus 'seasonal contract value'",15becab,repo cross-check; later the brief,contradicted,Pass 2: the brief says '$180k a season'; both documents now say that
-P1-20,1,"'210 coaches and parents' versus '210 respondents across 40 clubs'",15becab,repo cross-check,inconsistent,Now '210 respondents across 40 clubs'
+P1-18,1,README cites scratch/test_e2e.js and '12/12 passed',15becab,repo cross-check,no_source,New runnable suite in tests/
+P1-19,1,'$180k ARR' versus 'seasonal contract value',15becab,repo cross-check; later the brief,contradicted,Pass 2: the brief says '$180k a season'; both documents now say that
+P1-20,1,'210 coaches and parents' versus '210 respondents across 40 clubs',15becab,repo cross-check; the brief (later),contradicted,"Now '210 respondents across 40 clubs'. The brief calls it a parent survey, so 'coaches' was also wrong"
 P2-01,2,"210 respondents, 40 clubs; editing controls top request; 58% named it their single biggest ask",n/a,the original brief,supported,None needed
-P2-02,2,"6% of parents opened the Reel Editor; under 1% of those finished an edit; 90 days",n/a,the original brief,supported,None needed
-P2-03,2,"92% share rate over opened reels only; about 30% of reels never opened",n/a,the original brief,supported,None needed
-P2-04,2,"90% figure is the Share button on the weekly auto-recap over 90 days",n/a,the original brief,supported,None needed
-P2-05,2,"Analytics note names late-night notifications and a wrong-kid thumbnail as suspected causes",n/a,the original brief,supported,Kept as a hypothesis
-P2-06,2,"Three tickets and four incidents of wrong-child reels across three clubs (14/4; swapped digits; 1/11)",n/a,the original brief,supported,None needed
-P2-07,2,"$180k a season; renewal and signups in six weeks; biggest club",n/a,the original brief,supported,None needed
-P2-08,2,"Livestream request is for every game for grandparents and college scouts",n/a,the original brief,supported,Scouts had been left out; added (it widens the consent question)
-P2-09,2,"Jersey pair '#7 vs #17'",15becab,the original brief,no_source,Removed everywhere including the public page
+P2-02,2,6% of parents opened the Reel Editor; under 1% of those finished an edit; 90 days,n/a,the original brief,supported,None needed
+P2-03,2,92% share rate over opened reels only; about 30% of reels never opened,n/a,the original brief,supported,None needed
+P2-04,2,90% figure is the Share button on the weekly auto-recap over 90 days,n/a,the original brief,supported,None needed
+P2-05,2,Analytics note names late-night notifications and a wrong-kid thumbnail as suspected causes,n/a,the original brief,supported,Kept as a hypothesis
+P2-06,2,Three tickets and four incidents of wrong-child reels across three clubs (14/4; swapped digits; 1/11),n/a,the original brief,supported,None needed
+P2-07,2,$180k a season; renewal and signups in six weeks; biggest club,n/a,the original brief,supported,None needed
+P2-08,2,Livestream request is for every game for grandparents and college scouts,n/a,the original brief,supported,Scouts had been left out; added (it widens the consent question)
+P2-09,2,Jersey pair '#7 vs #17',15becab,the original brief,no_source,Removed everywhere including the public page
 P2-10,2,"Notification timing '70% vs 85%, Sunday evening vs Saturday afternoon'",15becab,the original brief,no_source,Removed; replaced by the analytics note's late-night hypothesis
 P2-11,2,"Auto-recap '15-second', '24-hour window', 'stakeholders conflated', 'auditing revealed'",15becab,the original brief,no_source,Removed; rewritten as a plain comparison of two numbers
 P2-12,2,"A survey question wording, an '8-week editor initiative' and a tracked event name",15becab,the original brief,no_source,Removed
-P2-13,2,"Clubs named for the wrong sports",15becab,the original brief,contradicted,Fixed (the brief says lacrosse and little league)
-P2-14,2,"Oct 15 feasibility date; prioritisation weights and 1-5 scores; 4.5-minute review; 50 matches; 95% CCDR; 7-day cutoff; 30-day purge",15becab,the original brief,not_checkable,Not in the brief; labelled as the author's judgment or a proposal
-P3-01,3,"Case-study page said '80 automated browser checks'",0f702f1,the test run,contradicted,This change: the suite had 92 checks when that was written
-P3-02,3,"Share of reels opened and shared is about 64% (0.92 x 0.70)",n/a,recomputation,supported,None needed
-P3-03,3,"5.6 points of reels were opened but not shared (70 - 64.4)",n/a,recomputation,supported,None needed
-P3-04,3,"485 of 500 correct clips passes a 95% Wilson lower-bound gate",n/a,recomputation,supported,None needed
-P3-05,3,"A truly 97%-accurate system passes at 500 audited clips about 57% of the time",n/a,recomputation,supported,None needed
+P2-13,2,Clubs named for the wrong sports,15becab,the original brief,contradicted,Fixed (the brief says lacrosse and little league)
+P2-14,2,Oct 15 feasibility date; prioritisation weights and 1-5 scores; 4.5-minute review; 50 matches; 95% CCDR; 7-day cutoff; 30-day purge,15becab,the original brief,not_checkable,Not in the brief; labelled as the author's judgment or a proposal
+P3-01,3,Case-study page said '80 automated browser checks',0f702f1,the test run,contradicted,This change: the suite had 92 checks when that was written
+P3-02,3,Share of reels opened and shared is about 64% (0.92 x 0.70),n/a,recomputation,supported,None needed
+P3-03,3,5.6 points of reels were opened but not shared (70 - 64.4),n/a,recomputation,supported,None needed
+P3-04,3,485 of 500 correct clips passes a 95% Wilson lower-bound gate,n/a,recomputation,supported,None needed
+P3-05,3,A truly 97%-accurate system passes at 500 audited clips about 57% of the time,n/a,recomputation,supported,None needed
 P3-06,3,"The same system passes at 1,000 audited clips about 88% of the time",n/a,recomputation,supported,None needed
-P3-07,3,"Survey described as '210 parents' in docs/PROBLEM_STATEMENT.md but '210 respondents' elsewhere",n/a,the repo only,open,Needs the original brief to settle; the new section avoids the word
-P3-08,3,"README top note said the scenario figures were 'not re-checked in this repo'",1e7c411,docs/CLAIMS_AND_EVIDENCE.md and the README's own later section,contradicted,"True when written (pass 1 had no brief); stale after pass 2. Fixed in this change"
-P3-09,3,"Label table in the claims document said 'Source' items were 'not re-checked here'",1e7c411,section C of the same document,contradicted,"True when written; stale after pass 2. Fixed in this change"
+P3-07,3,Survey described as '210 parents' in docs/PROBLEM_STATEMENT.md but '210 respondents' elsewhere,n/a,the original brief,supported,Brief: 'Quarterly parent survey (210 respondents across 40 clubs)'. Both wordings are fine
+P3-08,3,README top note said the scenario figures were 'not re-checked in this repo',1e7c411,docs/CLAIMS_AND_EVIDENCE.md and the README's own later section,contradicted,True when written (pass 1 had no brief); stale after pass 2. Fixed in this change
+P3-09,3,Label table in the claims document said 'Source' items were 'not re-checked here',1e7c411,section C of the same document,contradicted,True when written; stale after pass 2. Fixed in this change
 P3-10,3,"'Not re-checked' labels left in the PRD, trade-off memo, analytics note, project 04 and 05 notes and claims doc after pass 2 had checked the figures",1e7c411,section C of the claims document,contradicted,Updated to say checked against the brief on 10 October 2026
-P3-11,3,"PRD NG-4 labelled a derived 'under 0.06% of accounts' figure as Source",15becab,the brief figures (6% opened, under 1% of those finished),overstated,Relabelled as arithmetic on two source figures
+P3-11,3,PRD NG-4 labelled a derived 'under 0.06% of accounts' figure as Source,15becab,"the brief figures (6% opened, under 1% of those finished)",overstated,Relabelled as arithmetic on two source figures
 P3-12,3,"Memo: breadth 'every match, every team, every generated reel'; 'no parent will pay subscription fees'",15becab,the brief (three tickets; clubs pay per season),overstated,Rewritten to the evidence and labelled as judgment and inference
-P3-13,3,"Memo: 'Tier-1 Academy'; the club 'might leave' unless streaming came 'immediately'; 'weekend matches'",15becab,the brief paraphrase (every game; no churn threat stated),no_source,Removed; the memo now says the brief does not state a threat to leave
-P3-14,3,"Wireframe notes: 'four wrong-child tickets'",1e7c411,the brief (three tickets describing four incidents),contradicted,Corrected
-P3-15,3,"Case-study page: 'checking was designed at the start' as fact; 'about half the time' for a 43% fail rate; a leftover line about assessment scores 'mentioned elsewhere'",0f702f1,the rubric file and the recomputed power figures,overstated,Reworded as the author's account; 43%; leftover line removed
-P3-16,3,"Workflow log: 'resolved all ambiguities before implementation'",15becab,an outside review of the PRD (three open questions),overstated,Annotated in the log; open questions answered as proposals in the PRD
+P3-13,3,Memo and PRD: 'Tier-1 Academy'; company and customer names said to come from the brief; club asked for 'weekend matches' 'immediately',15becab,the original brief,contradicted,Names are changed for the portfolio; the brief says every game and asks for a roadmap answer before signups. Memo rewritten
+P3-14,3,Wireframe notes: 'four wrong-child tickets',1e7c411,the brief (three tickets describing four incidents),contradicted,Corrected
+P3-15,3,Case-study page: 'checking was designed at the start' as fact; 'about half the time' for a 43% fail rate; a leftover line about assessment scores 'mentioned elsewhere',0f702f1,the rubric file and the recomputed power figures,overstated,Reworded as the author's account; 43%; leftover line removed
+P3-16,3,Workflow log: 'resolved all ambiguities before implementation',15becab,an outside review of the PRD (three open questions),overstated,Annotated in the log; open questions answered as proposals in the PRD
+P3-17,3,Pass 3 fix to the memo said 'The brief does not say the club threatened to leave',dbc5c17,the original brief,contradicted,"My own earlier fix was wrong. The VP of Sales reports the director will take it to her board as a reason to shop around. Restored, labelled secondhand"
+P3-18,3,Workflow log header names 'ChatGPT-4o' and 'Gemini 1.5 / 3.8',15becab,the author's original AI-use log,no_source,The original log says 'ChatGPT' and 'Gemini' with no versions. Annotated as unverified
+P3-19,3,"Workflow log: quoted AI outputs and details ('fabric folds', 'raw database schema definitions', '12 automated test cases', '9 Matches' label)",15becab,the author's original AI-use log,overstated,"Not found in the original log, which is shorter. Annotated, not rewritten"
+P3-20,3,"Prioritisation weights (35/30/20/15) and the 1-5 scores give 4.15, 2.75, 2.25 and 1.85",n/a,the author's submission,supported,Matches the submission table
+A-01,A,Gemini restated about 30% unopened reels as nearly a third of users never receiving value,AI use log line 8,original AI-use log; the brief,overstated,Rejected; reels kept apart from users
+A-02,A,Gemini diagnosed an OCR segmentation flaw as the cause of wrong-child clips,AI use log line 8,original AI-use log; the tickets,no_source,Rejected; neither the materials nor the tickets give a diagnosis
+A-03,A,Decision card gave 95% and five minutes as targets with unsupported precision,AI use log line 11,original AI-use log (reviewer),overstated,Made placeholders; audit owners named; any livestream pilot kept conditional
+A-04,A,Builder proposed partial publication of a batch,AI use log line 11,original AI-use log; spec FR-17 and FR-18,defect,Replaced with blocking invalid included-child batches
+A-05,A,Builder added bulk confirmation (quickConfirmUncontested) while reporting passing tests,AI use log line 13,"original AI-use log; spec FR-6, FR-7, FR-21",defect,Removed; found by reading the code against the requirements
+A-06,A,Builder's success message made an unaudited zero-wrong-child claim,AI use log line 13,original AI-use log,overstated,Replaced with simulated-dispatch wording
+A-07,A,Builder's publish action did not revalidate,AI use log line 13,original AI-use log; spec FR-21,defect,Fixed (publication validation)
+A-08,A,Builder output carried incorrect tags,AI use log line 13,original AI-use log,defect,Fixed (the log does not say which tags)
+A-09,A,Spec had contradictory failure-readiness rules,AI use log line 14,original AI-use log (reviewer),inconsistent,Raw detection separated from processing readiness
+A-10,A,Spec left mixed-game weekly success undefined,AI use log line 14,original AI-use log (reviewer),inconsistent,"Complete-week success, cutoff and version-linked audit evidence defined"
+P3-21,3,"Ledger row P3-11 was malformed in the previous change and silently left out of the counts, so the live page said 15 entries and 9 fixed instead of 16 and 10",dbc5c17,a recount with the script,contradicted,Row repaired; count.mjs now stops on any malformed row and a test checks every row

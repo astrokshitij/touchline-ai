@@ -4,7 +4,7 @@
 - **Document Version:** 3.1 (case-study specification, revised after the assessment)
 - **Author:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
 - **Status:** Portfolio case-study draft. It has not been approved, reviewed or built by any company or engineering team.
-- **Scenario:** Companies and customers named here come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). All prototype data is fictional.
+- **Scenario:** Company and customer names are changed for this portfolio (the brief uses different names; see `docs/PROBLEM_STATEMENT.md`). All prototype data is fictional.
 - **Domain:** Computer Vision (CV), Active Learning, Minor Child Safeguarding. Consent and privacy rules such as COPPA and GDPR-K may apply. This document is not legal advice and has had no legal review.
 
 > **How to read the labels.** **[Source]** = stated in the assessment materials (checked against the original brief on 10 October 2026; see `docs/CLAIMS_AND_EVIDENCE.md`). **[Inference]** = reasoning from source facts, not proven. **[Target]** = a proposed number or policy with no validation behind it. **[Simulated]** = behaviour of the prototype with fictional data. Unlabelled requirements (FR-x) are design intent.

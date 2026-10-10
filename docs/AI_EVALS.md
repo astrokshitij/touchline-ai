@@ -35,9 +35,11 @@ Section C has 15 rows. Its last row (confidence values and technical causes) rep
 |---|---|
 | **Checked** | **34** |
 | Supported | 8 |
-| **Unsupported** (no source 12 + overstated 7 + contradicted 2) | **21** |
-| Inconsistent inside the repo | 4 |
+| **Unsupported** (no source 12 + overstated 7 + contradicted 3) | **22** |
+| Inconsistent inside the repo | 3 |
 | Not checkable against the brief (author-sourced, labelled) | 1 |
+
+P1-20 was first classed as inconsistent. The brief later showed the survey was of parents, so "coaches and parents" was wrong, and it is now `contradicted`.
 
 Of the 14 entries checked against the original brief (pass 2): 8 supported, 5 unsupported (4 with no source, 1 contradicted), 1 not checkable.
 
@@ -45,38 +47,53 @@ Of the 14 entries checked against the original brief (pass 2): 8 supported, 5 un
 
 **What pass 1 missed.** Pass 1 had no brief. It found 20 internal problems, but it listed the ticket numbers, the notification figures and the recap details as items to "check against the originals" and left them in place labelled as source. Pass 2 showed that five such entries (P2-09 to P2-13) had no source or were wrong. Pass 1 also softened an invented effort figure to "a proposed 8-week build" (P1-08); pass 2 removed it. So a review that does not hold the source cannot catch invented facts, and a fix can carry the same fault.
 
-## 3. Pass 3 (this change and a follow-up outside review, 15 entries, counted separately)
+## 3. Pass 3 (21 entries, counted separately)
 
-Pass 3 has two parts:
+Pass 3 has three parts, all after the first two passes:
 
-- **While building the section (P3-01 to P3-09).** Five statistics used on the case-study page were recomputed with a script and all matched (P3-02 to P3-06). Three statements were wrong or stale and were fixed: the page said "80 automated browser checks" when the suite had 92 (P3-01, wrong when written), and the README top note and the claims document's label table still said the scenario figures were "not re-checked" after pass 2 had checked them (P3-08, P3-09, true when written, stale since). One item stays open (P3-07): `docs/PROBLEM_STATEMENT.md` says "210 parents" while other files say "210 respondents". This needs the original brief.
-- **After an independent outside review of the live repo (P3-10 to P3-16).** The reviewer did not have the brief. It found more stale "not re-checked" labels in the PRD, memo, analytics note and project notes (P3-10), a derived figure labelled Source (P3-11), overstated lines in the trade-off memo (P3-12, P3-13), a ticket count error (P3-14), overstated wording on the case-study page (P3-15) and an overclaim in the workflow log (P3-16). All were checked against the repo and the brief paraphrase before fixing. The same review found three questions an engineer would have to ask of the PRD; they are answered as proposals in the PRD's "v1 scope decisions".
+- **While building the section (P3-01 to P3-09).** Five statistics were recomputed with a script and all matched (P3-02 to P3-06). Three statements were wrong or stale and were fixed: the page said "80 automated browser checks" when the suite had 92 (P3-01), and the README top note and the claims document's label table still said the scenario figures were "not re-checked" after pass 2 had checked them (P3-08, P3-09). The survey wording question (P3-07) was settled later from the brief: "Quarterly parent survey (210 respondents across 40 clubs)".
+- **After an independent outside review of the repo (P3-10 to P3-16).** The reviewer did not have the brief. It found more stale labels (P3-10), a derived figure labelled Source (P3-11), overstated memo lines (P3-12, P3-13), a ticket count error (P3-14), overstated page wording (P3-15) and an overclaim in the workflow log (P3-16). The same review found three questions an engineer would have to ask of the PRD; they are answered as proposals in the PRD's "v1 scope decisions".
+- **After the author's original files were checked (P3-17 to P3-21).** This found errors made by the audit itself: a memo line saying the brief mentions no threat to leave, when the VP of Sales reports the director will take it to her board as a reason to shop around (P3-17); and a ledger row with an unquoted comma that the counting script silently dropped, so the live page undercounted pass 3 by one (P3-21). `count.mjs` now stops on any malformed row. It also found model versions and some quoted AI text in the repo's copy of the workflow log that the original AI-use log does not contain (P3-18, P3-19), and confirmed the prioritisation weights and scores against the submission (P3-20).
 
-Totals for pass 3: 5 supported, 9 fixed (5 contradicted, 3 overstated, 1 no source), 1 open. The audit's own fixes missed items too, which repeats the pass 1 lesson.
+Totals for pass 3: 7 supported, 14 fixed (8 contradicted, 5 overstated, 1 no source), 0 open. The audit's own fixes missed items and added two errors of their own, which repeats the pass 1 lesson.
 
 Not recomputed: the experiment's "about 1,900 guardians per arm" (it rests on an assumed design effect) and the other figures in `projects/04`.
 
-## 4. Earlier outputs rejected at assessment time (self-reported, not counted above)
+## 4. The author's original AI-use log (10 entries, group A, counted separately)
 
-`logs/AGENTIC_WORKFLOW.md` records five AI outputs rejected during the assessment itself. They are kept apart because the original session is not in this repo, so git cannot corroborate them, and the log was not re-checked against the original AI-use log.
+The author kept an AI-use log during the assessment (`workspace/AI_USE_LOG.md`, outside this repo). It has 14 entries. On 10 October 2026 the author's local copy was read and quoted for this audit. Ten problems with AI output are recorded in it:
 
-| Output | Kind | What was found | What was done |
+| ID | What was found | Kind | What was done |
 |---|---|---|---|
-| A fabric-fold / OCR segmentation cause for the wrong-child errors | Unsupported claim | The tickets give no cause | Deleted; problem framed as observed number confusion |
-| "30% unopened reels" restated as "30% of users get no value" | Overstated claim | Telemetry counts reels, not users | Rejected; reel open rate kept apart from user retention |
-| A "Quick Confirm All Uncontested" bulk button | Behaviour that weakens the safety rule | Would let a coach skip looking at each clip | Removed; every clip starts unresolved |
-| A "100% Zero Wrong Child Delivered" success banner | Overstated claim | A coach's confirm does not establish accuracy | Replaced with a simulated-dispatch notice |
-| Partial publish that silently left out children without consent | Behaviour that weakens the safety rule | Hides an exclusion from the coach | Replaced with an atomic batch hold |
+| A-01 | Gemini restated about 30% unopened reels as nearly a third of users never receiving value | Overstated | Rejected; reels kept apart from users |
+| A-02 | Gemini diagnosed an OCR segmentation flaw | No source | Rejected; no source gives a diagnosis |
+| A-03 | Decision card carried 95% and five minutes with unsupported precision | Overstated | Made placeholders; conditional livestream pilot |
+| A-04 | Builder proposed partial publication of a batch | Defect | Replaced by blocking invalid batches |
+| A-05 | Builder added bulk confirmation while reporting passing tests | Defect | Removed after reading the code against FR-6, FR-7, FR-21 |
+| A-06 | Builder's success message made an unaudited zero-wrong-child claim | Overstated | Replaced with simulated wording |
+| A-07 | Publish action did not revalidate | Defect | Fixed |
+| A-08 | Builder output carried incorrect tags | Defect | Fixed (the log does not say which) |
+| A-09 | Spec had contradictory failure-readiness rules | Inconsistent | Raw detection separated from processing readiness |
+| A-10 | Spec left mixed-game weekly success undefined | Inconsistent | Defined |
 
-Three of these are now guarded by tests in `tests/e2e.mjs`: no bulk or confirm-all control exists, the publish message carries no "100%" or "zero wrong child" boast, and an excluded child stays visible with a reason.
+Totals: 1 no source, 3 overstated, 2 inconsistent, 4 defects.
 
-## 4b. The rubric behind the checks
+What the original log also records:
+- Gemini became unavailable. A separate ChatGPT reviewer stood in. The submission calls that "a second review, not an independent model family".
+- One rubric result is recorded in the submission: a spec (B2) checkpoint with every criterion at 4 or 5, gates passed, verdict SHIP, from that stand-in reviewer. The outside review of the later repo found three blocking questions in the PRD. The documents are different versions and both are reviewer judgments.
+- The weighted decision totals were checked with a script.
 
-The author supplied the scoring rubric used to plan the original assessment (gates, a verdict rule, an ingest check, per-task rubrics and a slop checklist). A paraphrase is in [`ai-evals/ORIGINAL_RUBRIC.md`](ai-evals/ORIGINAL_RUBRIC.md). It is a design. The filled-in scores from the original run are not in this repo, so none are reported. Its Layer C slop checklist was re-run over the new text in this section (no em dashes, no stock phrases, counts tied to the ledger).
+**The repo copy of the workflow log differs from the original.** `logs/AGENTIC_WORKFLOW.md` names "ChatGPT-4o" and "Gemini 1.5 / 3.8" and quotes AI outputs ("fabric folds", "raw database schema definitions", a "9 Matches" button label, "12 automated test cases"). The original AI-use log has none of these details: it says "ChatGPT" and "Gemini" with no versions and gives shorter descriptions. The repo copy is annotated and not rewritten, and the page uses only the original log's facts.
+
+**Not published:** a separate reviewer-written evaluation of the original submission, with scores and hiring-style judgments, exists in the author's files. It is not an employer result and it is personal to the author, so no part of it is on the page.
+
+## 4b. The rubric behind the checks (author-supplied)
+
+The author supplied the scoring rubric used to plan the original assessment (gates, a verdict rule, an ingest check, per-task rubrics and a slop checklist). A paraphrase is in [`ai-evals/ORIGINAL_RUBRIC.md`](ai-evals/ORIGINAL_RUBRIC.md). It is a design. The scores from the original run are not in this repo except for the one B2 result in section 4, so no others are reported. Its Layer C slop checklist was re-run over the new text in this section (no em dashes, no stock phrases, counts tied to the ledger).
 
 ## 5. Limits of these numbers
 
-- **Not an error rate.** The ledger holds the claims that were flagged or chosen for checking. It is not a random sample of everything in the repo. 21 of 34 must not be read as "62% of AI claims are wrong".
+- **Not an error rate.** The ledger holds the claims that were flagged or chosen for checking. It is not a random sample of everything in the repo. 22 of 34 must not be read as "65% of AI claims are wrong".
 - **Rows, not sentences.** Some rows bundle several phrases. Merging the two related "8-week" entries (P1-08 and P2-12) would make the total 33.
 - **The checkers were AI-assisted too.** Both passes were run with an AI coding assistant. The author supplied the original brief for pass 2 and reviews the changes. The original brief is not published here, so a reader cannot re-run pass 2.
 - **Verdicts are classifications.** See section 1.

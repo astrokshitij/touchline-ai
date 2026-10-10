@@ -15,7 +15,9 @@ export function parseCsv(text) {
   }
   if (cell || row.length) { row.push(cell); rows.push(row); }
   const [head, ...body] = rows;
-  return body.filter(r => r.length === head.length).map(r => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+  const bad = body.filter(r => r.length !== head.length).map(r => r[0]);
+  if (bad.length) throw new Error('Malformed ledger rows (wrong number of fields): ' + bad.join(', '));
+  return body.map(r => Object.fromEntries(head.map((h, i) => [h, r[i]])));
 }
 
 export function summarise(rows) {
@@ -37,7 +39,8 @@ export function summarise(rows) {
       notCheckable: n('not_checkable'),
       brief: (() => { const b = audit.filter(r => r.pass === '2'); const u = b.filter(r => ['no_source', 'overstated', 'contradicted'].includes(r.verdict)).length; return { checked: b.length, supported: b.filter(r => r.verdict === 'supported').length, unsupported: u, notCheckable: b.filter(r => r.verdict === 'not_checkable').length }; })(),
     },
-    pass3: (() => { const r3 = rows.filter(r => r.pass === '3'); const t3 = tally(r3); return { entries: r3.length, ...t3, fixed: (t3.contradicted || 0) + (t3.overstated || 0) + (t3.no_source || 0) }; })(),
+    orig: (() => { const ro = rows.filter(r => r.pass === 'A'); const to = tally(ro); return { entries: ro.length, noSource: to.no_source || 0, overstated: to.overstated || 0, inconsistent: to.inconsistent || 0, defect: to.defect || 0 }; })(),
+    pass3: (() => { const r3 = rows.filter(r => r.pass === '3'); const t3 = tally(r3); return { entries: r3.length, supported: 0, open: 0, ...t3, fixed: (t3.contradicted || 0) + (t3.overstated || 0) + (t3.no_source || 0) }; })(),
   };
 }
 

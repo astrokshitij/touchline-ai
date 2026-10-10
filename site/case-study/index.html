@@ -174,9 +174,9 @@
 
   <div class="grid g4" style="margin-top:20px">
     <div class="card"><div class="stat" data-ledger="checked">34</div><p>claims checked in two review passes. The drafts were AI-assisted.</p></div>
-    <div class="card"><div class="stat" data-ledger="unsupported">21</div><p>were unsupported: <span data-ledger="noSource">12</span> with no source, <span data-ledger="overstated">7</span> stronger than the evidence allows, <span data-ledger="contradicted">2</span> contradicted by the brief.</p></div>
+    <div class="card"><div class="stat" data-ledger="unsupported">22</div><p>were unsupported: <span data-ledger="noSource">12</span> with no source, <span data-ledger="overstated">7</span> stronger than the evidence allows, <span data-ledger="contradicted">3</span> contradicted by the brief or the repo.</p></div>
     <div class="card"><div class="stat" data-ledger="supported">8</div><p>matched the original brief.</p></div>
-    <div class="card"><div class="stat" data-ledger="inconsistent">4</div><p>contradicted another part of the repository. One more is author-sourced and cannot be checked against the brief.</p></div>
+    <div class="card"><div class="stat" data-ledger="inconsistent">3</div><p>contradicted another part of the repository. One more is author-sourced and cannot be checked against the brief.</p></div>
   </div>
   <p class="sub" style="margin-top:12px">These are counts of ledger rows, not an error rate. The rows are the claims that were chosen or flagged for checking, not a sample of every sentence in the repository.</p>
 
@@ -192,13 +192,15 @@
     </tbody>
   </table></div>
 
-  <div class="grid g2" style="margin-top:24px">
+  <div class="grid g3" style="margin-top:24px">
     <div class="card"><span class="tag warn">Pass 1</span><h3>Review without the source</h3>
       <p><span data-ledger="pass1">20</span> entries. The reviewer had only the repository: its own files, its AI log and arithmetic. It found real internal problems. It also left the invented ticket, notification and recap details in place, listing them as things to check against the originals.</p></div>
     <div class="card"><span class="tag ok">Pass 2</span><h3>Review against the brief</h3>
       <p><span data-ledger="pass2">14</span> entries. With the original brief supplied by the author, 8 matched and 5 did not (4 had no source, 1 was wrong). One more is author-sourced and not in the brief. Pass 1 had also softened an invented effort figure to "a proposed 8-week build". Pass 2 removed it.</p></div>
+    <div class="card"><span class="tag">At assessment time</span><h3>The author's own AI-use log</h3>
+      <p>14 log entries, kept during the assessment, record <span data-orig="entries">10</span> problems with AI output: <span data-orig="noSource">1</span> with no source, <span data-orig="overstated">3</span> overstated, <span data-orig="inconsistent">2</span> spec contradictions and <span data-orig="defect">4</span> defects in the prototype build. The builder reported passing tests while a bulk-confirm button was still in the code. It was found by reading the code against the requirements.</p></div>
   </div>
-  <p class="sub" style="margin-top:16px"><strong>While building this section and after an outside review</strong> (counted separately, <span data-ledger3="entries">15</span> entries). <span data-ledger3="supported">5</span> statistics used on this page were recomputed with a script and all matched. <span data-ledger3="fixed">9</span> statements were wrong, overstated or out of date and were fixed. They include this page's "80 browser checks", "not re-checked" labels left in the specs after the figures had been checked, and overstated lines in the trade-off memo and the PRD. <span data-ledger3="open">1</span> question is still open because it needs the original brief: whether the survey respondents were all parents.</p>
+  <p class="sub" style="margin-top:16px"><strong>After the first two passes</strong> (counted separately, <span data-ledger3="entries">21</span> entries). <span data-ledger3="supported">7</span> were confirmed: five recomputed statistics, the survey wording and the prioritisation scores. <span data-ledger3="fixed">14</span> were wrong, overstated or out of date and were fixed. They include "80 browser checks" on this page, "not re-checked" labels left in the specs, overstated lines in the trade-off memo, model versions in the workflow log that the original log does not give, and two errors made by this audit itself: a counting row that was silently dropped, and a memo line saying the brief mentions no threat to leave, when it does. <span data-ledger3="open">0</span> items are open.</p>
 
   <h3 style="margin-top:28px">The rubric the checks followed</h3>
   <p class="sub">Per the author, checking was planned at the start: every output, AI-drafted or the author's own, was to be scored 1 to 5 against a written rubric.</p>
@@ -210,12 +212,13 @@
     <div class="card"><span class="tag warn">Slop checklist</span><h3>A line fails if it has</h3>
       <p>A number with no source. A quote not in the materials. Boilerplate that fits any product. Hedging with no decision. Numbers that differ between sections. Features or users that do not exist. Padding. An em dash.</p></div>
   </div>
-  <p class="sub" style="margin-top:16px">The rubric assigns two judges: a quick self-check by the same model family, and an independent second-model judge at three checkpoints. <strong>The filled-in scores from the original run are not in this repository, so none are reported here.</strong> The slop checklist was run again over the text of this section, and the browser tests check the counts against the ledger and check for em dashes and stock phrases. A paraphrase of the rubric is in the repository.</p>
+  <p class="sub" style="margin-top:16px">The rubric assigns two judges: a quick self-check by the same model family, and an independent second-model judge at three checkpoints. In the run, the independent judge became unavailable and a separate reviewer from the drafting model family stood in, which the author's log calls "a second review, not an independent model family". One rubric result is recorded in the submission: a spec checkpoint scored 4 or 5 on every criterion and passed its gates, verdict SHIP. An independent review of the later repository found three blocking spec questions, now answered as proposals. Those are different versions of the document and both are reviewer judgments. <strong>The other scores from the original run are not in this repository, so none are reported here.</strong> The slop checklist was run again over the text of this section, and the browser tests check the counts against the ledger and check for em dashes and stock phrases. A paraphrase of the rubric is in the repository.</p>
 
   <h3 style="margin-top:28px">What the work taught</h3>
   <ul class="clean">
     <li>An AI that drafts without a source fills gaps with plausible, confident detail. A review that does not hold the source cannot catch it.</li>
     <li>A fix can carry the same fault. The effort figure was softened, not removed, until the second pass.</li>
+    <li>An AI builder's report of passing tests did not mean the safety rules held. Reading the code against the requirements found the bulk-confirm button.</li>
     <li>Safety rules need tests, not just wording. Several tests now guard the rules the AI proposed to bend.</li>
   </ul>
 
@@ -224,7 +227,7 @@
     <li>Both review passes were run with an AI coding assistant. The author supplied the original brief and reviews the changes. The brief is not published here, so pass 2 cannot be re-run by a reader.</li>
     <li>The verdicts are classifications made by reading each row. They are not measurements.</li>
     <li>Almost all of the problem entries (24 of 25) were already in the first commit. The commit history does not record which AI tool drafted them, so that attribution rests on the author's statement and the assessment log.</li>
-    <li>Five further rejections from the assessment itself (a fabricated cause, a users-versus-reels mix-up, a bulk-confirm button, an unverifiable "100%" banner, silent exclusion) are self-reported in the workflow log and are not counted above.</li>
+    <li>The assessment-time entries come from the author's own log, which is not in this repository. The repository's copy of that log differs in places (model versions and some quoted AI text that the original does not contain), and is annotated.</li>
   </ul>
   <div class="cta">
     <a class="btn" href="https://github.com/astrokshitij/touchline-ai/blob/main/docs/AI_EVALS.md">Method and full results</a>
