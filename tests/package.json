@@ -1,0 +1,8 @@
+{
+  "name": "touchline-ai-tests",
+  "private": true,
+  "type": "module",
+  "description": "Browser checks for the static prototype. Not needed to run the prototype itself.",
+  "scripts": { "test": "node e2e.mjs" },
+  "devDependencies": { "playwright": "^1.56.1" }
+}

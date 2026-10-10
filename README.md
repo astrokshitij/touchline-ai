@@ -1,205 +1,99 @@
-# TouchlineAI — Human-in-the-Loop Computer Vision & Highlight Engine for Youth Sports
+# TouchlineAI: coach-reviewed highlights for youth sports
 
-[![Live Demo](https://img.shields.io/badge/Demo-Netlify%20Live-brightgreen?style=for-the-badge&logo=netlify)](https://sidelinereel-kshitij.netlify.app)
-[![Zero External Dependencies](https://img.shields.io/badge/Dependencies-Zero%20External%20(Pure%20Vanilla)-blue?style=for-the-badge)]()
-[![Mobile-First 375px](https://img.shields.io/badge/Viewport-375px%20Mobile--First-orange?style=for-the-badge)]()
-[![Architecture](https://img.shields.io/badge/Architecture-HITL%20Active%20Learning-purple?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)]()
+A product case study and clickable prototype. It asks one question: **how do you stop a youth-sports app from sending one child's highlight clip to another child's parent?**
 
-> **An executive case study, production PRD, and pure vanilla interactive prototype addressing the high-stakes intersection of youth computer vision, child safeguarding, and human-in-the-loop active learning.**
->
-> Built by **[Kshitij Pandey](https://github.com/astrokshitij)** | Portfolio Showcase
+> **Read this first**
+> - This is a portfolio project that started as a product-management assessment. The assessment is closed. Nobody has approved, built or shipped this.
+> - The prototype uses **fictional data**. The "AI" and the "delivery" are **simulated**. It does not analyse video, recognise anyone, or send any email or SMS.
+> - Numbers about the scenario (tickets, share rates, survey results) come from the assessment materials. They are not re-checked in this repo. Targets and thresholds are proposals, not results. See [`docs/CLAIMS_AND_EVIDENCE.md`](docs/CLAIMS_AND_EVIDENCE.md).
 
----
+## The idea in one minute
 
-## 🔗 Live Links & Artifacts
+- **Source facts (from the assessment brief):** four support tickets across three clubs reported a clip of one child in another child's reel, always with similar jersey numbers (#4/#14, #1/#11, #7/#17). About 30% of generated reels were unopened. A flagship club wanted live streaming for a $180k renewal.
+- **Decision:** fix reliable correct-child assignment first. Notification timing is the runner-up. Livestreaming gets a bounded feasibility investigation before anyone commits to a build.
+- **Design rule:** the coach decides on every clip. Model confidence, even 99%, never skips that step.
+- **Publishing rules:** publication is blocked if any clip is unresolved, any included child lacks consent or a recipient, or any clip is unrenderable. Any change after approval requires a fresh approval. A child with no highlights gets an honest "no confirmed highlights" notice, never someone else's clips.
 
-- 🚀 **Interactive Prototype (Web App):** [https://sidelinereel-kshitij.netlify.app](https://sidelinereel-kshitij.netlify.app)
-- 🎬 **Video Walkthrough:** [Download / View Silent Screen Walkthrough (`demo/prototype_walkthrough.mp4`)](./demo/prototype_walkthrough.mp4)
-- 📋 **Production PRD (24 Requirements):** [`specs/PRD_SPECIFICATION.md`](./specs/PRD_SPECIFICATION.md)
-- ⚖️ **Strategic Prioritization & Trade-Off Memo:** [`specs/TRADE_OFF_ANALYSIS.md`](./specs/TRADE_OFF_ANALYSIS.md)
-- 📊 **Mathematical Denominator Audit:** [`analytics/METRICS_DECONSTRUCTION.md`](./analytics/METRICS_DECONSTRUCTION.md)
-- 🤖 **Agentic Multi-LLM Auditing Log:** [`logs/AGENTIC_WORKFLOW.md`](./logs/AGENTIC_WORKFLOW.md)
+## Run the prototype
 
----
+No install, no build, no network.
 
-## 🏛️ Executive Summary: The $180k Dilemma
+1. Open `site/index.html` in a browser (double-click it), or run `python3 -m http.server -d site 8000` and visit `http://localhost:8000`.
+2. A narrow window or phone view (375px wide) is the intended layout. Wider windows also work.
 
-When deploying autonomous AI into sensitive consumer environments—specifically youth sports involving minor children—**algorithmic confidence is not ground-truth safety**.
+The hosted copy at <https://sidelinereel-kshitij.netlify.app> is the build from the assessment. It may not include the fixes in this repo.
 
-```
-                           THE STRATEGIC CONFLICT
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ COMMERCIAL PRESSURE:                                                        │
-│ Flagship Tier-1 Academy ($180k ARR, renewal in 6 weeks) demands:            │
-│ "Ship unvetted weekend live streaming immediately or we churn."             │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                      VS.                                    │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ OPERATIONAL REALITY:                                                        │
-│ Computer vision models routinely confuse similar jersey numbers:            │
-│ Delivering clips of Jersey #4 into Jersey #14's personal reel at 94% conf.  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+## Demo script (about 4 minutes)
 
-### The Strategic Decision
-**Never amplify an unverified core product.** Streaming video live before solving child identity attribution and verified guardian authorization risks broadcasting minors without parental consent directly to the open internet.
-
-1. **Prioritize Roster Tagging with Human-in-the-Loop (HITL) Verification:** Build a mandatory coach-review workflow ensuring zero wrong-child clips reach parents.
-2. **Defend Core Retention:** Deconstruct vanity metrics to demonstrate that misattributed clips—not lack of streaming—drive customer dissatisfaction.
-3. **Execute a Bounded Commercial Compromise:** Commit to a formal feasibility study for third-party streaming integration by **October 15, 2026**, without promising an unvetted build date or derailing core computer vision engineering.
-
----
-
-## 🧠 The HITL Active Learning Architecture
-
-In single-camera youth sports footage, similar jersey numbers routinely lead to identity misattribution. While optical distortions and fabric wrinkles are hypothesized computer vision edge cases, empirical incident tickets demonstrate that high model confidence does not guarantee attribution correctness.
-
-TouchlineAI deploys an **Active Learning & Exception Routing Engine** that transitions from complete human oversight to automated triage:
-
-```
-+-----------------------------------------------------------------------------+
-|                      PHASE 1: COLD START (Current Phase)                    |
-|                        100% Mandatory Coach Review                          |
-|                                                                             |
-|  [Raw Video] ──► [CV Detection] ──► [All Proposed Clips (100%)]             |
-|                                                │                            |
-|                                                ▼                            |
-|                                     [Coach Review & Audit]                  |
-|                                                │                            |
-|                                                ▼                            |
-|                                   [Validated Batch Publish]                 |
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼ Model Fine-Tuning & Weight Calibration
-+-----------------------------------------------------------------------------+
-|                     PHASE 2: ASSISTED VERIFICATION                          |
-|                        High-Confidence Queuing                              |
-|                                                                             |
-|  [Raw Video] ──► [CV Detection] ──┬─► Confidence >= 0.85 ──► Rapid Swipe    |
-|                                   │                                         |
-|                                   └─► Confidence < 0.85  ──► Detailed Triage|
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼ Baseline Evaluation & Stratified QA
-+-----------------------------------------------------------------------------+
-|                    PHASE 3: EXCEPTION ROUTING ENGINE                        |
-|                        Autonomous Active Learning                           |
-|                                                                             |
-|  [Raw Video] ──► [CV Detection] ──┬─► Confidence >= 0.90 ──► Auto-Validated*|
-|                                   │   (Clear OCR, 1 Face)                   |
-|                                   │                                         |
-|                                   ├─► 0.80–0.90: Held for secondary QA /    |
-|                                   │   Delayed release queue                 |
-|                                   │                                         |
-|                                   └─► Confidence < 0.80  ──► Coach Review   |
-|                                       (OCR Ambiguity,        Exception Queue|
-|                                        Bounding Collision)                  |
-+-----------------------------------------------------------------------------+
-*Subject to independent post-publication double-blind QA auditing.
-```
-
----
-
-## 📱 Interactive Prototype & Core Edge Cases
-
-The standalone prototype (`site/index.html`) is built in **Pure Vanilla HTML5/CSS3/JavaScript** with **zero external dependencies, zero CDNs, and full 375px mobile-viewport responsiveness**.
-
-It implements the complete client-side state machine governing the 24 functional requirements (`FR-1` to `FR-24`):
-
-```
-       1. Setup & Roster ──────► 2. Coach Review ──────► 3. Batch Publish
-      (Confirm 12 Players)    (Inspect, Reassign, Purge) (Preflight & Idempotent)
-```
-
-### Core Verified Edge Cases
-
-| Edge Case | Specification | Prototype Implementation & Verification |
+| Step | Do this | You should see |
 |---|---|---|
-| **High-Confidence Misattribution** | `FR-4`, `FR-8`, `FR-10` | Clip #2 displays synthetic jersey #4, but AI proposed Maya L. (#14) at **94% confidence**. Coach reassigns clip to Liam T. (#4). System immediately extracts clip from Maya, transfers to Liam, and logs an immutable audit trail. |
-| **Mandatory Reason on Removal** | `FR-9`, `FR-11` | Discarding an unidentifiable moment requires selecting an explicit audit reason ("Unidentifiable Jersey", "Non-Focal Action"), permanently excluding the clip from all reels. |
-| **Unresolved Assignments Blocker** | `FR-6`, `FR-17` | Every detected moment initializes as `unresolved`. Navigating to the Publish view with unresolved clips triggers a hard preflight block: *"Publication Blocked: 9 assignment(s) remain unresolved."* |
-| **Missing Parental Consent Gate** | `FR-18`, `FR-20` | Sofia H. (#12) has missing guardian consent. System strictly prohibits partial silent publication; the entire team batch is blocked until consent is verified or an authorized exclusion is recorded. |
-| **Honest Empty State (Zero Filler)** | `FR-13` | Noah B. (#9) has 0 confirmed moments. The system renders an honest no-highlight card: *"No confirmed highlights for this game."* Strictly zero synthetic clips or teammate actions are substituted. |
-| **Idempotent Dispatch & Partial Retry** | `FR-22`, `FR-23` | Publishing commits an immutable manifest. Retrying a simulated transient transport failure (Lucas M.) dispatches exclusively to Lucas's parent without duplicate messaging to the remaining 11 parents. |
+| 1 | On **Setup**, press *Run Simulated AI Moment Detection* | 11 proposed clips, every one **unresolved** |
+| 2 | On **Review**, open the clip at 14:22 | The frame shows jersey **#4**, but the AI proposed **Maya S. (#14)** at 94% |
+| 3 | Press *Reassign* | Liam T. (#4) is preselected and the note names Liam. Change the player and the note follows. A note naming a different child blocks confirm |
+| 4 | Confirm, then try *Preview & Publish* | **Publication Blocked**: unresolved clips and Sofia H.'s missing consent |
+| 5 | Press *Remove* on a clip and confirm without a reason | Refused. A reason is mandatory |
+| 6 | Decide every clip, then on **Publish** use *Simulate Exclusion* (or *Simulate Consent*) for Sofia | Her exclusion stays visible with its reason. Noah B. shows an honest zero-highlight card |
+| 7 | Press *Approve*, then go back and change any clip | Approval is reset and publish is locked again |
+| 8 | Approve again, switch *Fail Mode* on, publish, then *Retry* | Only Lucas M. fails and is retried. The other recipients are not re-sent |
+| 9 | After publishing, go back to Review | Decisions are locked. A real system would need a revoke-and-reissue flow |
 
----
+Screens from the corrected build: [`docs/screenshots/`](docs/screenshots). The older images in `demo/` come from the assessment build and still show the bugs fixed since (for example `04-reassign.jpg` shows a note that contradicts the selected child).
 
-## 📊 Data Rigor & Denominator Audit
+## What is real and what is simulated
 
-A key failure mode in product analytics is relying on vanity metrics calculated on conditioned user subsets. TouchlineAI enforces mathematical rigor across all telemetry:
+| Real in the browser | Simulated or missing |
+|---|---|
+| The review and publishing rules (blocking, approval reset, exclusions, zero-highlight handling) | AI detection, jersey reading and confidence scores (fixed fictional data) |
+| An in-memory decision log (lost on reload) | Video: frames are drawn graphics, not footage |
+| A duplicate-publish guard and retry of failed recipients only | Email/SMS: nothing is sent |
+| | Backend, login, roles, saved data, server-side checks |
 
-### 1. The 92% Share Rate Vanity Trap
-* **The Dashboard Claim:** 92% of parents share their child's highlight reel.
-* **The Mathematical Reality:** The tracking event was instrumented only over **opened reels** ($D_{\text{opened}}$). Production logs revealed that **~30% of generated reels remain unopened across the dashboard cohort**:
-  
-  $$S_{\text{effective}} = P(\text{Shared} \mid \text{Opened}) \cdot P(\text{Opened}) = 0.92 \times (1.0 - 0.30) = \mathbf{64.4\%}$$
+How each requirement maps to the prototype: [Appendix A of the PRD](specs/PRD_SPECIFICATION.md#appendix-a-what-the-prototype-covers).
 
-Fixing identity attribution and eliminating wrong-child thumbnails directly addresses a primary driver of unengaged and unopened reels across the cohort, unlocking the remaining 35.6% of unrealized reach.
+## Limitations
 
-### 2. Stated vs. Revealed Preference (The Video Editor Fallacy)
-* **Stated Survey Preference:** **58%** of 210 surveyed coaches and parents requested in-app editing and trimming tools.
-* **Revealed Production Telemetry:** In 90 days of telemetry across all active accounts, usage data shows 6% opened the editor and <1% of those finished, placing the funnel completion bound below 0.06%:
-  
-  $$\text{Funnel Completion} = P(\text{Open Editor}) \times P(\text{Finish} \mid \text{Open Editor}) \le 0.06 \times 0.01 < 0.0006 \quad (< 0.06\%)$$
+- Checks run in your browser, so they only show the intended rules. A real system must enforce them on a server.
+- No real model has been built or evaluated. No accuracy claim is made anywhere in this repo.
+- Confidence thresholds are deliberately not defined. There is no calibration data.
+- The prototype does not warn when a confirmed child's jersey differs from the number in the frame. Whether it should is an open product decision.
+- The decision log has no durable store, and shared-jersey cases, roles and guardian views are not built.
+- Consent handling is a mock. It has had no legal review.
+- The scenario figures (tickets, 30% unopened, 92% share, 58% survey) are from the assessment materials and were not re-verified in this repo.
+- Evaluation scores from the assessment, where mentioned elsewhere, are a reviewer's estimates, not official employer results.
+- No license file has been added yet (see [`docs/REMAINING_WORK.md`](docs/REMAINING_WORK.md)).
 
-Parents do not want to be video editors; building desktop video tools would have wasted 8 engineering weeks on a phantom use case.
+## Tests
 
-### 3. North Star Metric: Correct-Child Delivery Rate (CCDR)
-$$\text{CCDR} = \frac{\sum_{i \in \text{Cohort}} \mathbb{I}(\text{Complete-Week Verified Delivery}_i)}{|\text{Eligible Weekly Cohort}|}$$
+Browser checks in [`tests/`](tests) use Playwright and Chromium:
 
-The cohort includes **all eligible rostered children**, including unopened, unpublished, and zero-highlight outputs. Every record must be validated by independent QA audit before the hard 7-day cutoff.
-
----
-
-## 📂 Repository Directory Tree
-
-```
-touchline-ai/
-├── README.md                          <-- Executive case study & architectural guide
-├── demo/                              <-- Visual assets & walkthrough media
-│   ├── prototype_walkthrough.mp4      <-- 1080p full prototype screen recording
-│   ├── 01-setup.jpg                   <-- Screen 1: Roster & match ingestion
-│   ├── 03-review.jpg                  <-- Screen 2: Coach HITL verification
-│   ├── 04-reassign.jpg                <-- Edge Case: 14 vs 4 reassignment modal
-│   ├── 06-corrected.jpg               <-- Attribution updated to Liam T. (#4)
-│   ├── 09-unresolved-block.jpg        <-- Preflight Gate: Unresolved assignments
-│   ├── 19-consent-block.jpg           <-- Preflight Gate: Missing parental consent
-│   ├── 20-noah-zero.jpg               <-- Honest empty state (0 highlights)
-│   ├── 24-delivery-failed.jpg         <-- Fault tolerance: Transport drop
-│   └── 25-retry-success.jpg          <-- Idempotent targeted retry
-├── site/                              <-- Interactive Prototype
-│   └── index.html                     <-- Zero-CDN, 100% offline Vanilla web app
-├── specs/                             <-- Engineering & Product Specifications
-│   ├── PRD_SPECIFICATION.md           <-- 24-requirement production PRD with schemas
-│   └── TRADE_OFF_ANALYSIS.md          <-- $180k enterprise trade-off memo & matrix
-├── analytics/                         <-- Quantitative Analytics & Data Rigor
-│   └── METRICS_DECONSTRUCTION.md      <-- Mathematical denominator audit & formulas
-└── logs/                              <-- Agentic Workflow & Auditability
-    └── AGENTIC_WORKFLOW.md            <-- Multi-LLM audit log & hallucination rejection
+```bash
+cd tests
+npm install
+npm test            # optional: SCREENSHOT_DIR=/tmp/shots npm test
 ```
 
----
+They cover the corrected flow, the publication gates, console errors, external requests and layout at 320, 375, 768 and 1280 px. They are checks of this prototype only, not evidence about a real product.
 
-## 🛠️ Verification & Test Suite
+## Repository map
 
-The interactive prototype has been verified through automated headless browser test scripts (`scratch/test_e2e.js`) using Chrome DevTools Protocol (CDP) at a native **375px × 812px mobile viewport**:
+```
+README.md
+site/index.html                  the prototype (one file, no dependencies)
+specs/PRD_SPECIFICATION.md       requirements FR-1 to FR-24, rules, prototype coverage
+specs/TRADE_OFF_ANALYSIS.md      prioritisation memo
+analytics/METRICS_DECONSTRUCTION.md   the share-rate and editor numbers, and the CCDR metric
+logs/AGENTIC_WORKFLOW.md         how AI tools were used and checked
+docs/CLAIMS_AND_EVIDENCE.md      what is fact, inference, target or simulated; open decisions
+docs/REMAINING_WORK.md           what is left to do
+docs/screenshots/                screens from the corrected build
+tests/                           browser checks
+demo/                            assessment-era screenshots and a silent screen recording
+```
 
-- [x] **Roster Binding (`FR-1`–`FR-3`):** 12 roster members cleanly bound.
-- [x] **Detection Presentation (`FR-4`, `FR-5`):** Synthetic clips render with timestamps and confidence tags.
-- [x] **High-Confidence Reassignment (`FR-8`, `FR-10`):** Jersey 4 (#14 Maya at 94%) successfully reassigned to #4 Liam; audit log logged.
-- [x] **Mandatory Reason Removal (`FR-9`, `FR-11`):** Moment removed with audit reason.
-- [x] **Preflight Gate Blocking (`FR-17`, `FR-18`):** Unresolved assignments and unconsented children block batch publishing.
-- [x] **Batch Approval Invalidation (`FR-20`):** Modifying any assignment invalidates previous approval.
-- [x] **Honest Zero Highlights (`FR-13`):** 0 clips for Noah B. renders honest notice without synthetic filler.
-- [x] **Idempotency & Retry (`FR-22`, `FR-23`):** Duplicate publishing blocked; failed recipients retried cleanly without resending to delivered parents.
-- [x] **Console Integrity:** 0 JavaScript errors, 0 external network requests, zero horizontal layout overflow.
+## Video
 
----
+`demo/prototype_walkthrough.mp4` is a silent screen recording (1080p, about 3 minutes) of the assessment build. The narrated video was uploaded with the original submission. Its public link is currently unavailable.
 
-## 👨‍💻 Author & Portfolio Attribution
+## Author
 
-- **Candidate / Architect:** **Kshitij Pandey**
-- **GitHub:** [@astrokshitij](https://github.com/astrokshitij)
-- **Live Deployment:** [https://sidelinereel-kshitij.netlify.app](https://sidelinereel-kshitij.netlify.app)
-- **Original Context:** Prepared for Product Management / Technical Portfolio Showcase
+Kshitij Pandey, [@astrokshitij](https://github.com/astrokshitij)

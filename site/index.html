@@ -1102,9 +1102,9 @@
       <div class="card" id="deliveryResultsCard" style="display: none; border-color: #10b981; background: rgba(16, 185, 129, 0.05);">
         <div class="card-header">
           <div class="card-title" style="color: #34d399;">
-            &check; Weekly Delivery Batch Published (<span class="fr-tag tag-sim">FR-24</span>)
+            &check; Weekly Delivery Batch Published (simulated, <span class="fr-tag tag-sim">FR-24</span>)
           </div>
-          <span class="badge-status badge-ok" id="deliveryIdempotencyBadge">Idempotent Key: ACTIVE (<span class="fr-tag">FR-22</span>)</span>
+          <span class="badge-status badge-ok" id="deliveryIdempotencyBadge">Duplicate-publish guard: ON (simulated, <span class="fr-tag">FR-22</span>)</span>
         </div>
 
         <div style="font-size: 12px; color: #e2e8f0;" id="deliverySummaryText">
@@ -1151,19 +1151,20 @@
 
     <div>
       <label for="reassignPlayerSelect">Correct Player</label>
-      <select id="reassignPlayerSelect">
+      <select id="reassignPlayerSelect" onchange="refreshReassignNote()">
         <!-- Rendered dynamically -->
       </select>
     </div>
 
     <div>
       <label for="reassignNotes">Coach Reassignment Note (<span class="fr-tag">FR-10</span>)</label>
-      <input type="text" id="reassignNotes" placeholder="e.g., Synthetic frame shows jersey #4 Liam T.">
+      <input type="text" id="reassignNotes" oninput="reassignNoteEdited = true; validateReassignForm()" placeholder="Note updates when you change the player">
+      <div id="reassignError" class="banner banner-danger" style="display:none; margin-top:6px;" role="alert"></div>
     </div>
 
     <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
       <button class="btn btn-secondary btn-sm" onclick="closeModal('reassignModal')">Cancel</button>
-      <button class="btn btn-sm" onclick="executeReassignment()">Confirm Reassignment</button>
+      <button class="btn btn-sm" id="btnConfirmReassign" onclick="executeReassignment()">Confirm Reassignment</button>
     </div>
   </div>
 </div>
@@ -1183,12 +1184,14 @@
     <div>
       <label for="removeReasonSelect"><span class="fr-tag">FR-11</span> Removal Reason (Mandatory)</label>
       <select id="removeReasonSelect">
+        <option value="">Select a reason...</option>
         <option value="Non-roster opponent or referee action">Non-roster opponent or referee action</option>
         <option value="Dead-ball / Out-of-bounds stoppage">Dead-ball / Out-of-bounds stoppage</option>
         <option value="Unidentifiable / Heavily obscured jersey">Unidentifiable / Heavily obscured jersey</option>
         <option value="Duplicate moment detection">Duplicate moment detection</option>
         <option value="Substandard footage quality">Substandard footage quality</option>
       </select>
+      <div id="removeError" class="banner banner-danger" style="display:none; margin-top:6px;" role="alert">Choose a removal reason before removing the clip.</div>
     </div>
 
     <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
@@ -1210,14 +1213,14 @@
       <div style="background: var(--surface-alt); padding: 8px; border-radius: 6px;">
         <strong style="color: #38bdf8;">What is Real:</strong>
         <p style="margin-top: 2px;">
-          Fully interactive client-side state machine; individual coach review requirement; dynamic clip counts and reel generation; publication preflight revalidation (FR-21); batch validation gates (FR-17, FR-18); decision audit ledger (FR-10); approval invalidation on modification (FR-20); delivery manifest and idempotency checks (FR-22); failed delivery retry (FR-23); responsive mobile layout (375px+).
+          Fully interactive client-side state machine; individual coach review requirement; dynamic clip counts and reel generation; the publication rules, run in your browser: preflight re-check before the simulated publish (FR-21, client-side only; a real system must do this on a server), batch blocking gates (FR-17, FR-18), an in-memory decision log that resets on reload (FR-10), approval reset after any change (FR-20), a duplicate-publish guard and a retry of failed recipients only (FR-22, FR-23), and a mobile layout (375px+).
         </p>
       </div>
 
       <div style="background: var(--surface-alt); padding: 8px; border-radius: 6px;">
         <strong style="color: #a855f7;">What is Simulated:</strong>
         <p style="margin-top: 2px;">
-          AI moment detection engine (deterministic mock data); synthetic jersey frame rendering; SMS/Email delivery dispatcher. No backend, no API keys, and system fonts only.
+          AI moment detection and confidence scores (fixed fictional data, no video is analysed); jersey frames (drawn graphics, not real footage); SMS/email delivery (nothing is sent). All names, rosters and emails are fictional. No backend, no API keys, no saved data.
         </p>
       </div>
 
@@ -1250,6 +1253,7 @@ const MATCHES_DATA = {
     account: 'Enterprise Club Partner (Tier-1 Academy) ($180k)',
     status: 'Uploaded • 1080p60 • Ready',
     statusColor: '#38bdf8',
+    footageDurationSec: 72 * 60, // 72 min of footage; every clip must start and end inside this
     clips: [
       {
         id: 'c1',
@@ -1383,7 +1387,7 @@ const MATCHES_DATA = {
       },
       {
         id: 'c11',
-        time: '74:15',
+        time: '70:15', // was 74:15, which is past the end of the 72:00 footage
         duration: '10s',
         description: 'Block on goal-bound shot inside penalty area',
         observedJersey: 8,
@@ -1401,6 +1405,7 @@ const MATCHES_DATA = {
     account: 'Enterprise Club Partner (Tier-1 Academy) ($180k)',
     status: 'Raw Unindexed • 0 Detections',
     statusColor: '#f59e0b',
+    footageDurationSec: 68 * 60,
     clips: [] // Genuine Empty State
   }
 };
@@ -1439,6 +1444,28 @@ const STATE = {
   auditLog: [],
   deliveryManifest: []
 };
+
+// Time helpers: clips store a start time ("mm:ss") and a duration ("8s").
+function parseClipStartSec(clip) {
+  const [m, sec] = clip.time.split(':').map(Number);
+  return m * 60 + sec;
+}
+function getClipEndSec(clip) {
+  return parseClipStartSec(clip) + parseInt(clip.duration, 10);
+}
+function formatSec(total) {
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+function formatClipRange(clip) {
+  return formatSec(parseClipStartSec(clip)) + '\u2013' + formatSec(getClipEndSec(clip));
+}
+// A clip that ends after the footage ends cannot be rendered (FR-19).
+function clipOutsideFootage(clip) {
+  const limit = MATCHES_DATA[STATE.gameId].footageDurationSec;
+  return getClipEndSec(clip) > limit;
+}
 
 // Helper: Get player by ID
 function getPlayer(id) {
@@ -1531,6 +1558,9 @@ function handleStartOverMatch() {
     STATE.deliveryManifest = [];
 
     // Re-enable game dropdown
+    STATE.reviewFilter = 'all';
+    updateSimulatedFailureButtonUI();
+    document.getElementById('tabNav2').classList.remove('completed');
     document.getElementById('gameSelect').disabled = false;
     document.getElementById('btnStartOver').style.display = 'none';
     document.getElementById('deliveryResultsCard').style.display = 'none';
@@ -1585,13 +1615,13 @@ function runSimulatedDetection() {
 }
 
 // 5. Synthetic Jersey Frame SVG Generator (FR-4, FR-15)
-function generateSyntheticFrameSVG(observedJersey, frameWidth, frameHeight) {
+function generateSyntheticFrameSVG(observedJersey, frameWidth, frameHeight, closeUp) {
   const numStr = String(observedJersey);
   const isObscured = numStr.includes('Obscured');
   const displayNumber = isObscured ? '?' : numStr;
 
   return `
-    <svg width="100%" height="100%" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <svg width="100%" height="100%" viewBox="${closeUp ? '112 18 96 84' : '0 0 320 140'}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="pitchGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#064e3b"/>
@@ -1644,6 +1674,11 @@ function renderReviewQueue() {
   const container = document.getElementById('clipsReviewContainer');
   container.innerHTML = '';
 
+  // The 14-vs-4 and Noah B. notes describe the first match only.
+  const isGame1 = STATE.gameId === 'game-1';
+  document.getElementById('edgeCaseCalloutBanner').style.display = isGame1 ? 'flex' : 'none';
+  document.getElementById('zeroHighlightNoticeBanner').style.display = isGame1 ? 'flex' : 'none';
+
   // Empty state handling for Game 2 or games with 0 clips
   if (STATE.clips.length === 0) {
     container.innerHTML = `
@@ -1656,6 +1691,13 @@ function renderReviewQueue() {
     `;
     updateReviewCounts();
     return;
+  }
+
+  if (STATE.isPublished) {
+    const lock = document.createElement('div');
+    lock.className = 'banner banner-warning';
+    lock.innerHTML = '<div><strong>Batch already published (simulated).</strong> The delivered manifest is fixed, so review decisions are locked. A real correction after publication needs a revoke-and-reissue flow that this prototype does not have. Use "Start Over" to reset the demo.</div>';
+    container.appendChild(lock);
   }
 
   const filteredClips = STATE.clips.filter(c => {
@@ -1672,7 +1714,7 @@ function renderReviewQueue() {
     const assignedPlayer = getPlayer(clip.assignedPlayerId);
     const proposedPlayer = getPlayer(clip.proposedPlayerId);
 
-    // Confidence class
+    // Colour bands are display-only. They never route, skip or auto-approve a clip.
     let confClass = 'conf-high';
     if (clip.confidence < 60) confClass = 'conf-low';
     else if (clip.confidence < 85) confClass = 'conf-med';
@@ -1704,7 +1746,9 @@ function renderReviewQueue() {
 
     // Individual action controls only (every clip requires explicit decision)
     let actionsHtml = '';
-    if (clip.status === 'unresolved') {
+    if (STATE.isPublished) {
+      actionsHtml = '';
+    } else if (clip.status === 'unresolved') {
       actionsHtml = `
         <div class="clip-actions">
           <button class="btn btn-sm" style="background:#059669;" onclick="confirmClip('${clip.id}')">
@@ -1720,11 +1764,16 @@ function renderReviewQueue() {
       `;
     }
 
+    if (STATE.isPublished) {
+      statusBannerHtml = statusBannerHtml.replace(/<button[\s\S]*?<\/button>/g, '');
+    }
+
     card.innerHTML = `
       <div class="clip-header">
         <div style="display:flex; align-items:center; gap:6px;">
-          <span class="clip-time">${clip.time}</span>
+          <span class="clip-time">${formatClipRange(clip)}</span>
           <span style="font-size:11px; color:var(--text-muted);">&bull; ${clip.duration}</span>
+          ${clipOutsideFootage(clip) ? `<span class="badge-status badge-err">Past end of footage</span>` : ''}
           ${isWrong14vs4 ? `<span class="fr-tag" style="background:#b45309; border-color:#f59e0b;">Must-Show Mixup</span>` : ''}
         </div>
         <div>
@@ -1805,83 +1854,164 @@ function invalidateApproval(reason) {
   }
 }
 
+// Decisions are locked once the batch is published: the manifest must not drift from what was sent.
+function decisionsLocked() {
+  if (STATE.isPublished) {
+    alert('Batch already published (simulated). Review decisions are locked. Use Start Over to reset the demo.');
+    return true;
+  }
+  return false;
+}
+
+function bumpAssignmentVersion(clip) {
+  clip.version = (clip.version || 0) + 1;
+  return clip.version;
+}
+
 function confirmClip(clipId) {
+  if (decisionsLocked()) return;
   const clip = STATE.clips.find(c => c.id === clipId);
   if (!clip) return;
 
   clip.status = 'confirmed';
   clip.removalReason = null;
+  const version = bumpAssignmentVersion(clip);
   invalidateApproval(`confirmation of clip ${clip.time}`);
 
   const p = getPlayer(clip.assignedPlayerId);
-  logAudit(`CONFIRM: Clip ${clip.time} confirmed for ${p.name} (#${p.jersey}) [FR-7]`);
+  logAudit(`CONFIRM: Clip ${clip.time} confirmed for ${p.name} (#${p.jersey}), assignment v${version} [FR-7, FR-10]`);
   renderReviewQueue();
 }
 
+// Default note text always describes the player currently selected in the modal.
+function buildReassignNote(clip, player) {
+  const seen = String(clip.observedJersey);
+  if (String(player.jersey) === seen) {
+    return `Frame shows jersey #${seen}; assigned to ${player.name} (#${player.jersey}).`;
+  }
+  return `Coach reassigned to ${player.name} (#${player.jersey}); observed jersey on frame was #${seen}.`;
+}
+
+// Returns the roster players (other than `selected`) whose name appears in a free-text note.
+function namesOtherPlayers(note, selected) {
+  return STATE.roster.filter(p => p.id !== selected.id && note.includes(p.name));
+}
+
+let reassignNoteEdited = false;
+
+function refreshReassignNote() {
+  const clip = STATE.clips.find(c => c.id === STATE.activeClipForModal);
+  const selected = getPlayer(document.getElementById('reassignPlayerSelect').value);
+  const input = document.getElementById('reassignNotes');
+  if (clip && selected && !reassignNoteEdited) {
+    input.value = buildReassignNote(clip, selected);
+  }
+  validateReassignForm();
+}
+
+function validateReassignForm() {
+  const clip = STATE.clips.find(c => c.id === STATE.activeClipForModal);
+  const selected = getPlayer(document.getElementById('reassignPlayerSelect').value);
+  const note = document.getElementById('reassignNotes').value;
+  const err = document.getElementById('reassignError');
+  const btn = document.getElementById('btnConfirmReassign');
+  let message = '';
+  if (!clip || !selected) {
+    message = 'Choose a player.';
+  } else if (selected.id === clip.assignedPlayerId && clip.status !== 'unresolved') {
+    message = `${selected.name} already holds this clip. Pick a different player.`;
+  } else {
+    const others = namesOtherPlayers(note, selected);
+    if (others.length > 0) {
+      message = `The note names ${others.map(p => p.name).join(', ')}, but ${selected.name} is selected. Fix the note or the player.`;
+    }
+  }
+  err.textContent = message;
+  err.style.display = message ? 'block' : 'none';
+  btn.disabled = message !== '';
+}
+
 function openReassignModal(clipId) {
+  if (decisionsLocked()) return;
   STATE.activeClipForModal = clipId;
   const clip = STATE.clips.find(c => c.id === clipId);
 
+  // Only eligible (non-excluded) roster players can receive a clip (FR-8).
+  const eligible = STATE.roster.filter(p => !p.excluded);
+
+  // Suggest the one player whose jersey matches the number seen on the frame.
+  // This is only a starting point: the coach must still confirm it visually.
+  const jerseyMatches = eligible.filter(p => String(p.jersey) === String(clip.observedJersey));
+  const preselectId = jerseyMatches.length === 1 ? jerseyMatches[0].id : clip.assignedPlayerId;
+
   const select = document.getElementById('reassignPlayerSelect');
   select.innerHTML = '';
-
-  STATE.roster.forEach(player => {
+  eligible.forEach(player => {
     const opt = document.createElement('option');
     opt.value = player.id;
     opt.innerText = `#${player.jersey} ${player.name}`;
-    if (clip.id === 'c2' && player.jersey === 4) {
-      opt.selected = true; // Pre-select Liam #4 for the 14 vs 4 edge case
-    } else if (player.id === clip.assignedPlayerId) {
-      opt.selected = true;
-    }
     select.appendChild(opt);
   });
+  select.value = preselectId; // exactly one option is selected
 
-  const notesInput = document.getElementById('reassignNotes');
-  if (clip.id === 'c2') {
-    notesInput.value = 'Synthetic frame visibly shows jersey #4 Liam T.';
-  } else {
-    notesInput.value = '';
-  }
-
+  reassignNoteEdited = false;
+  document.getElementById('reassignModalSub').innerText =
+    `Observed jersey on frame: #${clip.observedJersey}. The AI proposed ${getPlayer(clip.proposedPlayerId).name} (#${getPlayer(clip.proposedPlayerId).jersey}). Select the correct roster player.`;
+  refreshReassignNote();
   openModal('reassignModal');
 }
 
 function executeReassignment() {
+  if (decisionsLocked()) return;
   const clipId = STATE.activeClipForModal;
   const clip = STATE.clips.find(c => c.id === clipId);
   if (!clip) return;
 
   const newPlayerId = document.getElementById('reassignPlayerSelect').value;
-  const note = document.getElementById('reassignNotes').value;
-  const oldPlayer = getPlayer(clip.assignedPlayerId);
   const newPlayer = getPlayer(newPlayerId);
+  const oldPlayer = getPlayer(clip.assignedPlayerId);
+  if (!newPlayer) return;
+
+  // Re-check at the moment of the decision, not only while typing.
+  validateReassignForm();
+  if (document.getElementById('btnConfirmReassign').disabled) return;
+  const note = document.getElementById('reassignNotes').value;
 
   clip.assignedPlayerId = newPlayerId;
   clip.status = 'reassigned';
   clip.removalReason = null;
   clip.notes = note;
+  const version = bumpAssignmentVersion(clip);
 
   invalidateApproval(`reassignment of clip ${clip.time} to ${newPlayer.name}`);
-  logAudit(`REASSIGN: Clip ${clip.time} changed from ${oldPlayer.name} (#${oldPlayer.jersey}) -> ${newPlayer.name} (#${newPlayer.jersey}). Note: "${note}" [FR-8, FR-10]`);
+  logAudit(`REASSIGN: Clip ${clip.time} changed from ${oldPlayer.name} (#${oldPlayer.jersey}) -> ${newPlayer.name} (#${newPlayer.jersey}), assignment v${version}. Note: "${note}" [FR-8, FR-10]`);
 
   closeModal('reassignModal');
   renderReviewQueue();
 }
 
 function openRemoveModal(clipId) {
+  if (decisionsLocked()) return;
   STATE.activeClipForModal = clipId;
+  document.getElementById('removeReasonSelect').value = '';
+  document.getElementById('removeError').style.display = 'none';
   openModal('removeModal');
 }
 
 function executeRemoval() {
+  if (decisionsLocked()) return;
   const clipId = STATE.activeClipForModal;
   const clip = STATE.clips.find(c => c.id === clipId);
   if (!clip) return;
 
   const reason = document.getElementById('removeReasonSelect').value;
+  if (!reason) {
+    document.getElementById('removeError').style.display = 'flex';
+    return;
+  }
   clip.status = 'removed';
   clip.removalReason = reason;
+  bumpAssignmentVersion(clip);
 
   invalidateApproval(`removal of clip ${clip.time}`);
   logAudit(`REMOVE: Clip ${clip.time} removed. Reason: "${reason}" [FR-9, FR-11]`);
@@ -1891,6 +2021,7 @@ function executeRemoval() {
 }
 
 function reopenClip(clipId) {
+  if (decisionsLocked()) return;
   const clip = STATE.clips.find(c => c.id === clipId);
   if (!clip) return;
 
@@ -1959,13 +2090,14 @@ function renderPreviewsAndPublishScreen() {
     const card = document.createElement('div');
     card.className = 'reel-card';
 
-    // Thumbnail generation follows corrected assignment (FR-15)
+    // Thumbnail comes from the first confirmed clip and shows the number seen in that clip (FR-15),
+    // not the child's own number, so a wrong-child clip cannot hide behind the right-looking thumbnail.
     let thumbHtml = '';
     if (hasClips) {
       const firstClip = playerClips[0];
       thumbHtml = `
         <div class="reel-thumb" title="Clip ${firstClip.time}">
-          ${generateSyntheticFrameSVG(player.jersey, 68, 68)}
+          ${generateSyntheticFrameSVG(firstClip.observedJersey, 68, 68, true)}
         </div>
       `;
     } else {
@@ -2009,6 +2141,26 @@ function renderPreviewsAndPublishScreen() {
     container.appendChild(card);
   });
 
+  // Explicit exclusions stay visible: nothing is dropped silently.
+  excludedPlayers.forEach(player => {
+    const withheld = STATE.clips.filter(c =>
+      (c.status === 'confirmed' || c.status === 'reassigned') && c.assignedPlayerId === player.id
+    ).length;
+    const card = document.createElement('div');
+    card.className = 'reel-card';
+    card.style.opacity = '0.8';
+    card.innerHTML = `
+      <div class="reel-thumb" style="background:#1e293b; color:#64748b; font-size:10px; text-align:center; padding:4px;">Excluded</div>
+      <div class="reel-details">
+        <div class="reel-player-name">
+          <span class="jersey-pill">#${player.jersey}</span> ${player.name}
+          <span class="badge-status badge-warn">Excluded</span>
+        </div>
+        <div class="reel-meta">Reason recorded: ${player.exclusionReason || 'Not recorded'}. Nothing is sent for this child${withheld ? `; ${withheld} confirmed clip(s) are withheld` : ''}.</div>
+      </div>`;
+    container.appendChild(card);
+  });
+
   // Dynamic zero-highlight identification
   const zeroKids = activePlayers.filter(p => {
     const count = STATE.clips.filter(c => (c.status === 'confirmed' || c.status === 'reassigned') && c.assignedPlayerId === p.id).length;
@@ -2044,6 +2196,11 @@ function getBatchPreflightErrors() {
   const unresolvedClips = STATE.clips.filter(c => c.status === 'unresolved');
   if (unresolvedClips.length > 0) {
     errors.push(`${unresolvedClips.length} assignment(s) remain unresolved (FR-17). Every clip requires an explicit coach decision.`);
+  }
+
+  const badRange = STATE.clips.filter(c => c.status !== 'removed' && clipOutsideFootage(c));
+  if (badRange.length > 0) {
+    errors.push(`${badRange.length} clip(s) run past the end of the footage (${badRange.map(c => c.time).join(', ')}) and cannot be rendered (FR-19).`);
   }
 
   const invalidChildren = STATE.roster.filter(p => !p.excluded && (!p.consent || !p.recipient));
@@ -2103,6 +2260,7 @@ function evaluatePublicationGates() {
 
 // Sofia Synthetic Test Controls (FR-18)
 function resolveSofiaConsent() {
+  if (decisionsLocked()) return;
   const sofia = STATE.roster.find(p => p.id === 'p9');
   if (!sofia) return;
 
@@ -2118,6 +2276,7 @@ function resolveSofiaConsent() {
 }
 
 function excludeSofiaFromBatch() {
+  if (decisionsLocked()) return;
   const sofia = STATE.roster.find(p => p.id === 'p9');
   if (!sofia) return;
 
@@ -2125,7 +2284,7 @@ function excludeSofiaFromBatch() {
   sofia.exclusionReason = 'Missing consent / opt-out';
 
   invalidateApproval('explicit eligibility exclusion of Sofia H.');
-  logAudit(`ELIGIBILITY_EXCLUSION_SIMULATED: Sofia H. (#12) explicitly excluded from batch delivery. Reason: "Opt-out / Missing consent on file" [FR-10, FR-18, FR-20]`);
+  logAudit(`ELIGIBILITY_EXCLUSION_SIMULATED: Sofia H. (#12) explicitly excluded from batch delivery. Reason: "${sofia.exclusionReason}" [FR-10, FR-18, FR-20]`);
 
   renderRosterTable();
   renderPreviewsAndPublishScreen();
@@ -2150,7 +2309,7 @@ function handleApproveBatch() {
 function handlePublishBatch() {
   // 1. Idempotency protection against duplicate delivery (FR-22)
   if (STATE.isPublished) {
-    alert('Duplicate Delivery Blocked (FR-22): Batch has already been published. Idempotency key prevents resending.');
+    alert('Duplicate Delivery Blocked (FR-22): this batch was already published in this demo session, so it will not be sent again.');
     return;
   }
 

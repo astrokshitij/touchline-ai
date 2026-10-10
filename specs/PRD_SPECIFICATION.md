@@ -1,11 +1,13 @@
 # TouchlineAI — Product Requirements Document (PRD)
 ## Human-in-the-Loop Computer Vision & Highlight Engine for Youth Sports
 
-- **Document Version:** 3.0 (Production Specification)
+- **Document Version:** 3.1 (case-study specification, revised after the assessment)
 - **Author:** Kshitij Pandey ([@astrokshitij](https://github.com/astrokshitij))
-- **Status:** Approved for Implementation (B2 SHIP Gate Passed)
-- **Target Organization:** VentureStudio AI & Enterprise Club Partner (Tier-1 Academy)
-- **Domain:** Computer Vision (CV), Active Learning, Minor Child Safeguarding (COPPA/GDPR-K)
+- **Status:** Portfolio case-study draft. It has not been approved, reviewed or built by any company or engineering team.
+- **Scenario:** Companies and customers named here come from the assessment brief (VentureStudio AI; a flagship club customer called "Enterprise Club Partner"). All prototype data is fictional.
+- **Domain:** Computer Vision (CV), Active Learning, Minor Child Safeguarding. Consent and privacy rules such as COPPA and GDPR-K may apply. This document is not legal advice and has had no legal review.
+
+> **How to read the labels.** **[Source]** = stated in the assessment materials (not re-checked in this repo; see `docs/CLAIMS_AND_EVIDENCE.md`). **[Inference]** = reasoning from source facts, not proven. **[Target]** = a proposed number or policy with no validation behind it. **[Simulated]** = behaviour of the prototype with fictional data. Unlabelled requirements (FR-x) are design intent.
 
 ---
 
@@ -14,9 +16,9 @@
 **TouchlineAI** is an AI-powered sports highlights platform designed to detect, tag, and deliver personalized game clips of youth athletes directly to verified guardians. 
 
 ### Core Architectural Principle
-**Zero Unvetted Autonomous Publication.** Field footage in youth sports frequently presents severe visual ambiguity where similar jersey numbers are confused. While factors like motion blur, occlusion, fabric folds, and perspective warp remain hypothesized computer vision edge cases, the empirical incident tickets demonstrate that high-confidence model predictions misidentify similar jersey numbers (e.g., classifying a jersey #4 as jersey #14 at 94% confidence) regardless of underlying technical causes. 
+**Zero Unvetted Autonomous Publication.** Four support tickets across three clubs [Source] describe a clip of one child landing in another child's reel, each involving similar jersey numbers (#4/#14, #1/#11, #7/#17). The tickets give no technical cause, so this spec assumes none (not blur, not occlusion, not OCR). The "#4 shown as #14 at 94% confidence" case is the prototype's own scenario [Simulated]. It illustrates why a confidence score cannot replace a human check: a model can be confident and wrong.
 
-To ensure absolute safeguarding and prevent humiliating or distressing wrong-child deliveries:
+To reduce the risk of wrong-child deliveries, which are a trust and safeguarding failure:
 1. **Mandatory Human-in-the-Loop (HITL):** Every proposed highlight assignment—regardless of reported model confidence—must be explicitly confirmed, reassigned, or removed by the team's verified coach before publication.
 2. **Atomic Batch Validation:** Highlights are published exclusively as an immutable, validated batch for the entire team. If any included child lacks verified parental consent or recipient destination, the entire batch is held.
 3. **Honest Empty States:** A child with zero detected or confirmed highlights receives an honest, transparent notice ("No confirmed highlights for this game"). The system strictly prohibits synthetic filler or substituting teammate clips.
@@ -25,33 +27,33 @@ To ensure absolute safeguarding and prevent humiliating or distressing wrong-chi
 
 ## 2. Problem Statement & Empirical Evidence
 
-Youth sports video platforms face an existential tension between viral engagement features and core identity attribution. In pilot deployments across competitive youth clubs, multiple critical defects emerged:
+Youth sports video platforms face an existential tension between viral engagement features and core identity attribution. Four support tickets from three clubs, plus one analytics finding, shape this spec:
 
 | Incident Source | Empirical Evidence | Systemic Implication |
 |---|---|---|
-| **Tier-1 Academy Ticket #1** | Jersey #4 highlight delivered into Jersey #14's personal reel. | Digits with common stroke morphology (4 vs 14) suffer severe false positives; human review must verify focal identity. |
-| **Brightwater SC Tickets #2 & #3** | Two separate wrong-child reel deliveries involving similar jersey numbers (#1 vs #11, #7 vs #17). | Misattribution is a structural CV limitation, not an isolated edge case. |
-| **Cobblestone FC Ticket #4** | Player #11 clip assigned to Player #1. | Recurrence of similar jersey numbers (#1 vs #11); while optical factors like perspective warp or OCR segmentation errors are hypothesized computer vision edge cases, the empirical evidence confirms recurring identity misattribution requiring human review. |
-| **Analytics Log Telemetry** | 30% of generated recap reels remain unopened; wrong-child thumbnail attribution flagged as a major churn driver. | Delivering clips of other people's children breaks parent trust and drives immediate engagement drop-off. |
+| **Tier-1 Academy Ticket #1** [Source] | Jersey #4 highlight delivered into Jersey #14's personal reel. | [Inference] Similar numbers can be confused. The ticket does not say why. |
+| **Brightwater SC Tickets #2 & #3** [Source] | Two separate wrong-child reel deliveries involving similar jersey numbers (#1 vs #11, #7 vs #17). | [Inference] The problem recurs at a second club. |
+| **Cobblestone FC Ticket #4** [Source] | Player #11 clip assigned to Player #1. | [Inference] A third club, same pattern (similar numbers). Cause still unknown. |
+| **Analytics log** [Source] | About 30% of generated reels were unopened. | [Hypothesis, not shown by the data] Wrong-child clips may reduce opening. The log does not establish that. |
 
 ### The Denominator Reality Check
-While marketing dashboards highlighted a **92% share rate**, this metric was computed exclusively on *opened* reels ($D_{opened}$). Because ~30% of generated reels were never opened, the true population share rate is only **64.4%** ($0.92 \times 0.70$). Core highlight accuracy is the primary bottleneck to real organic retention.
+While marketing dashboards highlighted a **92% share rate**, this metric was computed exclusively on *opened* reels ($D_{opened}$). Because about 30% of generated reels were never opened, the share rate across all generated reels is about **64%** ($0.92 \times 0.70 = 0.644$), assuming a reel that is never opened is never shared [Assumption]. The data does not show that accuracy is the main reason reels go unopened. Attribution is prioritised because a wrong-child delivery is a trust and safeguarding failure in its own right.
 
 ---
 
 ## 3. Goals & Explicit Non-Goals
 
 ### Goals
-- **G-1 (Attribution Integrity):** Phased pilot rollout establishing baseline safety and measuring coach review burden, targeting zero unreviewed child misattributions in published reels.
-- **G-2 (Safeguarding Compliance):** Enforce strict COPPA/GDPR-K guardian consent gates prior to any asset distribution.
-- **G-3 (Coach Ergonomics):** Deliver a frictionless, mobile-first (375px viewport) review interface enabling full roster verification in under 5 minutes per match.
+- **G-1 (Attribution Integrity):** No clip reaches a guardian without an explicit coach decision, and every published batch can be independently audited. Pilot target: zero known wrong-child deliveries [Target]. The pilot also measures coach review burden.
+- **G-2 (Safeguarding):** Enforce guardian-consent gates before any asset is distributed. Whether this satisfies COPPA or GDPR-K needs legal review.
+- **G-3 (Coach Ergonomics):** Deliver a frictionless, mobile-first (375px viewport) review interface aiming for full roster verification in under 5 minutes per match [Target, not tested with coaches].
 - **G-4 (Delivery Transparency):** Provide unambiguous visibility into delivery states, supporting idempotent retry of failed transport destinations without duplicate delivery.
 
 ### Explicit Non-Goals
 - **NG-1 (No Unvetted Livestreaming):** Reject unvetted, raw real-time streaming demands until core CV attribution and child consent infrastructures are hardened.
-- **NG-2 (No Auto-Publish Bypasses):** No threshold of model confidence (even 99.9%) may bypass human coach verification during Phases 1 and 2.
+- **NG-2 (No Auto-Publish Bypasses):** No level of model confidence, even 99.9%, may bypass coach review. Confidence may only order the review queue and flag uncertain clips.
 - **NG-3 (No Synthetic Filler):** Under no circumstances may the system pad a low-activity player's reel with team celebrations or other players' actions to simulate high engagement.
-- **NG-4 (No In-App Non-Linear Video Editor):** Do not build heavy desktop-style clip trimming or timeline editing suites. Usage telemetry reveals <0.06% completion rates; parents want automated accuracy, not editing chores.
+- **NG-4 (No In-App Non-Linear Video Editor):** Do not build heavy desktop-style clip trimming or timeline editing suites. Telemetry shows under 0.06% of accounts finished an edit [Source]; [Inference] this points to accuracy, not editing tools, as the better investment.
 
 ---
 
@@ -234,25 +236,27 @@ graph TD
 
 ## 8. AI Computer Vision & Active Learning Architecture
 
-### Confidence Thresholding & Exception Routing
-Rather than attempting full automation on degraded video, TouchlineAI uses active learning with calibrated exception triage:
+### Using Confidence Safely
+Confidence is a hint to the coach, never a way around the coach.
 
 ```
 [ Raw Match Footage ]
         │
         ▼
-[ Object Detection & Tracking (YOLOv8 / ByteTrack) ]
+[ Player detection, tracking, jersey reading, re-identification ]
+   (candidate components, e.g. YOLOv8 / ByteTrack: illustrative only, not selected or benchmarked)
         │
         ▼
-[ Jersey OCR & Re-ID Feature Extraction ]
+[ Proposed moments with proposed child + confidence ]
         │
-        ├── Confidence >= 0.90 ──► Auto-Validated Candidate (High Confidence)
+        ├── every moment ──► starts "unresolved" ──► coach confirms, reassigns or removes (FR-6)
         │
-        ├── Confidence 0.80–0.90 ─► Held for secondary QA / Delayed release queue
-        │
-        └── Confidence < 0.80 ───► Route to Exception Triage ("Needs Identification")
-            (or Ambiguous Numbers)  (Forces explicit selection or removal)
+        └── low confidence or unreadable number ──► flagged "Needs identification" and shown first
 ```
+
+- No confidence value skips, auto-completes or delays review. Tiers such as "auto-validated at 0.90" or "delayed release at 0.80-0.90" are **not** part of this spec.
+- No calibration data exists, so no numeric thresholds are proposed. Any flagging threshold should be set from audited pilot data [Target].
+- The prototype colours confidence red under 60% and amber under 85%. These are display colours only [Simulated].
 
 ### Processing Readiness Contract
 Raw detection status and `processing_ready` are strictly separated:
@@ -271,7 +275,7 @@ Raw detection status and `processing_ready` are strictly separated:
 |---|---|---|
 | **Empty Setup** | Detection button disabled; display empty roster state. | Select valid match record and confirm roster. |
 | **High-Confidence Misattribution** | CV model flags Jersey 4 as Child #14 at 94% confidence. | Coach reassigns clip to Child #4; system removes clip from #14's reel, adds to #4's reel, invalidates previous preview approval. |
-| **Low-Confidence / Dirty Jersey** | Confidence < 0.80 or obscured number. | Displayed with prominent amber warning banner; coach must explicitly choose player or remove with reason. |
+| **Low-Confidence / Unreadable Jersey** | Low confidence or obscured number (threshold to be set from pilot data). | Flagged with a prominent warning; coach must explicitly choose a player or remove with a reason. |
 | **Number Collision (Shared Jersey)** | Multiple roster players share same number across halves. | Both candidate names surfaced side-by-side; coach performs visual identification. |
 | **Zero Confirmed Highlights** | Review completes with 0 clips for a player (e.g., Noah B.). | Honest empty state rendered: "No confirmed highlights for this game"; guardian notified of game participation without synthetic filler. |
 | **Missing Consent / Recipient** | Roster child (e.g., Sofia H.) has unverified parental consent. | Hard preflight block on publication. Options: Record consent verification or record explicit exclusion with reason. Batch cannot publish partially. |
@@ -283,13 +287,13 @@ Raw detection status and `processing_ready` are strictly separated:
 
 ### Failure Mode 1: Confidently Wrong Assignments Survive Coach Review
 - **Risk:** High model confidence (e.g., 94%) induces confirmation bias; a fatigued coach clicks "Confirm" without inspecting jersey details, delivering another child's clip.
-- **Detection:** Independent QA Auditor audits a double-blind 10% stratified random sample of all published manifests within 48 hours.
+- **Detection:** An independent QA auditor checks published manifests against source video. Phase 1 audits every batch (see section 14); later phases use a sample whose size is still to be set [Target].
 - **Mitigation:** Any confirmed wrong-child incident triggers immediate revocation of the web reel, an audit investigation ticket, and automated UI friction (enlarging jersey crop preview) for that team.
 
 ### Failure Mode 2: Coach Review Burden & Fatigue Abandonment
-- **Risk:** Coaches find reviewing 15–25 clips per match too time-consuming, resulting in abandoned drafts and parents never receiving highlights.
+- **Risk:** Coaches find reviewing every clip too time-consuming (assumed 15-25 clips per match, unvalidated; the prototype uses 11), resulting in abandoned drafts and parents never receiving highlights.
 - **Detection:** Telemetry instruments median active review time, upper-tail (p95) review duration, and draft abandonment rates.
-- **Mitigation:** Optimize keyboard shortcuts, group high-confidence clips into rapid-swipe interfaces, and provide coach reminder triggers after 24 hours.
+- **Mitigation ideas [untested]:** keyboard shortcuts, a fast one-clip-at-a-time review mode (each clip still needs its own decision, no bulk confirm), and a reminder after 24 hours.
 
 ---
 
@@ -299,7 +303,7 @@ Raw detection status and `processing_ready` are strictly separated:
 Feature: TouchlineAI Highlight Review & Publication Pipeline
 
   Scenario: Reassignment of High-Confidence Misattributed Jersey
-    Given a detected moment with observed jersey 4 and proposed player "Maya L. (#14)" with confidence 0.94
+    Given a detected moment with observed jersey 4 and proposed player "Maya S. (#14)" with confidence 0.94
     When the coach selects "Reassign" and picks "Liam T. (#4)"
     Then the moment is immediately removed from Maya's highlight reel
     And the moment is assigned to Liam's highlight reel
@@ -319,6 +323,19 @@ Feature: TouchlineAI Highlight Review & Publication Pipeline
     Then the "Approve & Publish Batch" action is disabled
     And a blocker alert displays "Publication Blocked: Included child Sofia H. (#12) has missing guardian consent (FR-18)"
 
+  Scenario: High confidence does not skip review
+    Given a detected moment with proposed player "Ava K. (#5)" and confidence 0.99
+    When the coach opens the Review screen
+    Then the moment is "unresolved"
+    And publication stays blocked until the coach confirms, reassigns or removes it
+
+  Scenario: Clip that runs past the end of the footage
+    Given footage that is 72:00 long
+    And a detected moment starting at 71:55 lasting 8 seconds
+    When the coach opens the Publish screen
+    Then a blocker states the clip runs past the end of the footage
+    And the "Approve & Publish Batch" action is disabled
+
   Scenario: Idempotent Delivery Retry on Transient Transport Drop
     Given a published batch with 11 successful deliveries and 1 failed delivery for "Lucas M."
     When the coach clicks "Retry Failed Deliveries"
@@ -332,9 +349,11 @@ Feature: TouchlineAI Highlight Review & Publication Pipeline
 
 ## 12. Privacy, Safety & Child Safeguarding (COPPA / GDPR-K)
 
+> Proposed design only. Retention periods, consent wording and legal basis need legal review.
+
 1. **Authentication Boundary:** Video reels are private, unlisted, token-authenticated assets accessible only by the verified guardian.
 2. **Zero Public Indexing:** Robot meta-tags and no-index headers prevent search engine indexing. External social sharing buttons are strictly disabled by default.
-3. **Right to Be Forgotten / Opt-Out:** When a parent requests deletion or opt-out, the system revokes public access tokens immediately and marks raw source files for purge within 30 days.
+3. **Right to Be Forgotten / Opt-Out:** When a parent requests deletion or opt-out, the system revokes public access tokens immediately and marks raw source files for purge within 30 days [Target; period needs legal input].
 4. **Incidental Minors:** If an opted-out child appears in the background of another child's highlight, the clip must be flagged for algorithmic background blurring or removed by coach review.
 
 ---
@@ -344,33 +363,61 @@ Feature: TouchlineAI Highlight Review & Publication Pipeline
 ### Primary North Star Metric: Correct-Child Delivery Rate (CCDR)
 $$\text{CCDR} = \frac{\text{Eligible Children with Confirmed, Audited, Correct Highlight Reels}}{\text{Total Eligible Generated Children in Weekly Cohort}}$$
 
+- **Measurement note:** The numerator needs an independent audit of each counted record. If audits are sampled in later phases, CCDR becomes an estimate and should be reported with a Wilson interval (see `analytics/METRICS_DECONSTRUCTION.md`). The exact estimator is an open product decision.
 - **Denominator:** Every eligible child rostered on an active team during the frozen weekly cohort (Monday 00:00 to Monday 00:00 local time). Must include unpublished, unopened, and zero-highlight records.
 - **Numerator:** Children whose guardians received a verified delivery containing at least one correctly attributed highlight and zero misattributed clips, validated by independent QA audit.
 
 ### Safety Guardrails
-- **Zero Known Wrong-Child Deliveries:** Any single confirmed wrong-child incident pauses pilot rollout for that club.
-- **Review Latency:** Median coach review time must remain $\le 4.5\text{ minutes}$ per match.
+- **Zero Known Wrong-Child Deliveries [Target]:** Any single confirmed wrong-child incident pauses pilot rollout for that club.
+- **Review Latency [Target]:** Median coach review time stays at or under 4.5 minutes per match. No coach timing data exists yet.
 
 ---
 
 ## 14. Phased Rollout Plan
 
+All gates below are proposals [Target]. None is validated.
+
 ```
-Phase 1: Controlled Single-Club Pilot (Tier-1 Academy)
-  ├── 100% Coach Review Enforcement
-  ├── Double-Blind QA Audit of 100% Published Reels
-  └── Zero Public Sharing Enabled
+Phase 1: Controlled Single-Club Pilot
+  ├── 100% coach review of every clip
+  ├── Independent QA audit of 100% of published reels
+  └── No public sharing
         │
-        ▼ (After 50 clean matches & CCDR >= 95%)
-Phase 2: Regional League Expansion (15 Clubs)
-  ├── Assisted Review (High confidence auto-queued)
-  ├── Stratified Random QA Auditing (20% sample)
-  └── Opt-In Guardian Social Download
+        ▼ Proposed gate: 50 clean matches and CCDR >= 95%, plus the Wilson-interval
+        │ gate in the metrics doc (both to hold; product decision needed)
+Phase 2: Regional League Expansion
+  ├── Faster review tooling (queue ordering, one-clip-at-a-time mode). Every clip still needs a coach decision.
+  ├── Sampled QA audit (rate to be set; 20% was floated)
+  └── Optional guardian download, off by default
         │
-        ▼ (After Model Baseline Validation)
-Phase 3: General Availability (Active Learning Exception Routing)
-  ├── Automated Publication for Confidence >= 0.90
-  ├── 0.80–0.90: Held for secondary QA / Delayed release queue
-  ├── Mandatory Review for Exception Queue (< 0.80)
-  └── Continuous Fine-Tuning Pipeline
+        ▼ Proposed gate: audited results from Phase 2
+Phase 3: General Availability
+  ├── Coach review still required for every clip
+  ├── Whether any review step could ever be relaxed is an open product decision,
+  │   to be made only with audited evidence. It is not planned here.
+  └── Coach corrections feed model improvement
 ```
+
+---
+
+## Appendix A. What the Prototype Covers
+
+The prototype (`site/index.html`) runs in the browser with fictional data. It has no backend, no real video analysis and no real delivery.
+
+| Requirement | In the prototype | Notes |
+|---|---|---|
+| FR-1 | Partly | A game selector only. No Club, Team or Game ID model. |
+| FR-2, FR-3 | Yes | Fictional 12-child roster and a coach confirmation checkbox. |
+| FR-4 | Partly | Start and end time, proposed child, observed jersey and confidence are shown. A drawn frame stands in for a playable clip. |
+| FR-5 | Partly | An obscured jersey shows as "7 (Obscured)". There is no "Unknown" path for missing fields. |
+| FR-6 to FR-9, FR-11 | Yes | Every clip starts unresolved. Removal requires a chosen reason. |
+| FR-10 | Partly | In-memory text log with actor, time and assignment version. Lost on reload. Not an immutable store. |
+| FR-12, FR-13, FR-14, FR-16 | Yes | Reels use confirmed clips only. Zero-highlight children get an honest notice. No playable reel. |
+| FR-15 | Partly | Thumbnail is a close-up of the first confirmed clip's frame. |
+| FR-17, FR-18, FR-20 | Yes | Blocks on unresolved clips and missing consent. Any change resets approval. |
+| FR-19 | Partly | Checks detection finished and that no clip runs past the footage. No rendering or `processing_ready` contract. |
+| FR-21 | Partly | Re-check runs in the browser before the simulated publish. A real system must do it on a server. |
+| FR-22 | Partly | A one-time publish flag in the page. No idempotency key or server. |
+| FR-23 | Yes (simulated) | One simulated failure (Lucas M.); retry reaches only that recipient. |
+| FR-24 | Yes | Simulation is labelled. |
+| Not built | | Roles and permissions (section 4), shared-jersey side-by-side view (section 9), incidental-minor handling (section 12), guardian-side views. |
